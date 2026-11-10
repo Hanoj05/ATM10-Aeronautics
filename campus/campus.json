@@ -20,10 +20,11 @@
     {
       "id": "me-zentrale",
       "name": "ME-Gebäude",
-      "ordner": null,
+      "ordner": "gebaeude/me-zentrale",
       "zweck": "AE2-Hauptsystem",
-      "status": "geplant",
-      "position": null
+      "status": "gebaut",
+      "position": null,
+      "drehung": 0
     }
   ]
 }

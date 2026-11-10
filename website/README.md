@@ -29,7 +29,7 @@ Dann im Browser `http://localhost:8000` öffnen. Die Startseite leitet auf die C
 | Datei | Wofür |
 | --- | --- |
 | `gebaeude.json` | Steckbrief, Zellen, Dateiliste |
-| `modell.json` | Blockmodell. Erzeugt mit `tools/modell-aus-bauplan.py`, später aus einer Schematic |
+| `modell.json` | Blockmodell. Erzeugt mit `tools/modell-aus-bauplan.py` oder aus einer Schematic mit `tools/modell-aus-schematic.py` |
 | `konfig.json` | Teile mit Position (`von`, `bis`), Einstellungen, Nodes und Kanälen. Das liest die Hover-Ansicht |
 | `einrichtung.json` | Einrichtungsteile mit Orten (`orte` oder `block`), Mod und Status. Das liest der Tab Einrichtung und die Ebene Einrichtung |
 | `konfig.md`, `einrichtung.md` | Lesbare Dokumente im Tab Dokumente |
@@ -43,7 +43,7 @@ Dann im Browser `http://localhost:8000` öffnen. Die Startseite leitet auf die C
 ## 3D-Modelle in zwei Stufen
 
 1. **Aus den Plandaten:** Jedes Gebäude als vereinfachtes Modell aus `gebaeude.json`, zum Beispiel die Waben des Wabenhauses mit ihren Höhen. Geht sofort, auch für Gebäude, die nur geplant sind.
-2. **Aus Schematics:** Sobald ein Gebäude als `.nbt` in `schematics/` liegt, wird es Block für Block geladen und ersetzt das vereinfachte Modell.
+2. **Aus Schematics:** Sobald ein Gebäude als `.nbt` in `schematics/` liegt, macht `tools/modell-aus-schematic.py` daraus `modell.json`. Das ersetzt das vereinfachte Modell. Erstes Gebäude so: ME-Gebäude.
 
 ## Hosting (kostenlos)
 

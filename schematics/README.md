@@ -2,7 +2,19 @@
 
 Exporte der echten Gebäude aus der Welt. Daraus soll die Website später die 3D-Ansicht Block für Block bauen.
 
-Dateiname = Gebäude-ID, also zum Beispiel `wabenhaus.nbt`. In `gebaeude/<id>/gebaeude.json` unter `dateien.schematic` eintragen.
+Dateiname = Gebäude-ID, also zum Beispiel `wabenhaus.nbt`. In `gebaeude/<id>/gebaeude.json` unter `dateien.schematic` eintragen (Pfad ab Repo, z. B. `schematics/wabenhaus.nbt`).
+
+| Datei | Gebäude |
+| --- | --- |
+| `me-zentrale.nbt` | [ME-Gebäude](../gebaeude/me-zentrale/) |
+
+## Ins Modell für die Website umwandeln
+
+```
+python3 tools/modell-aus-schematic.py gebaeude/<id>
+```
+
+Schreibt `gebaeude/<id>/modell.json`. Braucht keine Zusatzpakete. Blockfarben stehen in der Tabelle `FARBEN` im Skript, unbekannte Blöcke bekommen eine Ersatzfarbe und werden beim Lauf aufgelistet.
 
 ## Export mit Create
 

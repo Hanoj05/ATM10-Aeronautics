@@ -17,8 +17,9 @@ gebaeude/
     einrichtung.json   Einrichtungsteile mit Position und Status (für die Website)
     konfig.md          Technik und Konfiguration zum Lesen
     einrichtung.md     Stilregeln und Mods zum Lesen
+  me-zentrale/         ME-Gebäude, Modell aus der Schematic
 schematics/            Exportierte Gebäude aus der Welt für die 3D-Ansicht
-tools/                 Hilfsskripte, z. B. modell.json aus dem Bauplan erzeugen
+tools/                 Hilfsskripte: modell.json aus Bauplan oder Schematic erzeugen
 website/               Die Campus-Website
 ```
 
@@ -42,7 +43,7 @@ im Repo-Ordner starten und `http://localhost:8000` öffnen. Details in [website/
 | Gebäude | Zweck | Status |
 | --- | --- | --- |
 | [Wabenhaus](gebaeude/wabenhaus/) | Bienen: Modular Beehive, Modular Centrifuge | gebaut |
-| ME-Gebäude | AE2-Hauptsystem | geplant |
+| [ME-Gebäude](gebaeude/me-zentrale/) | AE2-Hauptsystem: ME Controller, 64 Extended Drives | gebaut |
 
 ## Konventionen
 

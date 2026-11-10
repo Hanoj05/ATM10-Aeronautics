@@ -1,0 +1,226 @@
+{
+  "hinweis": "Teile für die Website. Positionen in Schematic-Koordinaten [x, y, z], aus der Schematic ausgelesen. Einstellungen nach und nach ergänzen.",
+  "netzwerke": [],
+  "teile": [
+    {
+      "id": "controller",
+      "name": "ME Controller",
+      "art": "Maschine",
+      "zelle": "",
+      "von": [
+        23,
+        15,
+        23
+      ],
+      "bis": [
+        29,
+        31,
+        29
+      ],
+      "einstellungen": [
+        [
+          "Aufbau",
+          "Mehrblock-Controller in der Mitte, 157 Blöcke, 7 × 7 × 17"
+        ]
+      ],
+      "nodes": []
+    },
+    {
+      "id": "drives-nw",
+      "name": "Drive-Bank Nordwest",
+      "art": "Speicher",
+      "zelle": "",
+      "von": [
+        7,
+        7,
+        7
+      ],
+      "bis": [
+        15,
+        10,
+        15
+      ],
+      "einstellungen": [
+        [
+          "Inhalt",
+          "16 × ME Extended Drive"
+        ]
+      ],
+      "nodes": []
+    },
+    {
+      "id": "drives-no",
+      "name": "Drive-Bank Nordost",
+      "art": "Speicher",
+      "zelle": "",
+      "von": [
+        37,
+        7,
+        7
+      ],
+      "bis": [
+        45,
+        10,
+        15
+      ],
+      "einstellungen": [
+        [
+          "Inhalt",
+          "16 × ME Extended Drive"
+        ]
+      ],
+      "nodes": []
+    },
+    {
+      "id": "drives-sw",
+      "name": "Drive-Bank Südwest",
+      "art": "Speicher",
+      "zelle": "",
+      "von": [
+        7,
+        7,
+        37
+      ],
+      "bis": [
+        15,
+        10,
+        45
+      ],
+      "einstellungen": [
+        [
+          "Inhalt",
+          "16 × ME Extended Drive"
+        ]
+      ],
+      "nodes": []
+    },
+    {
+      "id": "drives-so",
+      "name": "Drive-Bank Südost",
+      "art": "Speicher",
+      "zelle": "",
+      "von": [
+        37,
+        7,
+        37
+      ],
+      "bis": [
+        45,
+        10,
+        45
+      ],
+      "einstellungen": [
+        [
+          "Inhalt",
+          "16 × ME Extended Drive"
+        ]
+      ],
+      "nodes": []
+    },
+    {
+      "id": "wireless-hub",
+      "name": "ME Wireless Hub",
+      "art": "Netzwerk",
+      "zelle": "",
+      "von": [
+        26,
+        32,
+        26
+      ],
+      "bis": [
+        26,
+        32,
+        26
+      ],
+      "einstellungen": [
+        [
+          "Lage",
+          "Oben auf dem Controller"
+        ]
+      ],
+      "nodes": []
+    },
+    {
+      "id": "wireless-ring",
+      "name": "ME Wireless Connector (Ring)",
+      "art": "Netzwerk",
+      "zelle": "",
+      "von": [
+        24,
+        27,
+        24
+      ],
+      "bis": [
+        28,
+        27,
+        28
+      ],
+      "einstellungen": [
+        [
+          "Inhalt",
+          "8 Connectors rund um den Controller"
+        ]
+      ],
+      "nodes": []
+    },
+    {
+      "id": "wireless-w",
+      "name": "ME Wireless Connector West",
+      "art": "Netzwerk",
+      "zelle": "",
+      "von": [
+        12,
+        19,
+        26
+      ],
+      "bis": [
+        12,
+        19,
+        26
+      ],
+      "einstellungen": [],
+      "nodes": []
+    },
+    {
+      "id": "wireless-o",
+      "name": "ME Wireless Connector Ost",
+      "art": "Netzwerk",
+      "zelle": "",
+      "von": [
+        40,
+        19,
+        26
+      ],
+      "bis": [
+        40,
+        19,
+        26
+      ],
+      "einstellungen": [],
+      "nodes": []
+    },
+    {
+      "id": "ender-gates",
+      "name": "Ender Gate (Nitro)",
+      "art": "Energie",
+      "zelle": "",
+      "von": [
+        26,
+        17,
+        25
+      ],
+      "bis": [
+        26,
+        31,
+        26
+      ],
+      "einstellungen": [
+        [
+          "Inhalt",
+          "3 Stück im Controller-Schacht"
+        ]
+      ],
+      "nodes": []
+    }
+  ]
+}

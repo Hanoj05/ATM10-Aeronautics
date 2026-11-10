@@ -1,0 +1,51 @@
+{
+  "id": "me-zentrale",
+  "name": "ME-Gebäude",
+  "zweck": "AE2-Hauptsystem: ME Controller, Extended Drives, Wireless Hub",
+  "status": "gebaut",
+  "welt": {
+    "p0": null,
+    "drehung": 0,
+    "hinweis": "P0 = Ecke (0, 0, 0) der Schematic, also die Ecke, die beim Speichern mit Schematic and Quill zuerst angeklickt wurde. y = 0 ist die Bodenebene (dort ist noch etwas Gelände mit drin). Weltkoordinate [x, y, z] mit F3 ablesen."
+  },
+  "masse": {
+    "breite": 53,
+    "tiefe": 53,
+    "hoehe": 98
+  },
+  "zellen": [],
+  "maschinen": [
+    {
+      "name": "ME Controller",
+      "von": [
+        23,
+        15,
+        23
+      ],
+      "bis": [
+        29,
+        31,
+        29
+      ]
+    },
+    {
+      "name": "ME Extended Drive",
+      "anzahl": 64
+    }
+  ],
+  "netzwerke": [
+    {
+      "mod": "Applied Energistics 2",
+      "name": "ME-Hauptsystem"
+    }
+  ],
+  "dateien": {
+    "bauplan": null,
+    "modell": "modell.json",
+    "konfigDaten": "konfig.json",
+    "einrichtungDaten": "einrichtung.json",
+    "konfig": "konfig.md",
+    "einrichtung": "einrichtung.md",
+    "schematic": "schematics/me-zentrale.nbt"
+  }
+}
