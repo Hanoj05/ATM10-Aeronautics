@@ -2,11 +2,11 @@
   "id": "me-zentrale",
   "name": "ME-Gebäude",
   "zweck": "AE2-Hauptsystem: ME Controller, Extended Drives, Wireless Hub",
-  "status": "gebaut",
+  "status": "im Bau",
   "welt": {
     "p0": null,
     "drehung": 0,
-    "hinweis": "P0 = Ecke (0, 0, 0) der Schematic, also die Ecke, die beim Speichern mit Schematic and Quill zuerst angeklickt wurde. y = 0 ist die Bodenebene (dort ist noch etwas Gelände mit drin). Weltkoordinate [x, y, z] mit F3 ablesen."
+    "hinweis": "P0 = Ecke (0, 0, 0) der Schematic: kleinstes x, y und z der Auswahl, also unten im Nordwesten. Create speichert ungedreht, deshalb drehung 0. Eingemessen über einen Block mit bekannter Schematic-Position, z. B. ME Wireless Hub bei (26, 32, 26): P0 = Welt des Hubs minus (26, 32, 26)."
   },
   "masse": {
     "breite": 53,

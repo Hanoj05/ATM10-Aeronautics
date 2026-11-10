@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Campus-Map</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="kopf">
+  <h1>Tech<b>·</b>Campus</h1>
+  <span class="sub" id="welt"></span>
+</header>
+<main class="buehne" id="viewport">
+  <div class="laden" id="laden">Lade Campus …</div>
+  <nav class="liste" id="liste" aria-label="Gebäude"></nav>
+  <div class="steuer"><button type="button" id="reset">Ansicht zurücksetzen</button></div>
+  <div class="hilfe">Ziehen: drehen · Rechtsklick: verschieben · Mausrad: zoomen · Klick auf ein Gebäude: öffnen</div>
+  <div class="tip" id="tip" hidden></div>
+</main>
+<script src="vendor/three.min.js"></script>
+<script src="vendor/OrbitControls.js"></script>
+<script src="daten.js"></script>
+<script src="voxel.js"></script>
+<script src="ansicht.js"></script>
+<script>Ansicht.map();</script>
+</body>
+</html>

@@ -41,7 +41,12 @@
     var mitModell = eintraege.filter(function (e) { return e.modell; });
     var basis = null;
     mitModell.forEach(function (e) { if (e.g.position && !basis) basis = e.g.position; });
+    /* Gebäude ohne Weltposition kommen rechts neben die eingetragenen */
     var reserve = 0;
+    mitModell.forEach(function (e) {
+      if (!e.g.position || !basis || !e.geb || !e.geb.masse) return;
+      reserve = Math.max(reserve, e.g.position[0] - basis[0] + Math.max(e.geb.masse.breite || 0, e.geb.masse.tiefe || 0) + 20);
+    });
     mitModell.forEach(function (e) {
       var vs;
       if (e.g.position && basis) vs = [e.g.position[0] - basis[0], e.g.position[1] - basis[1], e.g.position[2] - basis[2]];

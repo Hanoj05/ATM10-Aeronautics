@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Gebäude</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="kopf">
+  <a class="zurueck" href="index.html">← Map</a>
+  <h1 id="name">Gebäude</h1>
+  <span class="chip" id="status"></span>
+  <span class="sub" id="zweck"></span>
+</header>
+<main class="buehne" id="viewport">
+  <div class="laden" id="laden">Lade Gebäude …</div>
+  <div class="steuer">
+    <label>Schnitt bei <input type="range" id="schnitt" min="0" max="10" value="10"> <span id="schnittWert"></span></label>
+    <button type="button" id="reset">Ansicht zurücksetzen</button>
+  </div>
+  <div class="hilfe">Ziehen: drehen · Rechtsklick: verschieben · Mausrad: zoomen · Hover: Blockname</div>
+  <div class="tip" id="tip" hidden></div>
+</main>
+<script src="vendor/three.min.js"></script>
+<script src="vendor/OrbitControls.js"></script>
+<script src="daten.js"></script>
+<script src="voxel.js"></script>
+<script src="ansicht.js"></script>
+<script>Ansicht.gebaeude();</script>
+</body>
+</html>

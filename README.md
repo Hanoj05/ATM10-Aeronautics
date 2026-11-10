@@ -19,8 +19,9 @@ gebaeude/
     einrichtung.md     Stilregeln und Mods zum Lesen
   me-zentrale/         ME-Gebäude, Modell aus der Schematic
 schematics/            Exportierte Gebäude aus der Welt für die 3D-Ansicht
-tools/                 Hilfsskripte: modell.json aus Bauplan oder Schematic erzeugen
+tools/                 Hilfsskripte: modell.json aus Bauplan oder Schematic, Zip bauen
 website/               Die Campus-Website
+download/              campus-ansicht.zip: nur Map und 3D-Ansicht, offline per Doppelklick
 ```
 
 ## Website ansehen
@@ -30,6 +31,8 @@ python3 -m http.server 8000
 ```
 
 im Repo-Ordner starten und `http://localhost:8000` öffnen. Details in [website/README.md](website/README.md).
+
+Ohne Server und ohne Technik/Einrichtung: [download/campus-ansicht.zip](download/campus-ansicht.zip) entpacken und `index.html` öffnen.
 
 ## Neues Gebäude anlegen
 
@@ -43,7 +46,7 @@ im Repo-Ordner starten und `http://localhost:8000` öffnen. Details in [website/
 | Gebäude | Zweck | Status |
 | --- | --- | --- |
 | [Wabenhaus](gebaeude/wabenhaus/) | Bienen: Modular Beehive, Modular Centrifuge | gebaut |
-| [ME-Gebäude](gebaeude/me-zentrale/) | AE2-Hauptsystem: ME Controller, 64 Extended Drives | gebaut |
+| [ME-Gebäude](gebaeude/me-zentrale/) | AE2-Hauptsystem: ME Controller, 64 Extended Drives | im Bau |
 
 ## Konventionen
 

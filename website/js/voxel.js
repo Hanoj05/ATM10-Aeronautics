@@ -49,6 +49,7 @@
       var mat = p.transparent
         ? new THREE.MeshLambertMaterial({ color: p.farbe, transparent: true, opacity: p.id === "glass" ? 0.32 : 0.75, depthWrite: false })
         : new THREE.MeshLambertMaterial({ color: 0xffffff });
+      if (p.form === "kabel") { gruppe.add(baueKabel(p, liste, mat, wuerfel, vs, pickbar)); return; }
       var mesh = new THREE.InstancedMesh(p.klein ? klein : wuerfel, mat, liste.length);
       var basis = new THREE.Color(p.farbe);
       liste.forEach(function (b, j) {
@@ -75,6 +76,33 @@
         return { x: b[0], y: b[1], z: b[2], sorte: mesh.userData.sorte };
       }
     };
+  }
+
+  /* AE2-Kabel als Strang: Mittelstück plus ein Arm pro Verbindung.
+   * Block = [x, y, z, sorte, maske], Bits der maske: unten, oben, Nord, Süd, West, Ost. */
+  var KABEL_RICHTUNG = [[0, -1, 0], [0, 1, 0], [0, 0, -1], [0, 0, 1], [-1, 0, 0], [1, 0, 0]];
+  function baueKabel(p, liste, mat, wuerfel, vs, pickbar) {
+    var d = p.dicke || 0.3, arm = (1 - d) / 2, weg = d / 2 + arm / 2, stuecke = [];
+    liste.forEach(function (b) {
+      var c = [b[0] + vs[0] + 0.5, b[1] + vs[1] + 0.5, b[2] + vs[2] + 0.5], m = b[4] || 0;
+      stuecke.push({ b: b, pos: c, gr: [d, d, d] });
+      KABEL_RICHTUNG.forEach(function (r, k) {
+        if (!(m & (1 << k))) return;
+        stuecke.push({ b: b, pos: [c[0] + r[0] * weg, c[1] + r[1] * weg, c[2] + r[2] * weg], gr: [r[0] ? arm : d, r[1] ? arm : d, r[2] ? arm : d] });
+      });
+    });
+    var mesh = new THREE.InstancedMesh(wuerfel, mat, stuecke.length);
+    var m4 = new THREE.Matrix4(), q = new THREE.Quaternion(), v = new THREE.Vector3(), s = new THREE.Vector3(), farbe = new THREE.Color(p.farbe);
+    stuecke.forEach(function (t, j) {
+      m4.compose(v.set(t.pos[0], t.pos[1], t.pos[2]), q, s.set(t.gr[0], t.gr[1], t.gr[2]));
+      mesh.setMatrixAt(j, m4);
+      mesh.setColorAt(j, farbe);
+    });
+    mesh.instanceMatrix.needsUpdate = true;
+    if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
+    mesh.userData = { sorte: p, bloecke: stuecke.map(function (t) { return t.b; }) };
+    pickbar.push(mesh);
+    return mesh;
   }
 
   /** Szene mit Licht, Kamera und Steuerung in einem Container. */

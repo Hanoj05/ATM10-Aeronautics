@@ -2,7 +2,7 @@
 
 AE2-Hauptsystem. Einrichtung und Deko stehen in [einrichtung.md](einrichtung.md).
 
-Koordinaten sind relativ zur Ecke (0, 0, 0) der Schematic `schematics/me-zentrale.nbt` (x nach Osten, z nach Süden, y = 0 ist die Bodenebene). Das Gebäude ist 53 × 53 Blöcke groß und 98 hoch.
+Koordinaten sind relativ zur Ecke (0, 0, 0) der Schematic `schematics/me-zentrale.nbt`, das ist die Ecke unten im Nordwesten (x nach Osten, z nach Süden, y = 0 ist die Bodenebene). Das Gebäude ist 53 × 53 Blöcke groß und 98 hoch.
 
 ## Übersicht
 
@@ -15,7 +15,7 @@ Aus der Schematic ausgelesen:
 | ME Wireless Hub | 1 | 26, 32, 26 (oben auf dem Controller) |
 | ME Wireless Connector | 10 | 8 im Ring auf y 27 um den Controller, je einer bei 12, 19, 26 und 40, 19, 26 |
 | Ender Gate (Nitro) | 3 | 26, 17, 26 · 26, 26, 25 · 26, 31, 25 |
-| ME Cable / Parts | 222 | im ganzen Technikbereich, y 11 bis 30 |
+| ME Smart Cable | 222 | Blue, Black und White, normal und Dense, y 11 bis 30. Dazu 58 ME P2P Tunnels |
 
 ## Drive-Bänke
 

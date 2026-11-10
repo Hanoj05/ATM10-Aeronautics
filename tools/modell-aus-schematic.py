@@ -5,9 +5,11 @@ Braucht:  nur Python 3, keine Zusatzpakete
 
 Liest die Schematic aus gebaeude.json (dateien.schematic, Pfad relativ zum Repo)
 und schreibt modell.json in den Gebäudeordner. Koordinaten bleiben so, wie sie in
-der Schematic stehen: die Ecke, die beim Speichern als erste angeklickt wurde, ist
-(0, 0, 0). Farben kommen aus der Tabelle FARBEN unten, unbekannte Blöcke bekommen
+der Schematic stehen: (0, 0, 0) ist die Ecke der Auswahl mit dem kleinsten x, y und z,
+also unten im Nordwesten. Create speichert ungedreht, die Schematic liegt also so wie in der Welt. Farben kommen aus der Tabelle FARBEN unten, unbekannte Blöcke bekommen
 eine feste Ersatzfarbe aus ihrem Namen. Framed Blocks nehmen die Farbe ihres Camo-Blocks.
+AE2-Kabel werden mit ihren Verbindungen gespeichert ([x, y, z, sorte, maske], Bits
+in der Reihenfolge RICHTUNGEN), damit die Website sie als Stränge zeichnen kann.
 """
 import gzip
 import hashlib
@@ -26,11 +28,22 @@ UNSICHTBAR = {
 }
 
 # Kleine oder dünne Blöcke, die als schmaler Klotz gezeichnet werden
-KLEIN = {"ae2:cable_bus", "minecraft:chain"}
+KLEIN = {"minecraft:chain"}
+
+# AE2-Kabel: Dicke im Modell (1 = ganzer Block) und Farben je Kabelfarbe
+KABEL_DICKE = {"dense": 0.5, "smart": 0.3, "covered": 0.3, "glass": 0.22}
+KABEL_FARBE = {
+    "white": "#e9ecec", "orange": "#f07613", "magenta": "#bd44b3", "light_blue": "#3aafd9",
+    "yellow": "#f8c527", "lime": "#70b919", "pink": "#ed8dac", "gray": "#3e4447",
+    "light_gray": "#8e8e86", "cyan": "#158991", "purple": "#792aac", "blue": "#3c4fc4",
+    "brown": "#724728", "green": "#546d1b", "red": "#a12722", "black": "#1d1d21",
+    "fluix": "#6b4fa3",
+}
+# Reihenfolge der Bits in der Verbindungsmaske (5. Wert im Block)
+RICHTUNGEN = ["down", "up", "north", "south", "west", "east"]
 
 # Schöne Namen, so wie sie im Spiel heißen
 NAMEN = {
-    "ae2:cable_bus": "ME Cable / Parts",
     "ae2:controller": "ME Controller",
     "extendedae:ex_drive": "ME Extended Drive",
     "extendedae:wireless_connect": "ME Wireless Connector",
@@ -57,7 +70,6 @@ FARBEN = {
     "chipped:blue_concrete_tiles": "#30338f",
     "chipped:light_gray_concrete_tiles": "#82827a",
     "chipped:cut_calcite_column": "#dfe0dc",
-    "ae2:cable_bus": "#6b4fa3",
     "ae2:controller": "#8f7fc9",
     "extendedae:ex_drive": "#5b5f6b",
     "extendedae:wireless_connect": "#4fa3a0",
@@ -147,6 +159,28 @@ def camo_von(block):
     return None
 
 
+def kabel_von(block):
+    """Kabelsorte und Verbindungsmaske eines ae2:cable_bus, oder None ohne Kabel."""
+    kabel = (block.get("nbt") or {}).get("cable")
+    if not isinstance(kabel, dict) or not kabel.get("id"):
+        return None
+    kid = kabel["id"]
+    rest = kid.split(":", 1)[-1].replace("_cable", "")
+    dicke = 0.3
+    for art, d in KABEL_DICKE.items():
+        if art in rest:
+            dicke = d
+            rest = rest.replace("_" + art, "").replace(art, "")
+            break
+    if "dense" in kid:
+        dicke = KABEL_DICKE["dense"]
+        rest = rest.replace("_dense", "").replace("dense", "")
+    farbe = KABEL_FARBE.get(rest.strip("_") or "fluix", KABEL_FARBE["fluix"])
+    verb = (kabel.get("visual") or {}).get("connections") or []
+    maske = sum(1 << i for i, r in enumerate(RICHTUNGEN) if r in verb)
+    return kid, dicke, farbe, maske
+
+
 def main():
     ordner = Path(sys.argv[1] if len(sys.argv) > 1 else "gebaeude/me-zentrale")
     geb = json.loads((ordner / "gebaeude.json").read_text(encoding="utf-8"))
@@ -161,6 +195,18 @@ def main():
         name = palette[b["state"]]["Name"]
         if name in UNSICHTBAR:
             continue
+        x, y, z = b["pos"]
+        if name == "ae2:cable_bus":
+            k = kabel_von(b)
+            if not k:
+                continue
+            kid, dicke, farbe, maske = k
+            if kid not in index:
+                index[kid] = len(sorten)
+                sorten.append({"id": kid, "name": schoener_name(kid), "farbe": farbe,
+                               "transparent": False, "klein": False, "form": "kabel", "dicke": dicke})
+            bloecke.append([x, y, z, index[kid], maske])
+            continue
         camo = camo_von(b) if name.startswith("framedblocks:") else None
         sid = name + ("|" + camo if camo else "")
         if sid not in index:
@@ -174,7 +220,6 @@ def main():
                 "transparent": "glass" in farbquelle and "pane" not in farbquelle,
                 "klein": name in KLEIN,
             })
-        x, y, z = b["pos"]
         bloecke.append([x, y, z, index[sid]])
     bloecke.sort(key=lambda b: (b[1], b[2], b[0]))
 
@@ -186,7 +231,7 @@ def main():
         f.write(",\n".join(json.dumps(b, separators=(",", ":")) for b in bloecke))
         f.write("\n]}\n")
     print(f"{ziel}: {len(bloecke)} Blöcke, {len(sorten)} Sorten, Größe {nbt.get('size')}")
-    unbekannt = sorted({s["id"].split("|")[-1] for s in sorten} - set(FARBEN))
+    unbekannt = sorted({s["id"].split("|")[-1] for s in sorten if s.get("form") != "kabel"} - set(FARBEN))
     if unbekannt:
         print("Ohne eigene Farbe (Ersatzfarbe benutzt):", ", ".join(unbekannt))
 
