@@ -1,0 +1,34 @@
+{
+  "id": "wabenhaus",
+  "name": "Wabenhaus",
+  "zweck": "Bienen: Modular Beehive und Modular Centrifuge (Modular Bees), Zucht, Honig",
+  "status": "gebaut",
+  "welt": {
+    "p0": null,
+    "hinweis": "P0 = Nordwest-Ecke des Rechtecks um die Produktionszelle. Weltkoordinate [x, y, z] mit F3 ablesen, y = Höhe des Bodens."
+  },
+  "masse": { "breite": 64, "tiefe": 67, "hoehe": 35 },
+  "wabe": { "kante": 14, "stufen": 6, "zelle": [26, 23] },
+  "zellen": [
+    { "id": "prod",   "name": "Produktion",    "ursprung": [0, 0],     "dach": 14, "dachart": "Glas" },
+    { "id": "foyer",  "name": "Foyer",         "ursprung": [0, 22],    "dach": 9,  "dachart": "Beton" },
+    { "id": "tech",   "name": "Technik",       "ursprung": [19, 11],   "dach": 7,  "dachart": "Beton" },
+    { "id": "lab",    "name": "Labor & Zucht", "ursprung": [-19, 11],  "dach": 11, "dachart": "Beton" },
+    { "id": "tower",  "name": "Honigturm",     "ursprung": [19, -11],  "dach": 9,  "dachart": "Beton", "turm": 34 },
+    { "id": "garden", "name": "Bienengarten",  "ursprung": [-19, -11], "dach": null, "mauer": 5 },
+    { "id": "exp",    "name": "Erweiterung",   "ursprung": [0, -22],   "dach": 14, "dachart": "Glas" }
+  ],
+  "maschinen": [
+    { "name": "Modular Beehive",    "zelle": "prod", "von": [6, 1, 10],  "bis": [8, 3, 12],  "nodes": 16 },
+    { "name": "Modular Centrifuge", "zelle": "prod", "von": [17, 1, 10], "bis": [19, 3, 12], "nodes": 21 }
+  ],
+  "netzwerke": [
+    { "mod": "Logistics Network", "name": "Bienchen", "kanaele": [0, 1, 2, 3, 5, 8] }
+  ],
+  "dateien": {
+    "bauplan": "bauplan.html",
+    "einrichtung": "einrichtung.md",
+    "konfig": "konfig.md",
+    "schematic": null
+  }
+}

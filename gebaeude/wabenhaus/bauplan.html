@@ -1,0 +1,887 @@
+<!doctype html>
+<html lang="de">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Wabenhaus Bienengebäude</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,500..800&family=IBM+Plex+Sans:wght@400;600&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: eine Lesespalte wie ein Architektur-Planheft – jede Sektion ist ein Planblatt (Grundriss, Produktion, Ansicht, Ausbau, Material) */
+:root {
+  --bg: #ecebe6; --surface: #f8f7f3; --fg: #1f2124; --muted: #62645f; --line: #d2d0c8; --grout: #cfccc3;
+  --honey: #d9840b; --honey-ink: #9a5a00; --honey-soft: #f6e3c2; --ghost: #9a978d;
+  --f-display: "Archivo", "Arial Narrow", system-ui, sans-serif;
+  --f-body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #17181a; --surface: #202225; --fg: #ebeae5; --muted: #a3a49d; --line: #37393d; --grout: #2c2e31;
+  --honey: #f0a234; --honey-ink: #f4b45a; --honey-soft: #3a2c17; --ghost: #6e6f6a; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #17181a; --surface: #202225; --fg: #ebeae5; --muted: #a3a49d; --line: #37393d; --grout: #2c2e31;
+  --honey: #f0a234; --honey-ink: #f4b45a; --honey-soft: #3a2c17; --ghost: #6e6f6a; color-scheme: dark }
+
+body { background: var(--bg); color: var(--fg); font: 16px/1.6 var(--f-body); }
+.wrap { max-width: 1120px; margin: 0 auto; padding-block: 40px 72px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: grid; gap: 64px; }
+header { display: grid; gap: 14px; }
+.eyebrow { font: 600 12px var(--f-mono); letter-spacing: .14em; text-transform: uppercase; color: var(--honey-ink); }
+h1 { font: 800 clamp(34px, 7vw, 64px)/1 var(--f-display); font-stretch: 112%; letter-spacing: -.01em; margin: 0; text-wrap: balance; }
+h2 { font: 700 clamp(22px, 3.6vw, 30px)/1.15 var(--f-display); font-stretch: 105%; margin: 0; text-wrap: balance; display: flex; gap: 12px; align-items: baseline; }
+h2 .no { font: 600 13px var(--f-mono); color: var(--honey-ink); letter-spacing: .08em; }
+h3 { font: 700 17px/1.3 var(--f-display); margin: 0; }
+p { margin: 0; max-width: 70ch; }
+.lede { color: var(--muted); font-size: 17px; }
+section { display: grid; gap: 18px; min-width: 0; }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 4px; min-width: 0; }
+.scroll { overflow: auto; }
+.stats { display: flex; flex-wrap: wrap; gap: 10px 28px; font: 14px var(--f-mono); color: var(--muted); }
+.stats b { color: var(--fg); font-weight: 600; font-variant-numeric: tabular-nums; }
+.toolbar { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; padding: 12px 14px; border-bottom: 1px solid var(--line); }
+.toolbar .lbl { font: 600 12px var(--f-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); display: inline-flex; gap: 8px; align-items: center; }
+.toolbar input[type=range] { width: min(280px, 55vw); accent-color: var(--honey); }
+.toolbar select { font: 600 13px var(--f-mono); padding: 5px 8px; border-radius: 3px; border: 1px solid var(--line); background: var(--bg); color: var(--fg); }
+.ylabel { font: 600 14px var(--f-mono); color: var(--fg); font-variant-numeric: tabular-nums; min-width: 4.5em; }
+.ydesc { font-size: 14px; color: var(--muted); }
+.seg { display: inline-flex; flex-wrap: wrap; gap: 4px; }
+.seg button { font: 600 12px var(--f-mono); padding: 6px 10px; border-radius: 3px; border: 1px solid var(--line); background: var(--bg); color: var(--fg); cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px solid var(--honey); outline-offset: 2px; }
+.plan { position: relative; padding: 12px; }
+.plan svg { display: block; height: auto; }
+#prodSvg { width: 100%; min-width: 720px; }
+#secSvg { width: 100%; min-width: 720px; }
+.isoWrap { position: relative; padding: 12px; overflow: auto; max-height: 82vh; }
+#isoCanvas { display: block; }
+.tip { position: absolute; pointer-events: none; background: var(--fg); color: var(--bg); font: 12px/1.4 var(--f-mono); padding: 6px 8px; border-radius: 3px; white-space: nowrap; transform: translate(12px, 12px); z-index: 2; }
+.legend { display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 14px; padding: 12px 14px; border-top: 1px solid var(--line); }
+.legend span { display: inline-flex; align-items: center; gap: 7px; }
+.legend i { width: 14px; height: 14px; border-radius: 2px; display: inline-block; box-shadow: inset 0 0 0 1px rgba(0,0,0,.18); }
+.legend code { font: 600 11px var(--f-mono); color: var(--muted); }
+.two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 18px; }
+@media (max-width: 820px) { .two { grid-template-columns: 1fr; } }
+ul.notes { display: grid; gap: 8px; padding-left: 20px; margin: 0; max-width: 74ch; }
+table { border-collapse: collapse; width: 100%; font-size: 15px; }
+th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font: 600 12px var(--f-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+td.n { font: 600 14px var(--f-mono); font-variant-numeric: tabular-nums; white-space: nowrap; text-align: right; }
+td.m { font: 14px var(--f-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+th.n { text-align: right; }
+.sw { display: inline-block; width: 14px; height: 14px; border-radius: 2px; vertical-align: -2px; margin-right: 8px; box-shadow: inset 0 0 0 1px rgba(0,0,0,.18); }
+.callout { border-left: 3px solid var(--honey); padding: 4px 0 4px 14px; max-width: 74ch; }
+.mods { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
+.mod { padding: 14px 16px; display: grid; gap: 6px; align-content: start; }
+.mod h3 { font-size: 16px; }
+.mod p { font-size: 15px; color: var(--muted); }
+a { color: var(--honey-ink); }
+.src { font-size: 14px; color: var(--muted); }
+svg text { font-family: var(--f-mono); }
+</style>
+
+<div class="wrap">
+<header>
+  <div class="eyebrow">ATM10 · Tech-Campus · Bienengebäude</div>
+  <h1>Wabenhaus</h1>
+  <p class="lede">Sieben sechseckige Zellen um eine gläserne Produktionshalle. Jede Zelle ist <span id="cellSize"></span> Blöcke groß, Nachbarn teilen sich die Wand. Alle Koordinaten beziehen sich auf den Punkt P0, die Nordwest-Ecke des Rechtecks um die Produktionszelle. Norden ist oben (−Z), Osten rechts (+X).</p>
+  <div class="stats" id="stats"></div>
+</header>
+
+<section id="grundriss">
+  <h2><span class="no">01</span>Grundriss Block für Block</h2>
+  <p>Mit dem Regler gehst du Ebene für Ebene nach oben, y = 0 ist der Boden. Wähl eine einzelne Zelle, um sie groß mit Blockkürzeln zu sehen. Fahr mit der Maus über einen Block für Koordinate und Blockname.</p>
+  <div class="panel">
+    <div class="toolbar">
+      <label class="lbl" for="ySlider">Ebene</label>
+      <input type="range" id="ySlider" min="0" max="34" value="1">
+      <span class="ylabel" id="yLabel">y = 1</span>
+      <span class="ydesc" id="yDesc"></span>
+    </div>
+    <div class="toolbar">
+      <label class="lbl" for="focusSel">Ansicht</label>
+      <select id="focusSel"></select>
+      <span class="lbl">Zoom</span>
+      <div class="seg" id="zoomTabs" role="group" aria-label="Zoom"></div>
+      <label class="lbl"><input type="checkbox" id="ghostToggle" checked> Anbauzellen</label>
+    </div>
+    <div class="plan scroll" id="planWrap"><svg id="planSvg" role="img" aria-label="Grundriss des Wabenhauses als Blockraster"></svg><div class="tip" id="planTip" hidden></div></div>
+    <div class="legend" id="planLegend"></div>
+  </div>
+  <div class="panel scroll"><table>
+    <thead><tr><th>Zelle</th><th>Lage zu P0</th><th>Höhe</th><th>Inhalt</th></tr></thead>
+    <tbody id="cellTable"></tbody>
+  </table></div>
+  <div class="callout"><p id="sizeNote"></p></div>
+</section>
+
+<section id="produktion">
+  <h2><span class="no">02</span>Produktionszelle</h2>
+  <p>Hive und Zentrifuge stehen mit dem Core nach Süden in einer Glas-Vitrine, die nach oben offen ist. Um jede Maschine läuft ein Block Node-Zone, im Boden mit Polished Deepslate markiert, dahinter noch ein Block Platz bis zur Vitrine. Zwischen den Maschinen liegt ein 6 Blöcke breiter Gang, darüber ist alles frei bis zum Glasdach auf y = 14.</p>
+  <div class="panel">
+    <div class="toolbar">
+      <span class="lbl">Ebene</span>
+      <div class="seg" id="prodTabs" role="group" aria-label="Ebene der Produktionszelle"></div>
+      <span class="ydesc" id="prodDesc"></span>
+    </div>
+    <div class="plan scroll"><svg id="prodSvg" role="img" aria-label="Produktionszelle mit Hive, Zentrifuge, Node-Zonen und Maßketten"></svg></div>
+    <div class="legend" id="prodLegend"></div>
+  </div>
+  <div class="panel">
+    <div class="toolbar"><h3>Schnitt durch die Mittelreihe (z = 11), Blick von Süden</h3></div>
+    <div class="plan scroll"><svg id="secSvg" role="img" aria-label="Querschnitt durch die Produktionszelle mit Höhenmaßen"></svg></div>
+  </div>
+  <ul class="notes">
+    <li><strong>Hive</strong> (x 6–8, z 10–12): 16 Nodes. Overclocker und Treater bekommen ihre Node auf der Außenseite, der Core vorne. Die untere Alveary-Ebene braucht keine.</li>
+    <li><strong>Zentrifuge</strong> (x 17–19, z 10–12): 21 Nodes. Die Node für den Heater sitzt unter ihm zwischen den Beinen, die für den Import oben auf y = 4.</li>
+    <li><strong>Vitrine</strong> (x 3–22, z 7–15): Sockel aus Polished Deepslate, darüber 3 Reihen Glass, oben offen. Je eine Doppeltür vorn und hinten im Mittelgang. Innen kommst du rundum an jede Node.</li>
+    <li><strong>Laufwege:</strong> vorne 6 Reihen für Besucher, hinten 6 Reihen Wartungsgang, an den Seiten 1 Block zwischen Vitrine und Außenwand.</li>
+  </ul>
+</section>
+
+<section id="ansicht">
+  <h2><span class="no">03</span>Isometrische Ansicht</h2>
+  <p>Block für Block gerendert. Mit dem Schnitt-Regler schneidest du das Gebäude auf einer Höhe ab und schaust hinein, bei y = 4 siehst du zum Beispiel alle Räume mit ihren Einbauten.</p>
+  <div class="panel">
+    <div class="toolbar">
+      <span class="lbl">Blick von</span>
+      <div class="seg" id="isoTabs" role="group" aria-label="Blickrichtung"></div>
+      <span class="lbl">Zoom</span>
+      <div class="seg" id="isoZoom" role="group" aria-label="Zoom der Ansicht"></div>
+    </div>
+    <div class="toolbar">
+      <label class="lbl" for="isoCut">Schnitt bei</label>
+      <input type="range" id="isoCut" min="0" max="34" value="34">
+      <span class="ylabel" id="isoCutLabel">y = 34</span>
+      <span class="ydesc">ganz rechts: komplettes Gebäude</span>
+    </div>
+    <div class="isoWrap"><canvas id="isoCanvas" role="img" aria-label="Isometrische Blockansicht des Wabenhauses"></canvas></div>
+  </div>
+</section>
+
+<section id="ausbau">
+  <h2><span class="no">04</span>Zweiter Hive, zweite Zentrifuge</h2>
+  <p>Die Erweiterungszelle nördlich der Produktion ist eine Kopie der Produktionszelle: gleiche Höhe, gleiches Glasdach, der Boden mit den Node-Rahmen ist schon verlegt. Hive 2 und Zentrifuge 2 kommen an dieselben relativen Positionen, also 22 Blöcke weiter nördlich. Die Vitrine baust du dort erst, wenn die Maschinen stehen.</p>
+  <div class="two">
+    <div class="panel scroll"><table>
+      <thead><tr><th>Maschine</th><th>Position (x, z)</th><th class="n">Nodes</th></tr></thead>
+      <tbody>
+        <tr><td>Hive 1</td><td class="m">6–8, 10–12</td><td class="n">16</td></tr>
+        <tr><td>Zentrifuge 1</td><td class="m">17–19, 10–12</td><td class="n">21</td></tr>
+        <tr><td>Hive 2</td><td class="m">6–8, −12 bis −10</td><td class="n">16</td></tr>
+        <tr><td>Zentrifuge 2</td><td class="m">17–19, −12 bis −10</td><td class="n">21</td></tr>
+      </tbody>
+    </table></div>
+    <ul class="notes">
+      <li>Die Glaswand zwischen den beiden Hallen hat schon eine Tür im Mittelgang. Später kannst du sie ganz aufbrechen, dann wird daraus eine lange Halle.</li>
+      <li>Netzwerk „Bienchen“: Die neuen Teile hängen sich in die bestehenden Kanäle. Hive-2-Core sendet auf K0, K1 und K5 und empfängt Flaschen auf K2. Der Import von Zentrifuge 2 empfängt K1, ihr Export sendet auf K0 und K5. Overclocker und Heater bekommen K2 und K8.</li>
+      <li>Weil K1 dann zwei Sender und zwei Empfänger hat, die Sender auf Round Robin stellen, damit beide Zentrifugen Combs bekommen.</li>
+      <li>Weitere Zellen: Die gestrichelten Waben im Grundriss zeigen die nächsten freien Plätze. Die Außenwände der Erweiterungszelle sind schlichter White Concrete ohne Copper Grate, damit du dort durchbrechen kannst, ohne Kupfer zu verlieren.</li>
+    </ul>
+  </div>
+</section>
+
+<section id="material">
+  <h2><span class="no">05</span>Materialliste</h2>
+  <p>Direkt aus dem Plan gezählt, alle sieben Zellen inklusive Erweiterungszelle, ohne Maschinen. Stacks zu 64, Türen in Stück. Plan etwa 10 % Reserve für Verschnitt ein.</p>
+  <div class="panel scroll"><table>
+    <thead><tr><th>Block</th><th>Kürzel</th><th>Wofür</th><th class="n">Anzahl</th><th class="n">Stacks</th></tr></thead>
+    <tbody id="matTable"></tbody>
+  </table></div>
+  <h3>Was außerdem ins Gebäude kommt</h3>
+  <div class="panel scroll"><table>
+    <thead><tr><th>Teil</th><th>Zelle</th><th>Position (x, y, z)</th></tr></thead>
+    <tbody id="objTable"></tbody>
+  </table></div>
+</section>
+
+<section id="mods">
+  <h2><span class="no">06</span>Deko-Mods in ATM10</h2>
+  <p>Alle diese Bau- und Deko-Mods sind in deinem Pack dabei. So kannst du sie fürs Wabenhaus einsetzen:</p>
+  <div class="mods">
+    <div class="panel mod"><h3>Macaw's Windows &amp; Doors</h3><p>Schlanke Fensterrahmen und moderne Glastüren. Ersetzt die Waxed Copper Doors in den Glaswänden und an der Vitrine.</p></div>
+    <div class="panel mod"><h3>Macaw's Roofs</h3><p>Flachdach-Attiken und Dachkanten. Statt der Dachkante aus Polished Deepslate eine dünne, dunkle Blende.</p></div>
+    <div class="panel mod"><h3>Macaw's Fences and Walls</h3><p>Moderne Geländer für den Bienengarten und eine Galerie um den Honigturm.</p></div>
+    <div class="panel mod"><h3>FramedBlocks</h3><p>Rahmenblöcke nehmen jede Textur an. Gut für dünne Lamellen (Framed Pillar), schräge Fassadenteile und Sockelleisten mit Quartz-Textur.</p></div>
+    <div class="panel mod"><h3>Chipped</h3><p>Viele Varianten von Concrete, Quartz und Glass über die Chipped-Werkbänke. Ideal für Bodenmuster in Labor und Foyer.</p></div>
+    <div class="panel mod"><h3>Handcrafted</h3><p>Möbel: Tische und Stühle fürs Labor, Sofas fürs Foyer, Regale für die Technik.</p></div>
+    <div class="panel mod"><h3>Supplementaries</h3><p>Flower Boxes für den Garten, Way Signs und Schilder für die Zellen, Hängelampen.</p></div>
+    <div class="panel mod"><h3>Create</h3><p>Copper Shingles, Copper Tiles und Copper Casing passen zu den Copper-Grate-Lamellen, etwa als Turmkrone.</p></div>
+    <div class="panel mod"><h3>Macaw's Bridges</h3><p>Ein gläserner Steg vom Bienengebäude zu den anderen Campus-Gebäuden.</p></div>
+    <div class="panel mod"><h3>Building Gadgets 2</h3><p>Kein Deko-Mod, aber der größte Zeitsparer: Wände in einem Zug ziehen und mit dem Copy-Paste-Gadget die Produktionszelle in die Erweiterung kopieren.</p></div>
+  </div>
+</section>
+
+<section id="reihenfolge">
+  <h2><span class="no">07</span>Bauen in dieser Reihenfolge</h2>
+  <ul class="notes">
+    <li>P0 im Spiel festlegen und mit F3 die Koordinaten notieren. Weltkoordinate = P0 + Plan-Koordinate.</li>
+    <li>Boden (y = 0) aller Zellen inklusive Wandfundament legen. Die Node-Rahmen im Boden zeigen dir, wo die Maschinen hinkommen.</li>
+    <li>Maschinen aufbauen und alle Nodes setzen und konfigurieren, danach die Vitrine drumherum.</li>
+    <li>Quartz Pillars an den Wabenecken hochziehen, dann Sockel (y = 1), Wände und zum Schluss die Dächer.</li>
+    <li>Honigturm zuletzt: Output Tank mittig, darüber die Honigsäule aus Orange Stained Glass, außen der Zylinder aus Glass mit Ringen aus Honeycomb Block alle 6 Blöcke.</li>
+  </ul>
+</section>
+</div>
+
+<script>
+(function () {
+"use strict";
+var NS = "http://www.w3.org/2000/svg";
+function el(tag, attrs, parent, text) {
+  var n = document.createElementNS(NS, tag);
+  for (var k in attrs) n.setAttribute(k, attrs[k]);
+  if (text != null) n.textContent = text;
+  if (parent) parent.appendChild(n);
+  return n;
+}
+function clear(n) { while (n.firstChild) n.removeChild(n.firstChild); }
+function cssVar(n) { return getComputedStyle(document.documentElement).getPropertyValue(n).trim(); }
+
+/* ---------- Blöcke ---------- */
+var MAT = {
+  deepslate:   { en: "Polished Deepslate", k: "PD", c: "#4a4c52", use: "Fundament, Sockel, Dachkante, Node-Rahmen, Boden Technik, Tresen" },
+  concrete:    { en: "White Concrete", k: "WC", c: "#e3e1da", use: "Wände, Dächer" },
+  quartz:      { en: "Smooth Quartz Block", k: "SQ", c: "#f8f6f0", use: "Böden" },
+  pillar:      { en: "Quartz Pillar", k: "QP", c: "#fdfcf7", use: "Wabenecken" },
+  glass:       { en: "Glass", k: "GL", c: "#a6d0da", use: "Glaswände, Vitrine, Glasdach, Turmzylinder" },
+  grate:       { en: "Waxed Copper Grate", k: "CG", c: "#b8723e", use: "Lamellen der Außenfassade" },
+  cutcopper:   { en: "Waxed Cut Copper", k: "CC", c: "#c4733f", use: "Krone des Honigturms" },
+  honeycomb:   { en: "Honeycomb Block", k: "HB", c: "#e59a1d", use: "Waben-Intarsie im Foyer, Ringe am Turm" },
+  orangeglass: { en: "Orange Stained Glass", k: "OG", c: "#f2a53c", use: "Honigsäule im Turm" },
+  lantern:     { en: "Sea Lantern", k: "SL", c: "#cfe9e5", use: "Deckenlicht im 5er-Raster" },
+  door:        { en: "Waxed Copper Door", k: "DR", c: "#9c5b35", per: 2, use: "Türen, immer 2 nebeneinander" },
+  grass:       { en: "Grass Block", k: "GR", c: "#78a14e", use: "Bienengarten" },
+  flower:      { en: "Flowers (mixed)", k: "FL", c: "#cf7aa1", use: "Bienengarten" },
+  azalea:      { en: "Flowering Azalea", k: "AZ", c: "#4f8335", use: "Bienengarten, Mitte" }
+};
+var OBJ = {
+  "m-A": { n: "Modular Alveary", c: "#2f8f7a", t: "A" },
+  "m-O": { n: "Overclocker", c: "#6a55b8", t: "OC" },
+  "m-R": { n: "Beehive Treater", c: "#c98a1c", t: "T" },
+  "m-C": { n: "Core", c: "#c4512c", t: "C" },
+  "m-F": { n: "Modular Feeder", c: "#4f8a2a", t: "F" },
+  "m-G": { n: "Centrifuge Gearbox", c: "#7a6247", t: "G" },
+  "m-H": { n: "Centrifuge Heater", c: "#b03a3a", t: "H" },
+  "m-I": { n: "Import Hatch", c: "#2f6fae", t: "I" },
+  "m-E": { n: "Export Hatch", c: "#2c8fa8", t: "E" },
+  "x-barrel": { n: "Barrel", c: "#8a6a46", t: "B" },
+  "x-ae2": { n: "AE2 (ME Controller, ME Drives)", c: "#5b4f9e", t: "ME" },
+  "x-bus": { n: "ME Import Bus", c: "#7d70c4", t: "IB" },
+  "x-cube": { n: "Energy Cube", c: "#3b78ad", t: "EC" },
+  "x-tank": { n: "Output Tank", c: "#2f6fae", t: "TK" },
+  "x-lab": { n: "Laborplatz", c: "#6b6e76", t: "L" }
+};
+function info(m) { return MAT[m] || OBJ[m]; }
+function nameOf(m) { return MAT[m] ? MAT[m].en : OBJ[m].n; }
+
+/* ---------- Wabengeometrie (parametrisch) ---------- */
+var E = 14, K = 6, W = E + 2 * K, HZ = 4 * K - 1, MID = 2 * K - 1;
+var OFF = [];
+for (var z0 = 0; z0 < HZ; z0++) OFF.push(z0 <= MID ? K - Math.ceil(z0 / 2) : 0);
+for (var z1 = MID + 1; z1 < HZ; z1++) OFF[z1] = OFF[HZ - 1 - z1];
+var VERT = [[K,0],[W-1-K,0],[0,MID],[W-1,MID],[K,HZ-1],[W-1-K,HZ-1]].map(function (v) { return v.join(","); });
+function inCell(x, z) { return z >= 0 && z < HZ && x >= OFF[z] && x <= W - 1 - OFF[z]; }
+function isWall(x, z) { return inCell(x, z) && (z === 0 || z === HZ - 1 || x === OFF[z] || x === W - 1 - OFF[z]); }
+function edgeOf(x, z) {
+  if (VERT.indexOf(x + "," + z) >= 0) return "V";
+  if (z === 0) return "N";
+  if (z === HZ - 1) return "S";
+  if (x < W / 2) return z < MID ? "NW" : "SW";
+  return z < MID ? "NE" : "SE";
+}
+var EDGE_BLOCKS = {};
+for (var ez = 0; ez < HZ; ez++) for (var ex = 0; ex < W; ex++) if (isWall(ex, ez)) {
+  var ee = edgeOf(ex, ez); if (ee === "V") continue;
+  (EDGE_BLOCKS[ee] = EDGE_BLOCKS[ee] || []).push([ex, ez]);
+}
+Object.keys(EDGE_BLOCKS).forEach(function (e) { EDGE_BLOCKS[e].sort(function (a, b) { return a[1] - b[1] || a[0] - b[0]; }); });
+function edgeIdx(e, x, z) { var L = EDGE_BLOCKS[e]; for (var i = 0; i < L.length; i++) if (L[i][0] === x && L[i][1] === z) return i; return -1; }
+function isDoorIdx(e, i) { var n = EDGE_BLOCKS[e].length; return i === n / 2 - 1 || i === n / 2; }
+var DX = W - 1 - K, DZ = MID, DN = HZ - 1;
+var DIRS = { N: [0, -DN], NE: [DX, -DZ], SE: [DX, DZ], S: [0, DN], SW: [-DX, DZ], NW: [-DX, -DZ] };
+
+var CELLS = [
+  { id: "prod",   name: "Produktion",    dir: "Mitte",    o: [0, 0],        H: 14, roof: "glass",    floor: "quartz",    role: "Hive 1 und Zentrifuge 1 in der Glas-Vitrine" },
+  { id: "foyer",  name: "Foyer",         dir: "Süd",      o: DIRS.S,        H: 9,  roof: "concrete", floor: "quartz",    role: "Eingang, Glaswand zur Produktion, Waben-Intarsie, Tresen", ext: { S: { t: "glass", door: true } } },
+  { id: "tech",   name: "Technik",       dir: "Südost",   o: DIRS.SE,       H: 7,  roof: "concrete", floor: "deepslate", role: "AE2-Wand, Energy Cube, 4 Nachschub-Barrels, Receiver Barrel" },
+  { id: "lab",    name: "Labor & Zucht", dir: "Südwest",  o: DIRS.SW,       H: 11, roof: "concrete", floor: "quartz",    role: "Arbeitsplätze an den Außenwänden, Mitte frei für Tische" },
+  { id: "tower",  name: "Honigturm",     dir: "Nordost",  o: DIRS.NE,       H: 9,  roof: "concrete", floor: "quartz",    role: "Glaszylinder (Ø 12) bis y = 34, Output Tank, Honigsäule", towerTop: 34 },
+  { id: "garden", name: "Bienengarten",  dir: "Nordwest", o: DIRS.NW,       H: 5,  roof: null,       floor: "grass",     role: "Offen, niedrige Lamellenmauer, Flowers, Flowering Azalea, Platz" },
+  { id: "exp",    name: "Erweiterung",   dir: "Nord",     o: DIRS.N,        H: 14, roof: "glass",    floor: "quartz",    role: "Leer, Platz für Hive 2 und Zentrifuge 2", ext: { N: { t: "concrete" }, NE: { t: "concrete" }, NW: { t: "concrete" } } }
+];
+CELLS.forEach(function (c) { c.ox = c.o[0]; c.oz = c.o[1]; });
+var BYID = {}; CELLS.forEach(function (c) { BYID[c.id] = c; });
+var GHOSTS = [[0, -2 * DN], [DX, -DN - DZ], [-DX, -DN - DZ], [2 * DX, 0], [-2 * DX, 0], [2 * DX, DN], [-2 * DX, DN]];
+var PAIRS = {
+  "foyer|prod":  { t: "glass", door: true },
+  "prod|tech":   { t: "concrete", door: true },
+  "lab|prod":    { t: "concrete", door: true },
+  "garden|prod": { t: "glass" },
+  "prod|tower":  { t: "glass" },
+  "exp|prod":    { t: "glass", door: true },
+  "foyer|lab":   { t: "concrete", door: true },
+  "foyer|tech":  { t: "concrete", door: true },
+  "tech|tower":  { t: "concrete", door: true },
+  "garden|lab":  { t: "glass", door: true },
+  "exp|garden":  { t: "concrete" },
+  "exp|tower":   { t: "concrete" }
+};
+function pairKey(a, b) { return [a, b].sort().join("|"); }
+function edgeStyle(cell, e) { return (cell.ext && cell.ext[e]) || { t: "lamella" }; }
+
+var owners = {}, floorCell = {};
+CELLS.forEach(function (c) {
+  for (var z = 0; z < HZ; z++) for (var x = 0; x < W; x++) if (inCell(x, z)) {
+    var k = (c.ox + x) + "," + (c.oz + z);
+    if (isWall(x, z)) (owners[k] = owners[k] || []).push({ c: c, e: edgeOf(x, z), lx: x, lz: z });
+    else floorCell[k] = { c: c, lx: x, lz: z };
+  }
+});
+var wallInfo = {};
+Object.keys(owners).forEach(function (k) {
+  var o = owners[k], top = 0;
+  o.forEach(function (w) { top = Math.max(top, w.c.H); });
+  var w0 = o[0], type, door = false, idx = -1, shared = o.length > 1;
+  if (w0.e === "V") type = "pillar";
+  else {
+    idx = edgeIdx(w0.e, w0.lx, w0.lz);
+    var st = shared ? (PAIRS[pairKey(o[0].c.id, o[1].c.id)] || { t: "concrete" }) : edgeStyle(w0.c, w0.e);
+    type = st.t; door = !!st.door && isDoorIdx(w0.e, idx);
+  }
+  wallInfo[k] = { type: type, door: door, idx: idx, top: top, cells: o.map(function (w) { return w.c.id; }) };
+});
+
+/* ---------- Voxel-Modell ---------- */
+var V = {};
+function setV(x, y, z, m) { V[x + "," + y + "," + z] = m; }
+function getV(x, y, z) { return V[x + "," + y + "," + z]; }
+var objects = [];
+function obj(x, y, z, m, label, cell) { setV(x, y, z, m); objects.push({ x: x, y: y, z: z, m: m, label: label, cell: cell }); }
+
+Object.keys(wallInfo).forEach(function (k) {
+  var p = k.split(",").map(Number), w = wallInfo[k];
+  setV(p[0], 0, p[1], "deepslate");
+  for (var y = 1; y <= w.top; y++) {
+    var m;
+    if (w.door && y <= 2) m = "door";
+    else if (y === 1 || y === w.top) m = "deepslate";
+    else if (w.type === "pillar") m = "pillar";
+    else if (w.type === "glass") m = "glass";
+    else if (w.type === "concrete") m = "concrete";
+    else m = (w.idx % 2 === 0) ? "grate" : "concrete";
+    setV(p[0], y, p[1], m);
+  }
+});
+
+/* Turm */
+var TC = { x: 13, z: 12, r: 6 };
+function inTower(lx, lz) { return Math.hypot(lx + 0.5 - TC.x, lz + 0.5 - TC.z) <= TC.r; }
+function towerRing(lx, lz) { return inTower(lx, lz) && (!inTower(lx + 1, lz) || !inTower(lx - 1, lz) || !inTower(lx, lz + 1) || !inTower(lx, lz - 1)); }
+
+/* Maschinen */
+var HIVE = [["AAA","AAA","AAA"],["ROR","RAR","OCO"],["OOO","OFO","OOO"]];
+var CENT = [["G.G","...","O.O"],["OEO","GHG","OCO"],["OOO","GIG","OOO"]];
+var MACH = [
+  { id: "hive", name: "Hive", x0: 6, z0: 10, L: HIVE, needs: "ORC" },
+  { id: "cent", name: "Zentrifuge", x0: 17, z0: 10, L: CENT, needs: "OGHIE" }
+];
+var VIT = { x0: 3, x1: 22, z0: 7, z1: 15 };
+function inRing(lx, lz) {
+  return MACH.some(function (m) {
+    return lx >= m.x0 - 1 && lx <= m.x0 + 3 && lz >= m.z0 - 1 && lz <= m.z0 + 3 && !(lx >= m.x0 && lx <= m.x0 + 2 && lz >= m.z0 && lz <= m.z0 + 2);
+  });
+}
+function inMach(lx, lz) { return MACH.some(function (m) { return lx >= m.x0 && lx <= m.x0 + 2 && lz >= m.z0 && lz <= m.z0 + 2; }); }
+function vitWall(lx, lz) { return lx >= VIT.x0 && lx <= VIT.x1 && lz >= VIT.z0 && lz <= VIT.z1 && (lx === VIT.x0 || lx === VIT.x1 || lz === VIT.z0 || lz === VIT.z1); }
+var CX0 = W / 2 - 1, CX1 = W / 2;
+
+var MINI = [2,1,1,0,1,1,2];
+function inlay(lx, lz) {
+  var x = lx - (W / 2 - 4), z = lz - (MID - 3);
+  if (z < 0 || z > 6 || x < MINI[z] || x > 7 - MINI[z]) return false;
+  return z === 0 || z === 6 || x === MINI[z] || x === 7 - MINI[z];
+}
+
+Object.keys(floorCell).forEach(function (k) {
+  var p = k.split(",").map(Number), f = floorCell[k], c = f.c, lx = f.lx, lz = f.lz, x = p[0], z = p[1];
+  var fm = c.floor;
+  if ((c.id === "prod" || c.id === "exp") && inRing(lx, lz)) fm = "deepslate";
+  if (c.id === "garden") {
+    var path = (lx === CX0 || lx === CX1) && lz >= MID + 4;
+    var plaza = Math.abs(lx + 0.5 - W / 2) <= 4 && Math.abs(lz - MID) <= 3;
+    if (path || plaza) fm = "quartz";
+  }
+  if (c.id === "foyer" && inlay(lx, lz)) fm = "honeycomb";
+  setV(x, 0, z, fm);
+
+  if (c.id === "tower" && inTower(lx, lz)) {
+    if (towerRing(lx, lz)) {
+      var doorT = (lx === CX0 || lx === CX1) && !inTower(lx, lz + 1);
+      for (var y = 1; y <= c.towerTop; y++) {
+        var m = (doorT && y <= 2) ? "door" : y === 1 ? "deepslate" : y === c.towerTop ? "cutcopper" : (y % 6 === 1 ? "honeycomb" : "glass");
+        setV(x, y, z, m);
+      }
+    } else {
+      var core = (lx === CX0 || lx === CX1) && (lz === 11 || lz === 12);
+      if (core) {
+        if (lx === CX0 && lz === 11) obj(x, 1, z, "x-tank", "Output Tank (K5 rein), Node auf der Westseite", c.name);
+        else setV(x, 1, z, "honeycomb");
+        for (var y2 = 2; y2 <= c.towerTop - 2; y2++) setV(x, y2, z, "orangeglass");
+      }
+      setV(x, c.towerTop, z, "glass");
+    }
+  } else if (c.roof) {
+    setV(x, c.H, z, (lx % 5 === 0 && lz % 5 === 1) ? "lantern" : c.roof);
+  }
+
+  if (c.id === "garden") {
+    if ((lx === CX0 || lx === CX1) && (lz === MID - 1 || lz === MID)) setV(x, 1, z, "azalea");
+    else if (fm === "grass" && ((lx * 7 + lz * 13) % 4 === 0)) setV(x, 1, z, "flower");
+  }
+  if (c.id === "foyer" && lx === 20 && lz >= MID - 2 && lz <= MID + 2) setV(x, 1, z, "deepslate");
+  if (c.id === "prod" && vitWall(lx, lz)) {
+    var vDoor = (lx === CX0 || lx === CX1);
+    for (var vy = 1; vy <= 4; vy++) setV(x, vy, z, (vDoor && vy <= 2) ? "door" : (vy === 1 ? "deepslate" : "glass"));
+  }
+});
+
+/* Laborplätze */
+(function () {
+  var c = BYID.lab, n = 0;
+  for (var lz = 1; lz < HZ - 1; lz++) for (var lx = 1; lx < W - 1; lx++) {
+    var k = (c.ox + lx) + "," + (c.oz + lz);
+    if (!floorCell[k] || floorCell[k].c !== c) continue;
+    var adj = [[1,0],[-1,0],[0,1],[0,-1]].some(function (d) {
+      var w = wallInfo[(c.ox + lx + d[0]) + "," + (c.oz + lz + d[1])];
+      return w && w.cells.length === 1;
+    });
+    if (adj) { setV(c.ox + lx, 1, c.oz + lz, "x-lab"); n++; }
+  }
+  objects.push({ x: null, m: "x-lab", label: n + " Laborplätze entlang der Außenwände (Breeding Chamber, Incubator, Bottler, Gene Indexer …)", cell: c.name, pos: "Außenwände, y = 1" });
+})();
+
+/* Technik */
+(function () {
+  var c = BYID.tech, X = c.ox, Z = c.oz;
+  [["Overclocker Barrel (Elektroden, K2 raus)", 9], ["Honey Block Barrel (Honigblöcke, K2 raus)", 10], ["Bottle Barrel (Glasflaschen, K2 raus)", 11], ["Wax Barrel (Wachs, K2 raus)", 12], ["Receiver Barrel (K0 rein)", 13]]
+    .forEach(function (b) { obj(X + 22, 1, Z + b[1], "x-barrel", b[0], c.name); });
+  obj(X + 22, 2, Z + 13, "x-bus", "ME Import Bus auf dem Receiver Barrel, Kabel unter der Decke zum ME-System", c.name);
+  obj(X + 18, 1, Z + 4, "x-cube", "Energy Cube mit Energy-Source-Node (K8 raus)", c.name);
+  for (var lx = 9; lx <= 16; lx++) for (var y = 1; y <= 2; y++) setV(X + lx, y, Z + 20, "x-ae2");
+  objects.push({ x: null, m: "x-ae2", label: "AE2-Wand: ME Controller, ME Drives, Terminal (8 × 2 Blöcke)", cell: c.name, pos: (X + 9) + "…" + (X + 16) + ", 1–2, " + (Z + 20) });
+})();
+
+MACH.forEach(function (m) {
+  m.L.forEach(function (rows, L) { rows.forEach(function (row, r) {
+    for (var ci = 0; ci < 3; ci++) { var ch = row[ci]; if (ch !== ".") setV(m.x0 + ci, L + 1, m.z0 + r, "m-" + ch); }
+  }); });
+});
+var NODES = [];
+MACH.forEach(function (m) {
+  m.L.forEach(function (rows, L) { rows.forEach(function (row, r) {
+    for (var ci = 0; ci < 3; ci++) {
+      var ch = row[ci]; if (m.needs.indexOf(ch) < 0) continue;
+      if (m.id === "cent" && ch === "C") continue;
+      var f;
+      if (ch === "H") f = "D"; else if (ch === "I") f = "U";
+      else if (ci === 0 && r === 1) f = "W"; else if (ci === 2 && r === 1) f = "E";
+      else if (r === 0) f = "N"; else if (r === 2) f = "S"; else continue;
+      NODES.push({ x: m.x0 + ci, y: L + 1, z: m.z0 + r, f: f });
+    }
+  }); });
+});
+
+/* ---------- Kennzahlen ---------- */
+var allKeys = Object.keys(owners).concat(Object.keys(floorCell));
+var bb = { x0: Infinity, x1: -Infinity, z0: Infinity, z1: -Infinity };
+allKeys.forEach(function (k) { var p = k.split(",").map(Number); bb.x0 = Math.min(bb.x0, p[0]); bb.x1 = Math.max(bb.x1, p[0]); bb.z0 = Math.min(bb.z0, p[1]); bb.z1 = Math.max(bb.z1, p[1]); });
+var counts = {};
+Object.keys(V).forEach(function (k) { var m = V[k]; if (MAT[m]) counts[m] = (counts[m] || 0) + 1; });
+var total = 0; Object.keys(counts).forEach(function (m) { total += MAT[m].per ? counts[m] / MAT[m].per : counts[m]; });
+var interiorPerCell = 0; for (var iz = 0; iz < HZ; iz++) for (var ix = 0; ix < W; ix++) if (inCell(ix, iz) && !isWall(ix, iz)) interiorPerCell++;
+document.getElementById("cellSize").textContent = W + " × " + HZ;
+document.getElementById("stats").innerHTML =
+  "<span>Grundfläche <b>" + (bb.x1 - bb.x0 + 1) + " × " + (bb.z1 - bb.z0 + 1) + "</b> Blöcke</span>" +
+  "<span>Zelle innen <b>" + interiorPerCell + "</b> Blöcke Boden</span>" +
+  "<span>Höchster Punkt <b>y = 34</b></span>" +
+  "<span>Baublöcke <b>" + Math.round(total).toLocaleString("de-DE") + "</b></span>";
+document.getElementById("sizeNote").innerHTML = "<strong>Zur Wabengröße:</strong> Die gerade Kante ist " + E + " Blöcke lang, die schrägen Seiten laufen als Treppe mit 2 Reihen gerade und 1 Block versetzt über " + K + " Stufen bis zu einer einzelnen Spitze in der Mittelreihe. Das ergibt " + W + " × " + HZ + " Blöcke pro Zelle und " + interiorPerCell + " Blöcke Bodenfläche innen, fast dreimal so viel wie mit 8er-Kante. Nachbarzellen liegen " + DX + " Blöcke weiter östlich und " + DZ + " Blöcke versetzt, die direkt darüber " + DN + " Blöcke weiter nördlich.";
+
+(function () {
+  var tb = document.getElementById("cellTable");
+  CELLS.forEach(function (c) {
+    var h = c.roof ? ("Dach auf y = " + c.H) : ("Mauer bis y = " + c.H + ", offen");
+    if (c.towerTop) h += ", Turm bis y = " + c.towerTop;
+    var tr = document.createElement("tr");
+    tr.innerHTML = "<td><strong>" + c.name + "</strong></td><td>" + c.dir + " · Ursprung " + c.ox + ", " + c.oz + "</td><td class='m'>" + h + "</td><td>" + c.role + "</td>";
+    tb.appendChild(tr);
+  });
+})();
+
+/* ---------- 01 Grundriss ---------- */
+var planSvg = document.getElementById("planSvg"), slider = document.getElementById("ySlider");
+var tip = document.getElementById("planTip"), planWrap = document.getElementById("planWrap");
+var focusSel = document.getElementById("focusSel");
+var planZoom = 1;
+var Y_DESC = { 0: "Böden und Wandfundament", 1: "Sockel, Türen, Maschinen unten, Einbauten", 2: "Maschinen Mitte, Wände", 3: "Maschinen oben, Vitrine", 4: "Node-Luft, Oberkante Vitrine", 5: "Mauerkante Bienengarten", 7: "Dach Technik", 9: "Dach Foyer und Honigturm-Zelle", 11: "Dach Labor", 14: "Glasdach Produktion und Erweiterung", 34: "Krone des Honigturms" };
+var GB = {};
+GHOSTS.forEach(function (g) {
+  for (var z = 0; z < HZ; z++) for (var x = 0; x < W; x++) if (isWall(x, z)) { var k = (g[0] + x) + "," + (g[1] + z); if (!owners[k]) GB[k] = 1; }
+});
+(function () {
+  focusSel.insertAdjacentHTML("beforeend", "<option value='all'>Ganzes Gebäude</option>");
+  CELLS.forEach(function (c) { focusSel.insertAdjacentHTML("beforeend", "<option value='" + c.id + "'>Zelle: " + c.name + "</option>"); });
+  var zb = document.getElementById("zoomTabs");
+  [[1, "1×"], [1.5, "1,5×"], [2, "2×"]].forEach(function (z, i) {
+    var b = document.createElement("button"); b.type = "button"; b.textContent = z[1]; b.setAttribute("aria-pressed", i === 0 ? "true" : "false");
+    b.addEventListener("click", function () { zb.querySelectorAll("button").forEach(function (o) { o.setAttribute("aria-pressed", "false"); }); b.setAttribute("aria-pressed", "true"); planZoom = z[0]; drawPlan(); });
+    zb.appendChild(b);
+  });
+})();
+function drawPlan() {
+  var y = +slider.value, ghosts = document.getElementById("ghostToggle").checked, foc = focusSel.value;
+  document.getElementById("yLabel").textContent = "y = " + y;
+  document.getElementById("yDesc").textContent = Y_DESC[y] || "";
+  clear(planSvg);
+  var x0, x1, z0, z1, S;
+  if (foc === "all") {
+    x0 = bb.x0; x1 = bb.x1; z0 = bb.z0; z1 = bb.z1;
+    if (ghosts) Object.keys(GB).forEach(function (k) { var p = k.split(",").map(Number); x0 = Math.min(x0, p[0]); x1 = Math.max(x1, p[0]); z0 = Math.min(z0, p[1]); z1 = Math.max(z1, p[1]); });
+    S = 13 * planZoom;
+  } else {
+    var c = BYID[foc]; x0 = c.ox; x1 = c.ox + W - 1; z0 = c.oz; z1 = c.oz + HZ - 1; S = 32 * planZoom;
+  }
+  var pad = 30;
+  var Wd = (x1 - x0 + 1) * S + pad * 2, Hd = (z1 - z0 + 1) * S + pad * 2;
+  planSvg.setAttribute("viewBox", "0 0 " + Wd + " " + Hd);
+  planSvg.setAttribute("width", Wd); planSvg.setAttribute("height", Hd);
+  planSvg.dataset.x0 = x0; planSvg.dataset.z0 = z0; planSvg.dataset.pad = pad; planSvg.dataset.s = S;
+  var g = el("g", {}, planSvg);
+  function X(x) { return pad + (x - x0) * S; }
+  function Z(z) { return pad + (z - z0) * S; }
+  function inView(x, z) { return x >= x0 && x <= x1 && z >= z0 && z <= z1; }
+  var step = foc === "all" ? 5 : 1, fs = foc === "all" ? 9 : Math.min(11, Math.max(8, S * .32));
+  for (var xx = Math.ceil(x0 / step) * step; xx <= x1; xx += step)
+    el("text", { x: X(xx) + S / 2, y: pad - 10, "text-anchor": "middle", style: "font-size:" + fs + "px;fill:var(--muted)" }, g, xx);
+  for (var zz = Math.ceil(z0 / step) * step; zz <= z1; zz += step)
+    el("text", { x: pad - 6, y: Z(zz) + S / 2 + 3, "text-anchor": "end", style: "font-size:" + fs + "px;fill:var(--muted)" }, g, zz);
+  allKeys.forEach(function (k) {
+    var p = k.split(",").map(Number); if (!inView(p[0], p[1])) return;
+    el("rect", { x: X(p[0]), y: Z(p[1]), width: S, height: S, style: "fill:var(--grout)" }, g);
+  });
+  if (ghosts && foc === "all") Object.keys(GB).forEach(function (k) {
+    var p = k.split(",").map(Number);
+    el("rect", { x: X(p[0]) + 2, y: Z(p[1]) + 2, width: S - 4, height: S - 4, style: "fill:none;stroke:var(--ghost);stroke-dasharray:2 2" }, g);
+  });
+  var showCodes = S >= 24;
+  allKeys.forEach(function (k) {
+    var p = k.split(",").map(Number); if (!inView(p[0], p[1])) return;
+    var m = getV(p[0], y, p[1]);
+    if (m) {
+      var inf = info(m);
+      el("rect", { x: X(p[0]) + .5, y: Z(p[1]) + .5, width: S - 1, height: S - 1, style: "fill:" + inf.c }, g);
+      var code = MAT[m] ? MAT[m].k : inf.t;
+      var dark = !MAT[m] || ["deepslate","grate","cutcopper","door","grass","azalea","honeycomb"].indexOf(m) >= 0;
+      if (showCodes || OBJ[m]) el("text", { x: X(p[0]) + S / 2, y: Z(p[1]) + S / 2 + Math.min(4, S * .14), "text-anchor": "middle", style: "font-size:" + Math.max(6, Math.min(12, S * .34)) + "px;font-weight:600;fill:" + (dark ? "#ffffff" : "#3a3c40") }, g, showCodes ? code : code.charAt(0));
+    } else if (y > 0) {
+      var f = getV(p[0], 0, p[1]);
+      if (f) el("rect", { x: X(p[0]) + .5, y: Z(p[1]) + .5, width: S - 1, height: S - 1, style: "fill:" + info(f).c + ";opacity:.22" }, g);
+    }
+  });
+  if (y >= 1 && y <= 3) MACH.forEach(function (m) {
+    var mx = BYID.exp.ox + m.x0, mz = BYID.exp.oz + m.z0;
+    if (!inView(mx, mz)) return;
+    el("rect", { x: X(mx) + 1, y: Z(mz) + 1, width: 3 * S - 2, height: 3 * S - 2, style: "fill:none;stroke:var(--honey);stroke-width:1.5;stroke-dasharray:4 3" }, g);
+    el("text", { x: X(mx) + 1.5 * S, y: Z(mz) + 1.5 * S + 3, "text-anchor": "middle", style: "font-size:" + Math.max(8, S * .3) + "px;font-weight:600;fill:var(--honey-ink)" }, g, m.id === "hive" ? "HIVE 2" : "ZENTR. 2");
+  });
+  if (foc === "all") CELLS.forEach(function (c) {
+    var ly = (c.id === "prod" || c.id === "exp") ? 4.2 : c.id === "tower" ? 3.6 : MID + .6;
+    el("text", { x: X(c.ox + W / 2), y: Z(c.oz) + ly * S, "text-anchor": "middle", style: "font:700 " + Math.round(12 * planZoom) + "px var(--f-display);fill:var(--fg);paint-order:stroke;stroke:var(--surface);stroke-width:3px;letter-spacing:.04em" }, g, c.name.toUpperCase());
+  });
+  if (inView(0, 0)) {
+    el("circle", { cx: X(0), cy: Z(0), r: 4, style: "fill:var(--honey)" }, g);
+    el("text", { x: X(0) - 6, y: Z(0) - 5, "text-anchor": "end", style: "font-size:11px;font-weight:600;fill:var(--honey-ink)" }, g, "P0");
+  }
+  el("text", { x: Wd - pad, y: pad - 12, "text-anchor": "end", style: "font-size:11px;font-weight:600;fill:var(--muted)" }, g, "▲ N");
+}
+slider.addEventListener("input", drawPlan);
+focusSel.addEventListener("change", drawPlan);
+document.getElementById("ghostToggle").addEventListener("change", drawPlan);
+planSvg.addEventListener("pointermove", function (ev) {
+  var r = planSvg.getBoundingClientRect(), S = +planSvg.dataset.s, pad = +planSvg.dataset.pad;
+  var sc = r.width / planSvg.viewBox.baseVal.width;
+  var qx = (ev.clientX - r.left) / sc, qy = (ev.clientY - r.top) / sc;
+  var x = Math.floor((qx - pad) / S) + (+planSvg.dataset.x0), z = Math.floor((qy - pad) / S) + (+planSvg.dataset.z0);
+  var k = x + "," + z, y = +slider.value;
+  if (!owners[k] && !floorCell[k]) { tip.hidden = true; return; }
+  var m = getV(x, y, z), cellName = floorCell[k] ? floorCell[k].c.name : owners[k].map(function (o) { return o.c.name; }).join(" / ");
+  var lab = m ? nameOf(m) : "Luft";
+  if (m && OBJ[m]) objects.forEach(function (o) { if (o.x === x && o.y === y && o.z === z) lab = o.label; });
+  tip.textContent = "x " + x + "  y " + y + "  z " + z + " · " + lab + " · " + cellName;
+  var wr = planWrap.getBoundingClientRect();
+  tip.style.left = (ev.clientX - wr.left + planWrap.scrollLeft) + "px";
+  tip.style.top = (ev.clientY - wr.top + planWrap.scrollTop) + "px";
+  tip.hidden = false;
+});
+planSvg.addEventListener("pointerleave", function () { tip.hidden = true; });
+(function () {
+  var lg = document.getElementById("planLegend");
+  Object.keys(MAT).forEach(function (m) {
+    lg.insertAdjacentHTML("beforeend", "<span><i style='background:" + MAT[m].c + "'></i>" + MAT[m].en + " <code>" + MAT[m].k + "</code></span>");
+  });
+  lg.insertAdjacentHTML("beforeend", "<span><i style='background:#6a55b8'></i>Maschinen und Einbauten</span><span><i style='background:none;border:1.5px dashed var(--honey)'></i>Hive 2 und Zentrifuge 2 geplant</span>");
+})();
+
+/* ---------- 02 Produktion ---------- */
+var prodSvg = document.getElementById("prodSvg");
+var PS = 28, PL = 70, PT = 70;
+var PROD_DESC = { 0: "Boden: Node-Rahmen aus Polished Deepslate", 1: "Alveary-Ebene, Zentrifugen-Beine, Node unter dem Heater, Vitrinen-Sockel", 2: "Mittlere Ebene mit beiden Cores vorne", 3: "Obere Ebene: Overclocker, Feeder, Import", 4: "Node-Luft über den Maschinen, Oberkante Vitrine" };
+function hatchDefs(svg, id) {
+  var d = el("defs", {}, svg);
+  var p = el("pattern", { id: id, width: 6, height: 6, patternUnits: "userSpaceOnUse", patternTransform: "rotate(45)" }, d);
+  el("rect", { width: 6, height: 6, style: "fill:var(--honey-soft)" }, p);
+  el("line", { x1: 0, y1: 0, x2: 0, y2: 6, style: "stroke:var(--honey);stroke-width:2" }, p);
+}
+function nodeRect(svg, bx, by, s, f) {
+  var t = s * 0.26, w = s * 0.5, r = null;
+  if (f === "N" || f === "U") r = [bx + (s - w) / 2, by - t, w, t];
+  if (f === "S" || f === "D") r = [bx + (s - w) / 2, by + s, w, t];
+  if (f === "W") r = [bx - t, by + (s - w) / 2, t, w];
+  if (f === "E") r = [bx + s, by + (s - w) / 2, t, w];
+  if (r) el("rect", { x: r[0], y: r[1], width: r[2], height: r[3], rx: 1.5, style: "fill:var(--fg);stroke:var(--honey);stroke-width:1.5" }, svg);
+}
+function dimH(g, a, b, yy, label, minor) {
+  if (!minor) {
+    el("line", { x1: a, y1: yy, x2: b, y2: yy, style: "stroke:var(--fg)" }, g);
+    [a, b].forEach(function (q) { el("line", { x1: q, y1: yy - 5, x2: q, y2: yy + 5, style: "stroke:var(--fg)" }, g); });
+  }
+  el("text", { x: (a + b) / 2, y: yy - 7, "text-anchor": "middle", style: "font-size:" + (minor ? 9 : 11) + "px;font-weight:600;fill:" + (minor ? "var(--muted)" : "var(--fg)") }, g, label);
+}
+function dimV(g, a, b, xx, label, minor) {
+  if (!minor) {
+    el("line", { x1: xx, y1: a, x2: xx, y2: b, style: "stroke:var(--fg)" }, g);
+    [a, b].forEach(function (q) { el("line", { x1: xx - 5, y1: q, x2: xx + 5, y2: q, style: "stroke:var(--fg)" }, g); });
+  }
+  el("text", { x: xx - 9, y: (a + b) / 2 + 4, "text-anchor": "end", style: "font-size:" + (minor ? 9 : 11) + "px;font-weight:600;fill:" + (minor ? "var(--muted)" : "var(--fg)") }, g, label);
+}
+function drawProd(y) {
+  clear(prodSvg); hatchDefs(prodSvg, "hatchP");
+  document.getElementById("prodDesc").textContent = PROD_DESC[y];
+  var Wd = PL + W * PS + 60, Hd = PT + HZ * PS + 36;
+  prodSvg.setAttribute("viewBox", "0 0 " + Wd + " " + Hd);
+  var g = el("g", {}, prodSvg);
+  for (var z = 0; z < HZ; z++) for (var x = 0; x < W; x++) {
+    if (!inCell(x, z)) continue;
+    var px = PL + x * PS, pz = PT + z * PS;
+    el("rect", { x: px, y: pz, width: PS, height: PS, style: "fill:var(--grout)" }, g);
+    var m = getV(x, y, z), wall = isWall(x, z);
+    var ring = !wall && inRing(x, z) && y >= 1 && y <= 3;
+    var topAir = !wall && y === 4 && (inRing(x, z) || inMach(x, z));
+    if (m) {
+      var inf = info(m);
+      el("rect", { x: px + 1, y: pz + 1, width: PS - 2, height: PS - 2, rx: 2, style: "fill:" + inf.c }, g);
+      var code = MAT[m] ? MAT[m].k : inf.t, dark = !MAT[m] || ["deepslate","grate","door","honeycomb"].indexOf(m) >= 0;
+      el("text", { x: px + PS / 2, y: pz + PS / 2 + 4, "text-anchor": "middle", style: "font-size:" + (MAT[m] ? 8.5 : 10.5) + "px;font-weight:600;fill:" + (dark ? "#ffffff" : "#45474b") }, g, code);
+      if (m === "m-C") el("rect", { x: px + 2.5, y: pz + 2.5, width: PS - 5, height: PS - 5, rx: 2, style: "fill:none;stroke:#fff;stroke-width:1.5" }, g);
+    } else if (ring || topAir) {
+      el("rect", { x: px + 1, y: pz + 1, width: PS - 2, height: PS - 2, rx: 2, style: "fill:url(#hatchP)" }, g);
+    } else {
+      var f = getV(x, 0, z);
+      el("rect", { x: px + 1, y: pz + 1, width: PS - 2, height: PS - 2, rx: 2, style: "fill:" + (f ? info(f).c : "var(--surface)") + ";opacity:" + (y === 0 ? 1 : .3) }, g);
+    }
+  }
+  NODES.forEach(function (n) {
+    if (n.f === "U" || n.f === "D") {
+      var ny = n.f === "U" ? n.y + 1 : n.y - 1;
+      if (ny === y) {
+        el("circle", { cx: PL + n.x * PS + PS / 2, cy: PT + n.z * PS + PS / 2, r: PS * .28, style: "fill:var(--fg);stroke:var(--honey);stroke-width:2" }, g);
+        el("text", { x: PL + n.x * PS + PS / 2, y: PT + n.z * PS + PS / 2 + 3.5, "text-anchor": "middle", style: "font-size:9px;font-weight:600;fill:var(--bg)" }, g, n.f === "U" ? "↓" : "↑");
+      }
+    } else if (n.y === y) nodeRect(g, PL + n.x * PS, PT + n.z * PS, PS, n.f);
+  });
+  function lbl(x, z, t) { el("text", { x: PL + x * PS, y: PT + z * PS, "text-anchor": "middle", style: "font-size:10px;fill:var(--muted)" }, g, t); }
+  lbl(W / 2, HZ + .9, "Tür Foyer"); lbl(W / 2, -.35, "Tür Erweiterung");
+  lbl(1.6, 18.3, "← Labor"); lbl(W - 1.6, 18.3, "Technik →");
+  var chain = [[1,"Wand",1],[1,"1"],[1,"Glas",1],[1,"1"],[1,"1"],[3,"3"],[1,"1"],[6,"6"],[1,"1"],[3,"3"],[1,"1"],[1,"1"],[1,"Glas",1],[1,"1"],[1,"Wand",1]];
+  var cx0 = 1, yy = PT - 40;
+  el("text", { x: PL - 8, y: yy - 3, "text-anchor": "end", style: "font-size:10px;fill:var(--muted)" }, g, "z 10–12");
+  chain.forEach(function (c) { dimH(g, PL + cx0 * PS, PL + (cx0 + c[0]) * PS, yy, c[1], c[2]); cx0 += c[0]; });
+  var vchain = [[1,"Wand",1],[6,"6"],[1,"Glas",1],[1,"1"],[1,"1"],[3,"3"],[1,"1"],[1,"1"],[1,"Glas",1],[6,"6"],[1,"Wand",1]];
+  var zc = 0, xx = PL - 28;
+  vchain.forEach(function (c) { dimV(g, PT + zc * PS, PT + (zc + c[0]) * PS, xx, c[1], c[2]); zc += c[0]; });
+  for (var i = 0; i < W; i += 5) el("text", { x: PL + i * PS + PS / 2, y: PT + HZ * PS + 26, "text-anchor": "middle", style: "font-size:10px;fill:var(--muted)" }, g, "x" + i);
+  [0, 5, 10, 15, 20].forEach(function (j) { el("text", { x: PL + W * PS + 8, y: PT + j * PS + PS / 2 + 4, style: "font-size:10px;fill:var(--muted)" }, g, "z" + j); });
+}
+(function () {
+  var box = document.getElementById("prodTabs");
+  [0,1,2,3,4].forEach(function (y) {
+    var b = document.createElement("button"); b.type = "button"; b.textContent = "y " + y;
+    b.setAttribute("aria-pressed", y === 2 ? "true" : "false");
+    b.addEventListener("click", function () { box.querySelectorAll("button").forEach(function (o) { o.setAttribute("aria-pressed", "false"); }); b.setAttribute("aria-pressed", "true"); drawProd(y); });
+    box.appendChild(b);
+  });
+  var lg = document.getElementById("prodLegend");
+  ["m-A","m-O","m-R","m-C","m-F","m-G","m-H","m-I","m-E"].forEach(function (m) {
+    lg.insertAdjacentHTML("beforeend", "<span><i style='background:" + OBJ[m].c + "'></i>" + OBJ[m].n + "</span>");
+  });
+  lg.insertAdjacentHTML("beforeend", "<span><i style='background:repeating-linear-gradient(45deg,var(--honey) 0 2px,var(--honey-soft) 2px 5px)'></i>Node-Zone frei lassen</span><span><i style='background:var(--fg);box-shadow:0 0 0 2px var(--honey)'></i>Node</span>");
+})();
+
+/* Schnitt */
+(function () {
+  var svg = document.getElementById("secSvg"), s = 26, L = 46, T = 24, Z = MID, YM = 14;
+  hatchDefs(svg, "hatchS");
+  var Wd = L + W * s + 150, Hd = T + (YM + 1) * s + 46;
+  svg.setAttribute("viewBox", "0 0 " + Wd + " " + Hd);
+  function Y(y) { return T + (YM - y) * s; }
+  for (var y = 0; y <= YM; y++) for (var x = 0; x < W; x++) {
+    var m = getV(x, y, Z);
+    if (m) {
+      var inf = info(m), code = MAT[m] ? MAT[m].k : inf.t, dark = !MAT[m] || ["deepslate","grate","door"].indexOf(m) >= 0;
+      el("rect", { x: L + x * s + .5, y: Y(y) + .5, width: s - 1, height: s - 1, style: "fill:" + inf.c }, svg);
+      el("text", { x: L + x * s + s / 2, y: Y(y) + s / 2 + 4, "text-anchor": "middle", style: "font-size:" + (MAT[m] ? 8 : 10) + "px;font-weight:600;fill:" + (dark ? "#ffffff" : "#45474b") }, svg, code);
+    } else if (y >= 1 && y <= 4 && (inRing(x, Z) || (y === 4 && MACH.some(function (mm) { return x >= mm.x0 - 1 && x <= mm.x0 + 3; })))) {
+      el("rect", { x: L + x * s + .5, y: Y(y) + .5, width: s - 1, height: s - 1, style: "fill:url(#hatchS);opacity:.85" }, svg);
+    }
+  }
+  NODES.forEach(function (n) { if (n.z === Z && n.f !== "N" && n.f !== "S") nodeRect(svg, L + n.x * s, Y(n.y), s, n.f); });
+  el("line", { x1: L - 8, y1: Y(0) + s, x2: L + W * s + 8, y2: Y(0) + s, style: "stroke:var(--fg);stroke-width:1.5" }, svg);
+  for (var yy = 0; yy <= YM; yy += 2) el("text", { x: L - 8, y: Y(yy) + s / 2 + 4, "text-anchor": "end", style: "font-size:10px;fill:var(--muted)" }, svg, "y" + yy);
+  var hx = L + W * s + 22;
+  [[1, 3, "3 Maschine"], [4, 4, "1 Node-Luft"], [5, 13, "9 frei"], [14, 14, "Glasdach"]].forEach(function (p) {
+    var a = Y(p[1]), b = Y(p[0]) + s;
+    el("line", { x1: hx, y1: a, x2: hx, y2: b, style: "stroke:var(--fg)" }, svg);
+    [a, b].forEach(function (q) { el("line", { x1: hx - 5, y1: q, x2: hx + 5, y2: q, style: "stroke:var(--fg)" }, svg); });
+    el("text", { x: hx + 10, y: (a + b) / 2 + 4, style: "font-size:11px;font-weight:600;fill:var(--fg)" }, svg, p[2]);
+  });
+  [[7.5, "HIVE", 1], [18.5, "ZENTRIFUGE", 1], [13, "Gang"], [3.5, "Vitrine"], [22.5, "Vitrine"]].forEach(function (t) {
+    el("text", { x: L + t[0] * s, y: Hd - 14, "text-anchor": "middle", style: "font-size:" + (t[2] ? 11 : 10) + "px;font-weight:600;fill:" + (t[2] ? "var(--fg)" : "var(--muted)") }, svg, t[1]);
+  });
+})();
+
+/* ---------- 03 Isometrie (Canvas, Block für Block) ---------- */
+var isoCanvas = document.getElementById("isoCanvas"), isoCut = document.getElementById("isoCut");
+var isoView = 0, isoZoom = 1;
+var VIEWS = ["Südost", "Südwest", "Nordwest", "Nordost"];
+var TRANSP = { glass: 1, orangeglass: 1 };
+var VLIST = Object.keys(V).map(function (k) { var p = k.split(",").map(Number); return { x: p[0], y: p[1], z: p[2], m: V[k] }; });
+function hexRGB(h) { var n = parseInt(h.slice(1), 16); return [n >> 16, (n >> 8) & 255, n & 255]; }
+function rgba(c, f, a) { return "rgba(" + Math.round(Math.min(255, c[0] * f)) + "," + Math.round(Math.min(255, c[1] * f)) + "," + Math.round(Math.min(255, c[2] * f)) + "," + a + ")"; }
+var COL = {}; Object.keys(MAT).forEach(function (m) { COL[m] = hexRGB(MAT[m].c); }); Object.keys(OBJ).forEach(function (m) { COL[m] = hexRGB(OBJ[m].c); });
+function rotI(x, z, k) { for (var i = 0; i < k; i++) { var t = x; x = z; z = -t - 1; } return [x, z]; }
+function rotF(x, z, k) { for (var i = 0; i < k; i++) { var t = x; x = z; z = -t; } return [x, z]; }
+function drawIso() {
+  var cut = +isoCut.value, k = isoView;
+  document.getElementById("isoCutLabel").textContent = "y = " + cut;
+  var a = 7 * isoZoom, h = a * 1.15, ratio = a / h;
+  var blocks = [], occ = {};
+  VLIST.forEach(function (b) {
+    if (b.y > cut) return;
+    var r = rotI(b.x, b.z, k), nb = { x: r[0], y: b.y, z: r[1], m: b.m };
+    blocks.push(nb); occ[nb.x + "," + nb.y + "," + nb.z] = b.m;
+  });
+  function P(x, y, z) { return [(x - z) * a, (x + z) * a / 2 - y * h]; }
+  var minx = Infinity, maxx = -Infinity, miny = Infinity, maxy = -Infinity;
+  function grow(p) { minx = Math.min(minx, p[0]); maxx = Math.max(maxx, p[0]); miny = Math.min(miny, p[1]); maxy = Math.max(maxy, p[1]); }
+  blocks.forEach(function (b) { grow(P(b.x, b.y + 1, b.z)); grow(P(b.x + 1, b.y, b.z + 1)); grow(P(b.x + 1, b.y, b.z)); grow(P(b.x, b.y, b.z + 1)); });
+  GHOSTS.forEach(function (gc) { [[0,0],[W,0],[0,HZ],[W,HZ]].forEach(function (c) { var r = rotF(gc[0] + c[0], gc[1] + c[1], k); grow(P(r[0], 0, r[1])); }); });
+  miny -= 40; var pad = 16;
+  var cw = maxx - minx + pad * 2, ch = maxy - miny + pad * 2, dpr = Math.min(2, window.devicePixelRatio || 1);
+  isoCanvas.width = Math.round(cw * dpr); isoCanvas.height = Math.round(ch * dpr);
+  isoCanvas.style.width = cw + "px"; isoCanvas.style.height = ch + "px";
+  var ctx = isoCanvas.getContext("2d");
+  ctx.setTransform(dpr, 0, 0, dpr, (pad - minx) * dpr, (pad - miny) * dpr);
+  ctx.setLineDash([4, 4]); ctx.strokeStyle = cssVar("--ghost") || "#9a978d"; ctx.lineWidth = 1;
+  var HEXC = [[K + .5, .5], [W - 1 - K + .5, .5], [W - .5, MID + .5], [W - 1 - K + .5, HZ - .5], [K + .5, HZ - .5], [.5, MID + .5]];
+  GHOSTS.forEach(function (gc) {
+    ctx.beginPath();
+    HEXC.forEach(function (c, i) { var r = rotF(gc[0] + c[0], gc[1] + c[1], k), p = P(r[0], 0, r[1]); if (i) ctx.lineTo(p[0], p[1]); else ctx.moveTo(p[0], p[1]); });
+    ctx.closePath(); ctx.stroke();
+  });
+  ctx.setLineDash([]);
+  blocks.sort(function (b1, b2) { return (b1.x + b1.z + ratio * b1.y) - (b2.x + b2.z + ratio * b2.y); });
+  function opaqueAt(x, y, z, self) { var m = occ[x + "," + y + "," + z]; if (!m || m === "flower") return false; if (TRANSP[m]) return m === self; return true; }
+  function face(pts, fill, stroke) {
+    ctx.beginPath(); ctx.moveTo(pts[0][0], pts[0][1]);
+    for (var i = 1; i < pts.length; i++) ctx.lineTo(pts[i][0], pts[i][1]);
+    ctx.closePath(); ctx.fillStyle = fill; ctx.fill();
+    if (stroke) { ctx.strokeStyle = stroke; ctx.lineWidth = .5; ctx.stroke(); }
+  }
+  blocks.forEach(function (b) {
+    var x = b.x, y = b.y, z = b.z, m = b.m, c = COL[m], al = TRANSP[m] ? (m === "glass" ? .38 : .7) : 1;
+    var st = TRANSP[m] ? "rgba(255,255,255,.35)" : "rgba(0,0,0,.14)";
+    if (m === "flower") {
+      var fp = P(x + .5, y + .45, z + .5);
+      ctx.fillStyle = rgba(c, 1, 1); ctx.beginPath(); ctx.arc(fp[0], fp[1], a * .32, 0, Math.PI * 2); ctx.fill(); return;
+    }
+    var sx = !opaqueAt(x + 1, y, z, m), sz = !opaqueAt(x, y, z + 1, m);
+    if (sx) face([P(x + 1, y, z), P(x + 1, y, z + 1), P(x + 1, y + 1, z + 1), P(x + 1, y + 1, z)], rgba(c, .76, al), st);
+    if (sz) face([P(x, y, z + 1), P(x + 1, y, z + 1), P(x + 1, y + 1, z + 1), P(x, y + 1, z + 1)], rgba(c, .9, al), st);
+    if (!opaqueAt(x, y + 1, z, m)) face([P(x, y + 1, z), P(x + 1, y + 1, z), P(x + 1, y + 1, z + 1), P(x, y + 1, z + 1)], rgba(c, 1.04, al), st);
+    if (m === "grate") {
+      ctx.strokeStyle = rgba(c, .5, 1); ctx.lineWidth = .8; ctx.beginPath();
+      if (sx) { var g1 = P(x + 1, y + .15, z + .3), g2 = P(x + 1, y + .85, z + .3), g3 = P(x + 1, y + .15, z + .7), g4 = P(x + 1, y + .85, z + .7); ctx.moveTo(g1[0], g1[1]); ctx.lineTo(g2[0], g2[1]); ctx.moveTo(g3[0], g3[1]); ctx.lineTo(g4[0], g4[1]); }
+      if (sz) { var h1 = P(x + .3, y + .15, z + 1), h2 = P(x + .3, y + .85, z + 1), h3 = P(x + .7, y + .15, z + 1), h4 = P(x + .7, y + .85, z + 1); ctx.moveTo(h1[0], h1[1]); ctx.lineTo(h2[0], h2[1]); ctx.moveTo(h3[0], h3[1]); ctx.lineTo(h4[0], h4[1]); }
+      ctx.stroke();
+    }
+  });
+  var placed = [], fg = cssVar("--fg") || "#1f2124", sf = cssVar("--surface") || "#f8f7f3";
+  CELLS.map(function (cl) {
+    var top = (cl.towerTop || cl.H);
+    var r = rotF(cl.ox + W / 2, cl.oz + MID + .5, k);
+    return { p: P(r[0], Math.min(top, cut) + 3, r[1]), t: cl.name };
+  }).sort(function (l1, l2) { return l2.p[1] - l1.p[1]; }).forEach(function (l) {
+    var guard = 0;
+    while (guard++ < 10 && placed.some(function (q) { return Math.abs(q[0] - l.p[0]) < 110 && Math.abs(q[1] - l.p[1]) < 20; })) l.p = [l.p[0], l.p[1] - 20];
+    placed.push(l.p);
+    ctx.font = "700 " + Math.round(13 * Math.max(1, isoZoom * .85)) + "px Archivo, system-ui, sans-serif";
+    ctx.textAlign = "center"; ctx.lineJoin = "round";
+    ctx.lineWidth = 4; ctx.strokeStyle = sf; ctx.strokeText(l.t, l.p[0], l.p[1]);
+    ctx.fillStyle = fg; ctx.fillText(l.t, l.p[0], l.p[1]);
+  });
+}
+(function () {
+  var box = document.getElementById("isoTabs");
+  VIEWS.forEach(function (v, i) {
+    var b = document.createElement("button"); b.type = "button"; b.textContent = v; b.setAttribute("aria-pressed", i === 0 ? "true" : "false");
+    b.addEventListener("click", function () { box.querySelectorAll("button").forEach(function (o) { o.setAttribute("aria-pressed", "false"); }); b.setAttribute("aria-pressed", "true"); isoView = i; drawIso(); });
+    box.appendChild(b);
+  });
+  var zb = document.getElementById("isoZoom");
+  [[1, "1×"], [1.5, "1,5×"], [2, "2×"]].forEach(function (z, i) {
+    var b = document.createElement("button"); b.type = "button"; b.textContent = z[1]; b.setAttribute("aria-pressed", i === 0 ? "true" : "false");
+    b.addEventListener("click", function () { zb.querySelectorAll("button").forEach(function (o) { o.setAttribute("aria-pressed", "false"); }); b.setAttribute("aria-pressed", "true"); isoZoom = z[0]; drawIso(); });
+    zb.appendChild(b);
+  });
+  var pend = 0;
+  isoCut.addEventListener("input", function () { if (pend) return; pend = requestAnimationFrame(function () { pend = 0; drawIso(); }); });
+  if (window.matchMedia) { var mq = window.matchMedia("(prefers-color-scheme: dark)"); if (mq.addEventListener) mq.addEventListener("change", drawIso); }
+})();
+
+/* ---------- 05 Material ---------- */
+(function () {
+  var tb = document.getElementById("matTable");
+  Object.keys(counts).sort(function (a, b) { return counts[b] / (MAT[b].per || 1) - counts[a] / (MAT[a].per || 1); }).forEach(function (m) {
+    var n = Math.round(counts[m] / (MAT[m].per || 1)), st = Math.floor(n / 64), rest = n % 64;
+    var stx = st ? st + " × 64" + (rest ? " + " + rest : "") : String(rest);
+    var tr = document.createElement("tr");
+    tr.innerHTML = "<td><span class='sw' style='background:" + MAT[m].c + "'></span><strong>" + MAT[m].en + "</strong></td><td class='m'>" + MAT[m].k + "</td><td>" + MAT[m].use + "</td><td class='n'>" + n.toLocaleString("de-DE") + "</td><td class='n'>" + stx + "</td>";
+    tb.appendChild(tr);
+  });
+  var ob = document.getElementById("objTable");
+  var rows = [
+    ["Modular Beehive komplett (27 Teile, 16 Nodes)", "Produktion", "6–8, 1–3, 10–12"],
+    ["Modular Centrifuge komplett (22 Teile, 21 Nodes)", "Produktion", "17–19, 1–3, 10–12"]
+  ];
+  objects.forEach(function (o) { rows.push([o.label, o.cell, o.pos || (o.x + ", " + o.y + ", " + o.z)]); });
+  rows.forEach(function (r) {
+    var tr = document.createElement("tr");
+    tr.innerHTML = "<td>" + r[0] + "</td><td>" + r[1] + "</td><td class='m'>" + r[2] + "</td>";
+    ob.appendChild(tr);
+  });
+})();
+
+drawPlan();
+drawProd(2);
+drawIso();
+})();
+</script>

@@ -1,0 +1,20 @@
+{
+  "id": "neues-gebaeude",
+  "name": "Neues Gebäude",
+  "zweck": "",
+  "status": "geplant",
+  "welt": {
+    "p0": null,
+    "hinweis": "P0 = Bezugspunkt des Gebäudes, meist die Nordwest-Ecke. Weltkoordinate [x, y, z] mit F3 ablesen."
+  },
+  "masse": { "breite": null, "tiefe": null, "hoehe": null },
+  "zellen": [],
+  "maschinen": [],
+  "netzwerke": [],
+  "dateien": {
+    "bauplan": null,
+    "einrichtung": "einrichtung.md",
+    "konfig": "konfig.md",
+    "schematic": null
+  }
+}

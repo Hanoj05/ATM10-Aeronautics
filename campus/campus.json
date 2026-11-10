@@ -1,0 +1,24 @@
+{
+  "name": "Tech-Campus",
+  "welt": "ATM10 Aeronautics",
+  "dimension": "minecraft:overworld",
+  "hinweis": "position = Weltkoordinate von P0 des Gebäudes [x, y, z]. null, solange noch nicht eingetragen.",
+  "gebaeude": [
+    {
+      "id": "wabenhaus",
+      "name": "Wabenhaus",
+      "ordner": "gebaeude/wabenhaus",
+      "zweck": "Bienen",
+      "status": "gebaut",
+      "position": null
+    },
+    {
+      "id": "me-zentrale",
+      "name": "ME-Gebäude",
+      "ordner": null,
+      "zweck": "AE2-Hauptsystem",
+      "status": "geplant",
+      "position": null
+    }
+  ]
+}
