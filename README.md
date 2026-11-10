@@ -16,8 +16,10 @@ gebaeude/
     modell.json        Blockmodell für die 3D-Ansicht
     konfig.json        Teile mit Position, Nodes und Kanälen (für die Website)
     konfig.md          Technik und Konfiguration zum Lesen
-  me-zentrale/         ME-Gebäude, Modell aus der Schematic
-schematics/            Exportierte Gebäude aus der Welt für die 3D-Ansicht
+  me-zentrale/         ME-Gebäude
+  haus-west/, haus-ost/  zwei Gebäude, Zweck noch offen
+schematics/
+  campus.nbt           die ganze Campus-Fläche, daraus werden alle Modelle ausgeschnitten
 tools/                 Hilfsskripte: modell.json aus Bauplan oder Schematic, Zip bauen
 website/               Die Campus-Website
 download/              campus-ansicht.zip: nur Map und 3D-Ansicht, offline per Doppelklick
@@ -46,6 +48,8 @@ Ohne Server und ohne Technik: [download/campus-ansicht.zip](download/campus-ansi
 | --- | --- | --- |
 | [Wabenhaus](gebaeude/wabenhaus/) | Bienen: Modular Beehive, Modular Centrifuge | gebaut |
 | [ME-Gebäude](gebaeude/me-zentrale/) | AE2-Hauptsystem: ME Controller, 64 Extended Drives | im Bau |
+| [Haus West](gebaeude/haus-west/) | noch offen | leer |
+| [Haus Ost](gebaeude/haus-ost/) | noch offen | leer |
 
 ## Konventionen
 

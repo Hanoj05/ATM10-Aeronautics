@@ -1,5 +1,5 @@
 {
-  "hinweis": "Teile für die Website. Positionen in Schematic-Koordinaten [x, y, z], aus der Schematic ausgelesen. Einstellungen nach und nach ergänzen.",
+  "hinweis": "Teile für die Website. Positionen in Schematic-Koordinaten [x, y, z], aus der Schematic ausgelesen. Einstellungen nach und nach ergänzen. me = von Hand gepflegte Angaben fürs ME-System: zellen als [Name, Inhalt], anbindungen als {gebaeude, wie, was}, hinweise.",
   "netzwerke": [],
   "teile": [
     {
@@ -222,5 +222,18 @@
       ],
       "nodes": []
     }
-  ]
+  ],
+  "me": {
+    "zellen": [],
+    "anbindungen": [
+      {
+        "gebaeude": "Wabenhaus",
+        "wie": "Powah Ender Gate, Kanal 0",
+        "was": "3 Ender Gates im ME-Gebäude, 1 im Wabenhaus, alle auf Kanal 0"
+      }
+    ],
+    "hinweise": [
+      "Die Schematic speichert keine Inventare. Zellen, Prioritäten und Partitionen hier von Hand eintragen."
+    ]
+  }
 }

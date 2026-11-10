@@ -1,0 +1,47 @@
+{
+  "id": "haus-west",
+  "name": "Haus West",
+  "zweck": "noch offen",
+  "status": "leer",
+  "welt": {
+    "p0": [
+      253,
+      65,
+      -308
+    ],
+    "drehung": 0,
+    "hinweis": "P0 = Nordwest-Ecke unten. Ausgeschnitten aus der Campus-Schematic."
+  },
+  "masse": {
+    "breite": 20,
+    "tiefe": 22,
+    "hoehe": null
+  },
+  "zellen": [],
+  "maschinen": [],
+  "netzwerke": [],
+  "dateien": {
+    "bauplan": null,
+    "modell": "modell.json",
+    "konfigDaten": "konfig.json",
+    "konfig": "konfig.md",
+    "schematic": "schematics/campus.nbt"
+  },
+  "ausschnitt": {
+    "schematicP0": [
+      221,
+      65,
+      -391
+    ],
+    "von": [
+      253,
+      65,
+      -308
+    ],
+    "bis": [
+      272,
+      113,
+      -287
+    ]
+  }
+}

@@ -48,6 +48,23 @@
     "modell": "modell.json",
     "konfigDaten": "konfig.json",
     "konfig": "konfig.md",
-    "schematic": "schematics/me-zentrale.nbt"
+    "schematic": "schematics/campus.nbt"
+  },
+  "ausschnitt": {
+    "schematicP0": [
+      221,
+      65,
+      -391
+    ],
+    "von": [
+      246,
+      65,
+      -386
+    ],
+    "bis": [
+      299,
+      162,
+      -332
+    ]
   }
 }

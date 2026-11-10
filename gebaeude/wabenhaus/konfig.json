@@ -88,7 +88,7 @@
         {
           "label": "Hive Core",
           "anzahl": 1,
-          "block": "m-C",
+          "block": "modularbees:modular_beehive_core",
           "kanaele": [
             {
               "k": 0,
@@ -115,7 +115,7 @@
         {
           "label": "Overclocker",
           "anzahl": 11,
-          "block": "m-O",
+          "block": "modularbees:modular_beehive_overclocker",
           "kanaele": [
             {
               "k": 2,
@@ -132,7 +132,7 @@
         {
           "label": "Treater",
           "anzahl": 4,
-          "block": "m-R",
+          "block": "modularbees:modular_treater",
           "kanaele": [
             {
               "k": 2,

@@ -70,6 +70,19 @@
           "wo": "Website",
           "bereich": "Website",
           "status": "erledigt"
+        },
+        {
+          "titel": "Campus-Schematic: alle Gebäude aus einer Datei",
+          "wo": "Website",
+          "bereich": "3D",
+          "status": "erledigt",
+          "text": "schematics/campus.nbt, jedes Gebäude als Ausschnitt. Wabenhaus jetzt auch aus der echten Welt."
+        },
+        {
+          "titel": "Technik-Seite: ME-System und alle Logistics Networks",
+          "wo": "Website",
+          "bereich": "Website",
+          "status": "erledigt"
         }
       ]
     },
@@ -90,9 +103,16 @@
           "titel": "Wabenhaus als Schematic exportieren",
           "wo": "Minecraft",
           "bereich": "Gebäude",
-          "status": "offen",
+          "status": "erledigt",
           "gebaeude": "wabenhaus",
-          "text": "Ersetzt das Modell aus dem Bauplan durch die echte Welt."
+          "text": "Steckt in der Campus-Schematic vom 10.11.2026."
+        },
+        {
+          "titel": "Haus West und Haus Ost: Zweck festlegen",
+          "wo": "Minecraft",
+          "bereich": "Gebäude",
+          "status": "offen",
+          "text": "Beide stehen leer. Wenn klar ist, wofür, Namen und Zweck in campus.json eintragen."
         },
         {
           "titel": "P2P Tunnels und andere Parts an Kabeln zeichnen",
@@ -155,7 +175,8 @@
           "bereich": "Doku",
           "status": "offen",
           "gebaeude": "me-zentrale",
-          "tab": "konfig"
+          "tab": "konfig",
+          "text": "Steht dann auf der Technik-Seite. In konfig.json unter me.zellen."
         },
         {
           "titel": "Weitere Gebäude des Campus bauen",

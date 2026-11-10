@@ -15,8 +15,9 @@ Dann im Browser `http://localhost:8000` öffnen. Die Startseite leitet auf die C
 
 ## Seiten
 
-- `index.html` – **Übersicht:** eine Karte pro Gebäude mit Kennzahlen und Sprungmarken, darunter alle Netzwerke.
+- `index.html` – **Übersicht:** eine Karte pro Gebäude mit Kennzahlen und Sprungmarken.
 - `map.html` – **Map:** der Campus in 3D. Hover zeigt den Gebäudenamen, Klick öffnet die Gebäudeseite.
+- `technik.html` – **Technik:** ME-System (Zahlen aus dem Blockmodell, Zellen und Anbindungen aus `konfig.json` unter `me`) und alle Logistics Networks, jedes einzeln aufklappbar mit Kanälen, Flüssen und Nodes.
 - `roadmap.html` – **Roadmap:** Phasen mit Stand, getrennt nach Minecraft und Website, Filter nach Ort und Status. Daten aus `campus/roadmap.json`.
 - `gebaeude.html?id=<id>` – **Gebäude** mit Unter-Tabs:
   - `#ansicht`: 3D-Modell mit Schnitt-Regler. Hover zeigt die Konfiguration eines Teils, Kanäle lassen sich markieren.

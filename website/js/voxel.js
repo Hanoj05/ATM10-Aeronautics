@@ -208,12 +208,12 @@
     return [p0[0] + dx, p0[1] + y, p0[2] + dz];
   }
 
-  /* Navigation oben auf jeder Seite. aktiv: "uebersicht", "map", "roadmap" oder eine Gebäude-ID */
+  /* Navigation oben auf jeder Seite. aktiv: "uebersicht", "map", "technik", "roadmap" oder eine Gebäude-ID */
   function navi(aktiv) {
     var nav = document.getElementById("nav");
     if (!nav) return;
     function link(href, text, an) { return "<a href='" + href + "'" + (an ? " aria-current='page'" : "") + ">" + esc(text) + "</a>"; }
-    nav.innerHTML = link("index.html", "Übersicht", aktiv === "uebersicht") + link("map.html", "Map", aktiv === "map") + link("roadmap.html", "Roadmap", aktiv === "roadmap");
+    nav.innerHTML = link("index.html", "Übersicht", aktiv === "uebersicht") + link("map.html", "Map", aktiv === "map") + link("technik.html", "Technik", aktiv === "technik") + link("roadmap.html", "Roadmap", aktiv === "roadmap");
     ladeJSON("campus/campus.json").then(function (c) {
       var h = "";
       c.gebaeude.forEach(function (g) { if (g.ordner) h += link("gebaeude.html?id=" + encodeURIComponent(g.id), g.name, aktiv === g.id); });

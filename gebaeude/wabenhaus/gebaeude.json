@@ -7,10 +7,10 @@
     "p0": [
       392,
       65,
-      -286
+      -285
     ],
     "drehung": 90,
-    "hinweis": "Gebaut um 90 Grad im Uhrzeigersinn gedreht: Plan-Norden zeigt in der Welt nach Osten, das Foyer liegt im Westen. Plan-Koordinate (x, y, z) -> Welt (392 - z, 65 + y, -286 + x). Eingemessen am Messpunkt, der Quartz Pillar bei Plan (6, 14, 0) = Welt (392, 79, -280)."
+    "hinweis": "Gebaut um 90 Grad im Uhrzeigersinn gedreht: Plan-Norden zeigt in der Welt nach Osten, das Foyer liegt im Westen. Plan-Koordinate (x, y, z) -> Welt (392 - z, 65 + y, -285 + x). Eingemessen über die Campus-Schematic: Hive-Core Plan (7, 2, 12) = Welt (380, 67, -278)."
   },
   "masse": {
     "breite": 64,
@@ -149,6 +149,23 @@
     "modell": "modell.json",
     "konfigDaten": "konfig.json",
     "konfig": "konfig.md",
-    "schematic": null
+    "schematic": "schematics/campus.nbt"
+  },
+  "ausschnitt": {
+    "schematicP0": [
+      221,
+      65,
+      -391
+    ],
+    "von": [
+      348,
+      65,
+      -304
+    ],
+    "bis": [
+      414,
+      99,
+      -241
+    ]
   }
 }

@@ -248,3 +248,57 @@ ul.hinweise { margin: 0; padding-left: 18px; display: grid; gap: 4px; font-size:
 .rm-quelle { margin-left: auto; }
 @media (max-width: 640px) { .rm-quelle { margin-left: 0; } }
 
+
+/* ---------- Technik ---------- */
+.tk-titel { margin: 0; font: 800 24px/1.2 var(--f-display); font-stretch: 108%; }
+.tk-kopf { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px 16px; }
+.tk-knoepfe { display: flex; gap: 6px; }
+.tk-knopf { font: 600 12px var(--f-mono); background: var(--surface); color: var(--fg); border: 1px solid var(--line); border-radius: 4px; padding: 6px 10px; cursor: pointer; }
+.tk-knopf:hover { border-color: var(--muted); }
+.tk-link { font: 600 12px var(--f-mono); text-decoration: none; white-space: nowrap; }
+.tk-me { padding: 18px 20px; display: grid; gap: 18px; }
+.tk-me-kopf { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 8px 16px; }
+.tk-me-kopf h3 { margin: 0; font: 700 20px var(--f-display); }
+.tk-me-kopf .note { margin: 2px 0 0; }
+.tk-me h4 { margin: 0 0 8px; font: 600 11px var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.tk-zahlen { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
+.tk-kachel { display: grid; gap: 2px; padding: 12px 14px; background: var(--raised); border: 1px solid var(--line); border-radius: 4px; }
+.tk-kachel b { font: 800 28px/1 var(--f-display); }
+.tk-kachel span { font-size: 14px; }
+.tk-kachel small { color: var(--muted); font: 12px var(--f-mono); }
+.tk-spalten { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px 28px; }
+.tk-kabel, .tk-liste, .tk-kanalliste { list-style: none; margin: 0; padding: 0; display: grid; gap: 5px; font-size: 14px; }
+.tk-kabel li { display: grid; grid-template-columns: 12px minmax(0, 1fr) auto; gap: 8px; align-items: center; }
+.tk-kabel i { width: 12px; height: 12px; border-radius: 2px; border: 1px solid var(--line); }
+.tk-kabel b { font: 600 13px var(--f-mono); }
+.tk-liste small { color: var(--muted); }
+.tk-teile { display: flex; flex-wrap: wrap; gap: 6px; }
+.tk-teile span { font-size: 13px; padding: 4px 9px; border-radius: 3px; background: var(--raised); border: 1px solid var(--line); }
+.tk-netze { display: grid; gap: 10px; }
+.tk-netz > summary { list-style: none; cursor: pointer; display: grid; grid-template-columns: minmax(180px, 1fr) auto auto; align-items: center; gap: 8px 18px; padding: 14px 18px; }
+.tk-netz > summary::-webkit-details-marker { display: none; }
+.tk-netz > summary::before { content: "▸"; position: absolute; margin-left: -12px; color: var(--muted); }
+.tk-netz[open] > summary::before { content: "▾"; }
+.tk-netz > summary:hover { background: var(--raised); }
+.tk-netz[open] > summary { border-bottom: 1px solid var(--line); }
+.tk-netz-name { display: grid; gap: 2px; }
+.tk-netz-name b { font: 700 17px var(--f-display); }
+.tk-netz-name small { color: var(--muted); font-size: 13px; }
+.tk-netz-chips { display: flex; flex-wrap: wrap; gap: 4px; }
+.tk-netz-zahl { font: 13px var(--f-mono); color: var(--muted); white-space: nowrap; }
+.tk-netz-zahl b { color: var(--fg); font-size: 16px; }
+.tk-netz-inhalt { padding: 14px 18px 18px; display: grid; gap: 14px; }
+.tk-tabelle { width: 100%; border-collapse: collapse; font-size: 14px; }
+.tk-tabelle th { text-align: left; font: 600 11px var(--f-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); padding: 6px 10px; border-bottom: 1px solid var(--line); }
+.tk-tabelle td { padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.tk-tabelle td small { color: var(--muted); }
+.tk-wer { display: flex; flex-wrap: wrap; gap: 4px; }
+.tk-wer span { font-size: 13px; padding: 2px 7px; border-radius: 3px; background: var(--raised); border: 1px solid var(--line); }
+.tk-pfeil { font: 700 16px var(--f-mono); color: var(--muted); }
+.tk-nodes > summary { cursor: pointer; font: 600 12px var(--f-mono); color: var(--honey-ink); padding: 4px 0; }
+.tk-nodes[open] > summary { margin-bottom: 8px; }
+.tk-kanalliste li { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px; }
+.tk-richtung { font: 600 11px var(--f-mono); color: var(--muted); text-transform: uppercase; min-width: 34px; }
+@media (max-width: 640px) {
+  .tk-netz > summary { grid-template-columns: 1fr; padding-left: 26px; }
+}
