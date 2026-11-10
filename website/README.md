@@ -2,7 +2,32 @@
 
 Ziel: eine Seite mit 3D-Ansicht vom ganzen Campus. Jedes Gebäude lässt sich anklicken und zeigt dann seine Übersicht aus `gebaeude.json`, `einrichtung.md` und `konfig.md`.
 
-## Geplanter Aufbau
+## Anschauen
+
+Die Seite lädt ihre Daten per `fetch`, deshalb geht sie nicht per Doppelklick als Datei. So startest du sie lokal:
+
+```
+cd ATM10-Aeronautics
+python3 -m http.server 8000
+```
+
+Dann im Browser `http://localhost:8000` öffnen. Die Startseite leitet auf die Campus-Ansicht weiter.
+
+## Seiten
+
+- `index.html`: Campus in 3D. Hover zeigt den Gebäudenamen, Klick öffnet die Gebäudeseite.
+- `gebaeude.html?id=<id>`: Gebäude in 3D mit Schnitt-Regler. Hover über ein Teil aus `konfig.json` zeigt dessen Konfiguration, Klick hält sie fest. Kanäle lassen sich markieren. Darunter `konfig.md`, `einrichtung.md` und ein Link zum Bauplan.
+
+## Daten pro Gebäude
+
+| Datei | Wofür |
+| --- | --- |
+| `gebaeude.json` | Steckbrief, Zellen, Dateiliste |
+| `modell.json` | Blockmodell. Erzeugt mit `tools/modell-aus-bauplan.py`, später aus einer Schematic |
+| `konfig.json` | Teile mit Position (`von`, `bis`), Einstellungen, Nodes und Kanälen. Das liest die Hover-Ansicht |
+| `konfig.md`, `einrichtung.md` | Lesbare Dokumente, werden unter dem Modell angezeigt |
+
+## Ursprünglicher Plan
 
 - Statische Seite ohne Build-Schritt: eine `index.html` plus ein paar JavaScript-Dateien. Läuft auf jedem Webserver.
 - 3D mit three.js. Die Seite liest `campus/campus.json`, platziert jedes Gebäude an seiner Weltkoordinate und lädt dessen Daten.

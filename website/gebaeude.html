@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Gebäude · Tech-Campus</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,500..800&family=IBM+Plex+Sans:wght@400;600&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="back" href="index.html">← Campus</a>
+  <h1 id="titel">Gebäude</h1>
+  <span class="chip" id="status"></span>
+  <span class="sub" id="zweck"></span>
+</header>
+
+<div class="layout">
+  <div class="viewport" id="viewport">
+    <div class="loading" id="loading">Lade Gebäude …</div>
+    <div class="controls">
+      <label class="ctl" for="schnitt">Schnitt bei <input type="range" id="schnitt" min="0" max="40" value="5"> <span id="schnittWert">y 5</span></label>
+      <span class="ctl"><button type="button" id="ansicht">Ansicht zurücksetzen</button></span>
+    </div>
+    <div class="hint">Ziehen: drehen · Rechtsklick: verschieben · Mausrad: zoomen · Klick auf ein Teil: festhalten</div>
+    <div class="tooltip" id="tooltip" hidden></div>
+  </div>
+  <aside class="panel" id="panel" aria-live="polite"></aside>
+</div>
+
+<section class="docs">
+  <div class="tabs" role="group" aria-label="Dokumente">
+    <button type="button" data-doc="konfig" aria-pressed="true">Konfiguration</button>
+    <button type="button" data-doc="einrichtung" aria-pressed="false">Einrichtung</button>
+    <a id="bauplanLink" href="#" target="_blank" rel="noopener">Bauplan öffnen ↗</a>
+  </div>
+  <article class="md" id="doc"></article>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/controls/OrbitControls.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
+<script src="js/voxel.js"></script>
+<script src="js/gebaeude.js"></script>
+</body>
+</html>

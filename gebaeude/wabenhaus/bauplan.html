@@ -82,7 +82,7 @@ svg text { font-family: var(--f-mono); }
 <header>
   <div class="eyebrow">ATM10 · Tech-Campus · Bienengebäude</div>
   <h1>Wabenhaus</h1>
-  <p class="lede">Sieben sechseckige Zellen um eine gläserne Produktionshalle. Jede Zelle ist <span id="cellSize"></span> Blöcke groß, Nachbarn teilen sich die Wand. Alle Koordinaten beziehen sich auf den Punkt P0, die Nordwest-Ecke des Rechtecks um die Produktionszelle. Norden ist oben (−Z), Osten rechts (+X).</p>
+  <p class="lede">Sieben sechseckige Zellen um eine gläserne Produktionshalle. Jede Zelle ist <span id="cellSize"></span> Blöcke groß, Nachbarn teilen sich die Wand. Alle Koordinaten beziehen sich auf den Punkt P0, die Nordwest-Ecke des Rechtecks um die Produktionszelle. P0 ist ein Luftblock außerhalb der Wände, eingemessen wird er über den Messpunkt: die Quartz Pillar 6 Blöcke östlich davon, wo Produktion, Erweiterung und Bienengarten zusammenstoßen. Norden ist oben (−Z), Osten rechts (+X).</p>
   <div class="stats" id="stats"></div>
 </header>
 
@@ -598,8 +598,12 @@ function drawPlan() {
     el("text", { x: X(c.ox + W / 2), y: Z(c.oz) + ly * S, "text-anchor": "middle", style: "font:700 " + Math.round(12 * planZoom) + "px var(--f-display);fill:var(--fg);paint-order:stroke;stroke:var(--surface);stroke-width:3px;letter-spacing:.04em" }, g, c.name.toUpperCase());
   });
   if (inView(0, 0)) {
-    el("circle", { cx: X(0), cy: Z(0), r: 4, style: "fill:var(--honey)" }, g);
-    el("text", { x: X(0) - 6, y: Z(0) - 5, "text-anchor": "end", style: "font-size:11px;font-weight:600;fill:var(--honey-ink)" }, g, "P0");
+    el("rect", { x: X(0) + 1, y: Z(0) + 1, width: S - 2, height: S - 2, style: "fill:none;stroke:var(--honey);stroke-width:2" }, g);
+    el("text", { x: X(0) - 4, y: Z(0) + S / 2 + 4, "text-anchor": "end", style: "font-size:11px;font-weight:600;fill:var(--honey-ink)" }, g, "P0");
+  }
+  if (inView(K, 0)) {
+    el("circle", { cx: X(K) + S / 2, cy: Z(0) + S / 2, r: S * .42, style: "fill:none;stroke:var(--honey);stroke-width:2" }, g);
+    el("text", { x: X(K) + S / 2, y: Z(0) - 4, "text-anchor": "middle", style: "font-size:10px;font-weight:600;fill:var(--honey-ink)" }, g, "Messpunkt (P0 + " + K + ", 0)");
   }
   el("text", { x: Wd - pad, y: pad - 12, "text-anchor": "end", style: "font-size:11px;font-weight:600;fill:var(--muted)" }, g, "▲ N");
 }
