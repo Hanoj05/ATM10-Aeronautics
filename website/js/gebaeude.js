@@ -313,10 +313,23 @@
     if (t.hinweise && t.hinweise.length) h += "<div><h3>Hinweise</h3><ul class='hinweise'>" + t.hinweise.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + "</ul></div>";
     return h;
   }
+  /* Aussehen, Bauschritte und Material eines Einrichtungsteils */
+  function einrDetails(t, offen) {
+    var h = "";
+    if (t.aussehen) h += "<p class='aussehen'>" + esc(t.aussehen) + "</p>";
+    var schritte = t.bauen || [], material = t.material || [];
+    if (schritte.length || material.length) {
+      h += "<details class='bauen'" + (offen ? " open" : "") + "><summary>So baust du es</summary>";
+      if (schritte.length) h += "<ol>" + schritte.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + "</ol>";
+      if (material.length) h += "<h4>Material</h4><ul>" + material.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + "</ul>";
+      h += "</details>";
+    }
+    return h;
+  }
   function einrKarte(t) {
     var h = "<div><h2>" + esc(t.name) + "</h2><p class='meta'>" + esc(t.zelle) + "</p></div>";
     h += "<div><span class='status " + esc(t.status) + "'>" + esc(t.status) + "</span></div>";
-    h += "<p style='margin:0'>" + esc(t.was || "") + "</p><dl class='kv'>";
+    h += "<p style='margin:0'>" + esc(t.was || "") + "</p>" + einrDetails(t, true) + "<dl class='kv'>";
     if (t.mod) h += "<dt>Mod</dt><dd>" + esc(t.mod) + "</dd>";
     (t.orte || []).forEach(function (o, i) {
       var wt = weltText(o[0], o[1]);
@@ -393,7 +406,7 @@
         var hatOrt = t.block || (t.orte || []).length;
         h += "<article class='box karte'><div class='oben'><strong>" + esc(t.name) + "</strong><span class='status " + esc(t.status) + "'>" + esc(t.status) + "</span></div>";
         if (t.mod) h += "<span class='mod'>" + esc(t.mod) + "</span>";
-        h += "<p>" + esc(t.was || "") + "</p>";
+        h += "<p>" + esc(t.was || "") + "</p>" + einrDetails(t, false);
         if (hatOrt && D.modell) h += "<button type='button' class='zeige' data-einr='" + i + "'>Im 3D zeigen</button>";
         h += "</article>";
       });

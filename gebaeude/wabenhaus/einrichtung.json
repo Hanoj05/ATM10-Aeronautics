@@ -1,5 +1,5 @@
 {
-  "hinweis": "Einrichtung und Deko für die Website. Positionen in Plan-Koordinaten [x, y, z]. orte = Liste von [von, bis]; block = alle Blöcke dieser Sorte aus modell.json. status: offen oder fertig.",
+  "hinweis": "Einrichtung und Deko für die Website. Positionen in Plan-Koordinaten [x, y, z]. orte = Liste von [von, bis]; block = alle Blöcke dieser Sorte aus modell.json. status: offen oder fertig. aussehen = wie es fertig aussieht, bauen = Schritte, material = Einkaufsliste.",
   "stil": [
     "Hell: Smooth Quartz Block und White Concrete. Dunkle Akzente: Polished Deepslate.",
     "Signalfarbe nur Honig-Orange (Honeycomb Block, Orange Stained Glass). Pflanzen ausgenommen.",
@@ -8,111 +8,1079 @@
     "Die Node-Zonen um die Maschinen bleiben leer."
   ],
   "mods": [
-    ["Create", "Framed Glass und Tiled Glass, Copper Shingles und Copper Tiles"],
-    ["Macaw's Doors", "Glastüren"],
-    ["Macaw's Windows", "Fensterrahmen und Fensterbänke"],
-    ["Macaw's Roofs", "Dünne Attika an den Dachkanten"],
-    ["Macaw's Fences and Walls", "Geländer"],
-    ["Macaw's Bridges", "Steg zum ME-Gebäude"],
-    ["FramedBlocks", "Framed Slab und Framed Panel für Platten und Leisten"],
-    ["Chipped", "Muster-Varianten von Quartz und Concrete"],
-    ["Handcrafted", "Tische, Stühle, Couches, Bänke, Counter"],
-    ["Supplementaries", "Sign Post, Notice Board, Pedestal, Item Shelf, Flower Box, Planter"]
+    [
+      "Create",
+      "Framed Glass und Tiled Glass, Copper Shingles und Copper Tiles"
+    ],
+    [
+      "Macaw's Doors",
+      "Glastüren"
+    ],
+    [
+      "Macaw's Windows",
+      "Fensterrahmen und Fensterbänke"
+    ],
+    [
+      "Macaw's Roofs",
+      "Dünne Attika an den Dachkanten"
+    ],
+    [
+      "Macaw's Fences and Walls",
+      "Geländer"
+    ],
+    [
+      "Macaw's Bridges",
+      "Steg zum ME-Gebäude"
+    ],
+    [
+      "FramedBlocks",
+      "Framed Slab und Framed Panel für Platten und Leisten"
+    ],
+    [
+      "Chipped",
+      "Muster-Varianten von Quartz und Concrete"
+    ],
+    [
+      "Handcrafted",
+      "Tische, Stühle, Couches, Bänke, Counter"
+    ],
+    [
+      "Supplementaries",
+      "Sign Post, Notice Board, Pedestal, Item Shelf, Flower Box, Planter"
+    ]
   ],
   "teile": [
-    { "id": "tresen", "zelle": "Foyer", "name": "Empfangstresen", "mod": "FramedBlocks, Handcrafted",
+    {
+      "id": "tresen",
+      "zelle": "Foyer",
+      "name": "Empfangstresen",
+      "mod": "FramedBlocks, Handcrafted",
       "was": "Framed Slab mit Quartz-Textur als Deckplatte auf dem Tresen, zwei Handcrafted Chairs dahinter.",
-      "orte": [[[20, 1, 31], [21, 2, 35]]], "status": "offen" },
-    { "id": "sitzgruppe", "zelle": "Foyer", "name": "Sitzgruppe", "mod": "Handcrafted, Supplementaries",
+      "aussehen": "Ein heller, glatter Empfangstresen in Hüfthöhe: unten Quartz, oben eine dünne Platte, die einen halben Block übersteht. Dahinter zwei schlichte helle Holzstühle. Wirkt wie die Rezeption in einem Laborgebäude.",
+      "bauen": [
+        "Tresenkörper zwei Blöcke hoch aus Smooth Quartz Block lassen, so wie er schon steht.",
+        "Obenauf eine Reihe Framed Slab (obere Hälfte) setzen und per Rechtsklick mit Smooth Quartz Block verkleiden.",
+        "Optional vorne an der Unterkante eine Reihe Framed Panel mit Polished Deepslate als dunkle Sockelleiste.",
+        "Hinter den Tresen zwei Birch Chairs aus Handcrafted, Blick zum Eingang.",
+        "Auf den Tresen ein Item Shelf oder einen Flower Pot als einzigen Deko-Punkt."
+      ],
+      "material": [
+        "5× Framed Slab",
+        "5× Smooth Quartz Block (Camo)",
+        "2× Birch Chair (Handcrafted)",
+        "optional 5× Framed Panel + Polished Deepslate"
+      ],
+      "orte": [
+        [
+          [
+            20,
+            1,
+            31
+          ],
+          [
+            21,
+            2,
+            35
+          ]
+        ]
+      ],
+      "status": "offen"
+    },
+    {
+      "id": "sitzgruppe",
+      "zelle": "Foyer",
+      "name": "Sitzgruppe",
+      "mod": "Handcrafted, Supplementaries",
       "was": "Zwei Handcrafted Couches gegenüber, dazwischen ein Side Table, daneben ein Planter.",
-      "orte": [[[3, 1, 31], [6, 1, 35]]], "status": "offen" },
-    { "id": "wegweiser", "zelle": "Foyer", "name": "Wegweiser", "mod": "Supplementaries",
+      "aussehen": "Eine kleine Wartezone: zwei helle Couches stehen sich gegenüber, dazwischen ein niedriger Beistelltisch. In der Ecke ein großer Pflanzkübel mit Grün. Polster weiß, ein Kissen in Honig-Orange als Akzent.",
+      "bauen": [
+        "Zwei Birch Couches aus Handcrafted mit 3 Blöcken Abstand gegenüberstellen, beide mit der Sitzfläche zur Mitte.",
+        "In die Mitte einen Birch Side Table.",
+        "Polster weiß oder hellgrau; wenn Handcrafted Kissen anbietet, eins in Orange.",
+        "Einen Planter (Supplementaries) in die Ecke, darin ein Azalea- oder Flowering-Azalea-Busch."
+      ],
+      "material": [
+        "2× Birch Couch (Handcrafted)",
+        "1× Birch Side Table (Handcrafted)",
+        "1× Planter (Supplementaries)",
+        "1× Azalea"
+      ],
+      "orte": [
+        [
+          [
+            3,
+            1,
+            31
+          ],
+          [
+            6,
+            1,
+            35
+          ]
+        ]
+      ],
+      "status": "offen"
+    },
+    {
+      "id": "wegweiser",
+      "zelle": "Foyer",
+      "name": "Wegweiser",
+      "mod": "Supplementaries",
       "was": "Sign Posts vor den Türen zu Labor, Technik und Produktion.",
-      "orte": [[[5, 1, 28], [5, 2, 28]], [[20, 1, 29], [20, 2, 29]], [[11, 1, 24], [11, 2, 24]]], "status": "offen" },
-    { "id": "infowand-foyer", "zelle": "Foyer", "name": "Info-Wand", "mod": "Supplementaries",
+      "aussehen": "Drei schmale Holzpfosten neben den Türen, jeder mit einem Richtungsschild auf Augenhöhe: „Labor“, „Technik“, „Produktion“. Wie Wegweiser in einem Museum.",
+      "bauen": [
+        "Je einen Birch Sign Post (Supplementaries) neben die Tür stellen, nicht davor.",
+        "Schild mit Rechtsklick auf die Tür ausrichten und beschriften: Labor & Zucht, Technik, Produktion.",
+        "Optional ein zweites Schild am selben Pfosten in die Gegenrichtung: „Foyer“."
+      ],
+      "material": [
+        "3× Birch Sign Post (Supplementaries)"
+      ],
+      "orte": [
+        [
+          [
+            5,
+            1,
+            28
+          ],
+          [
+            5,
+            2,
+            28
+          ]
+        ],
+        [
+          [
+            20,
+            1,
+            29
+          ],
+          [
+            20,
+            2,
+            29
+          ]
+        ],
+        [
+          [
+            11,
+            1,
+            24
+          ],
+          [
+            11,
+            2,
+            24
+          ]
+        ]
+      ],
+      "status": "offen"
+    },
+    {
+      "id": "infowand-foyer",
+      "zelle": "Foyer",
+      "name": "Info-Wand",
+      "mod": "Supplementaries",
       "was": "Notice Board neben der Glaswand mit der Liste der Bienenarten im Hive.",
-      "orte": [[[16, 2, 23], [16, 2, 23]]], "status": "offen" },
-    { "id": "intarsie", "zelle": "Foyer", "name": "Waben-Intarsie freihalten", "mod": null,
+      "aussehen": "Ein Holzbrett an der Wand neben der Glaswand, auf dem wie ein Aushang die Seiten eines Buches zu lesen sind: die Bienenarten im Hive.",
+      "bauen": [
+        "Einen Notice Board (Supplementaries) an die Wand setzen, auf Augenhöhe.",
+        "Book and Quill schreiben: pro Seite eine Bienenart mit Produkt.",
+        "Buch signieren und per Rechtsklick ins Notice Board legen. Die aktuelle Seite wird auf dem Brett angezeigt."
+      ],
+      "material": [
+        "1× Notice Board (Supplementaries)",
+        "1× Book and Quill"
+      ],
+      "orte": [
+        [
+          [
+            16,
+            2,
+            23
+          ],
+          [
+            16,
+            2,
+            23
+          ]
+        ]
+      ],
+      "status": "offen"
+    },
+    {
+      "id": "intarsie",
+      "zelle": "Foyer",
+      "name": "Waben-Intarsie freihalten",
+      "mod": null,
       "was": "Liegt schon im Boden. Keine Möbel darauf stellen.",
-      "orte": [[[9, 0, 30], [16, 0, 36]]], "status": "fertig" },
-
-    { "id": "vitrine", "zelle": "Produktion", "name": "Vitrine aus Framed Glass", "mod": "Create",
+      "aussehen": "Das Wabenmuster im Foyerboden ist das Herzstück des Eingangs und bleibt frei sichtbar.",
+      "bauen": [
+        "Nichts zu tun. Keine Möbel, Teppiche oder Pflanzen darauf stellen."
+      ],
+      "material": [],
+      "orte": [
+        [
+          [
+            9,
+            0,
+            30
+          ],
+          [
+            16,
+            0,
+            36
+          ]
+        ]
+      ],
+      "status": "fertig"
+    },
+    {
+      "id": "vitrine",
+      "zelle": "Produktion",
+      "name": "Vitrine aus Framed Glass",
+      "mod": "Create",
       "was": "Glass gegen Create Framed Glass tauschen. Der Sockel aus Polished Deepslate bleibt.",
-      "orte": [[[3, 1, 7], [22, 4, 15]]], "status": "offen" },
-    { "id": "vitrinentueren", "zelle": "Produktion", "name": "Glastüren der Vitrine", "mod": "Macaw's Doors",
+      "aussehen": "Die Produktion steht in einem großen Glaskasten. Statt glatter Scheiben sieht man Glas mit feinen Rahmenlinien wie bei einem Gewächshaus oder Labor. Unten bleibt der dunkle Sockel als Kante.",
+      "bauen": [
+        "Alle Glass-Blöcke der Vitrine gegen Framed Glass (Create) tauschen.",
+        "Wo mehr Struktur gut aussieht, z. B. in der obersten Reihe, Tiled Glass (Create) nehmen.",
+        "Den Sockel aus Polished Deepslate nicht anfassen.",
+        "Vorher die Glass-Blöcke zählen, damit genug Framed Glass da ist."
+      ],
+      "material": [
+        "Framed Glass (Create), so viel wie Glass in der Vitrine",
+        "optional Tiled Glass (Create) für die oberste Reihe"
+      ],
+      "orte": [
+        [
+          [
+            3,
+            1,
+            7
+          ],
+          [
+            22,
+            4,
+            15
+          ]
+        ]
+      ],
+      "status": "offen"
+    },
+    {
+      "id": "vitrinentueren",
+      "zelle": "Produktion",
+      "name": "Glastüren der Vitrine",
+      "mod": "Macaw's Doors",
       "was": "Die beiden Waxed-Copper-Doppeltüren gegen Glastüren tauschen.",
-      "orte": [[[12, 1, 7], [13, 2, 7]], [[12, 1, 15], [13, 2, 15]]], "status": "offen" },
-    { "id": "exponate", "zelle": "Produktion", "name": "Exponate", "mod": "Supplementaries",
+      "aussehen": "Die beiden Türen in die Vitrine sind selbst aus Glas, so dass die Wand optisch durchgehend bleibt und man beim Reingehen schon die Maschinen sieht.",
+      "bauen": [
+        "Die zwei Waxed-Copper-Doppeltüren abbauen.",
+        "Je eine doppelte Glastür aus Macaw's Doors setzen, helle Variante (Birch oder Metall-Glas), passend zu den Möbeln.",
+        "Beide Türflügel so setzen, dass sie sich nach außen gemeinsam öffnen."
+      ],
+      "material": [
+        "4× Glastür aus Macaw's Doors (2 Doppeltüren)"
+      ],
+      "orte": [
+        [
+          [
+            12,
+            1,
+            7
+          ],
+          [
+            13,
+            2,
+            7
+          ]
+        ],
+        [
+          [
+            12,
+            1,
+            15
+          ],
+          [
+            13,
+            2,
+            15
+          ]
+        ]
+      ],
+      "status": "offen"
+    },
+    {
+      "id": "exponate",
+      "zelle": "Produktion",
+      "name": "Exponate",
+      "mod": "Supplementaries",
       "was": "Vier Pedestals im Besucherbereich mit je einem Comb-Block (Draconic, Obsidian, Withered) und einer Honigflasche.",
-      "orte": [[[6, 1, 17], [6, 1, 17]], [[10, 1, 17], [10, 1, 17]], [[15, 1, 17], [15, 1, 17]], [[19, 1, 17], [19, 1, 17]]], "status": "offen" },
-    { "id": "infotafeln", "zelle": "Produktion", "name": "Infotafeln an der Vitrine", "mod": "Supplementaries",
+      "aussehen": "Vor der Vitrine stehen in einer Reihe vier kleine Steinsockel wie in einem Museum. Auf jedem liegt ein besonderer Comb-Block bzw. eine Honigflasche zum Anschauen.",
+      "bauen": [
+        "Vier Pedestals (Supplementaries) mit gleichem Abstand in die Reihe setzen.",
+        "Per Rechtsklick drauflegen: Draconic Comb Block, Obsidian Comb Block, Withered Comb Block und eine Honey Bottle.",
+        "Unter jeden Sockel optional eine Chipped-Quartz-Variante als kleine Bodenplatte."
+      ],
+      "material": [
+        "4× Pedestal (Supplementaries)",
+        "1× Draconic Comb Block",
+        "1× Obsidian Comb Block",
+        "1× Withered Comb Block",
+        "1× Honey Bottle"
+      ],
+      "orte": [
+        [
+          [
+            6,
+            1,
+            17
+          ],
+          [
+            6,
+            1,
+            17
+          ]
+        ],
+        [
+          [
+            10,
+            1,
+            17
+          ],
+          [
+            10,
+            1,
+            17
+          ]
+        ],
+        [
+          [
+            15,
+            1,
+            17
+          ],
+          [
+            15,
+            1,
+            17
+          ]
+        ],
+        [
+          [
+            19,
+            1,
+            17
+          ],
+          [
+            19,
+            1,
+            17
+          ]
+        ]
+      ],
+      "status": "offen"
+    },
+    {
+      "id": "infotafeln",
+      "zelle": "Produktion",
+      "name": "Infotafeln an der Vitrine",
+      "mod": "Supplementaries",
       "was": "Vor Hive und Zentrifuge je ein Notice Board außen an der Vitrine mit kurzer Erklärung.",
-      "orte": [[[7, 2, 16], [7, 2, 16]], [[18, 2, 16], [18, 2, 16]]], "status": "offen" },
-    { "id": "bank-produktion", "zelle": "Produktion", "name": "Bank", "mod": "Handcrafted",
+      "aussehen": "Außen an der Glaswand, genau vor Hive und Zentrifuge, hängt je ein Aushang, der erklärt, was dahinter passiert.",
+      "bauen": [
+        "Je einen Notice Board (Supplementaries) außen an die Vitrine vor Hive und vor Zentrifuge hängen.",
+        "Je ein kurzes Buch: Hive = was es produziert, welche Bienen drin sind. Zentrifuge = was rein- und rausgeht.",
+        "Buch signieren und einlegen."
+      ],
+      "material": [
+        "2× Notice Board (Supplementaries)",
+        "2× Book and Quill"
+      ],
+      "orte": [
+        [
+          [
+            7,
+            2,
+            16
+          ],
+          [
+            7,
+            2,
+            16
+          ]
+        ],
+        [
+          [
+            18,
+            2,
+            16
+          ],
+          [
+            18,
+            2,
+            16
+          ]
+        ]
+      ],
+      "status": "offen"
+    },
+    {
+      "id": "bank-produktion",
+      "zelle": "Produktion",
+      "name": "Bank",
+      "mod": "Handcrafted",
       "was": "Eine Handcrafted Bench mittig vorne mit Blick auf die Vitrine.",
-      "orte": [[[12, 1, 19], [13, 1, 19]]], "status": "offen" },
-    { "id": "wartungsgang", "zelle": "Produktion", "name": "Wartungsgang freihalten", "mod": null,
+      "aussehen": "Eine helle Holzbank mitten im Besucherbereich, die direkt auf die Vitrine schaut. Hier sitzt man und schaut den Maschinen zu.",
+      "bauen": [
+        "Eine Birch Bench aus Handcrafted mittig setzen, mit Sitzfläche zur Vitrine.",
+        "Die Bank ist zwei Blöcke breit, also beide Plätze belegen."
+      ],
+      "material": [
+        "1× Birch Bench (Handcrafted), 2 Blöcke breit"
+      ],
+      "orte": [
+        [
+          [
+            12,
+            1,
+            19
+          ],
+          [
+            13,
+            1,
+            19
+          ]
+        ]
+      ],
+      "status": "offen"
+    },
+    {
+      "id": "wartungsgang",
+      "zelle": "Produktion",
+      "name": "Wartungsgang freihalten",
+      "mod": null,
       "was": "Hinter der Vitrine nichts abstellen, höchstens Item Shelves an der Rückwand.",
-      "orte": [[[4, 0, 1], [21, 0, 6]]], "status": "fertig" },
-
-    { "id": "barrel-schilder", "zelle": "Technik", "name": "Beschriftung der Barrels", "mod": "Vanilla",
+      "aussehen": "Der Gang hinter der Vitrine bleibt leer und begehbar.",
+      "bauen": [
+        "Nichts abstellen. Höchstens Item Shelves an die Rückwand für Ersatzteile."
+      ],
+      "material": [],
+      "orte": [
+        [
+          [
+            4,
+            0,
+            1
+          ],
+          [
+            21,
+            0,
+            6
+          ]
+        ]
+      ],
+      "status": "fertig"
+    },
+    {
+      "id": "barrel-schilder",
+      "zelle": "Technik",
+      "name": "Beschriftung der Barrels",
+      "mod": "Vanilla",
       "was": "Über jedem Barrel ein Item Frame an der Wand mit dem Inhalt: Elektrode, Honey Block, Glass Bottle, Wax, Receiver.",
-      "orte": [[[42, 2, 20], [42, 2, 24]]], "status": "offen" },
-    { "id": "werkstatt", "zelle": "Technik", "name": "Werkstatt", "mod": "Chipped",
+      "aussehen": "Über jedem Fass an der Wand hängt ein Rahmen, in dem das Item steckt, das im Fass ist. Man sieht auf einen Blick, welches Fass wofür ist.",
+      "bauen": [
+        "Über jedem Barrel ein Item Frame an die Wand.",
+        "Von links nach rechts reinlegen: Overclocker-Elektrode, Honey Block, Glass Bottle, Wax, und für den Receiver ein Honeycomb.",
+        "Wer es unauffälliger mag: Glow Item Frame weglassen, normale Item Frames nehmen."
+      ],
+      "material": [
+        "5× Item Frame",
+        "je 1× das Item als Anzeige"
+      ],
+      "orte": [
+        [
+          [
+            42,
+            2,
+            20
+          ],
+          [
+            42,
+            2,
+            24
+          ]
+        ]
+      ],
+      "status": "offen"
+    },
+    {
+      "id": "werkstatt",
+      "zelle": "Technik",
+      "name": "Werkstatt",
+      "mod": "Chipped",
       "was": "An der Stelle der AE2-Wand aus dem Bauplan: Mason Table, Glassblower, Carpenter's Table und eine Crafting Table.",
-      "orte": [[[28, 1, 31], [35, 2, 31]]], "status": "offen" },
-    { "id": "laufband", "zelle": "Technik", "name": "Laufband im Boden", "mod": "Chipped",
+      "aussehen": "Eine Werkbank-Ecke an der Wand: vier Tische nebeneinander, jeder sieht anders aus (Stein, Glas, Holz), daneben die normale Werkbank. Hier werden die Chipped-Varianten für die Deko gemacht.",
+      "bauen": [
+        "An der Wand nebeneinander: Mason Table, Glassblower, Carpenter's Table (alle Chipped), Crafting Table.",
+        "Darüber eine Reihe Item Shelves (Supplementaries) für Werkzeug oder Materialproben.",
+        "Optional am Boden davor eine Reihe Chipped-Concrete als Arbeitsfläche markieren."
+      ],
+      "material": [
+        "1× Mason Table (Chipped)",
+        "1× Glassblower (Chipped)",
+        "1× Carpenter's Table (Chipped)",
+        "1× Crafting Table",
+        "optional Item Shelves (Supplementaries)"
+      ],
+      "orte": [
+        [
+          [
+            28,
+            1,
+            31
+          ],
+          [
+            35,
+            2,
+            31
+          ]
+        ]
+      ],
+      "status": "offen"
+    },
+    {
+      "id": "laufband",
+      "zelle": "Technik",
+      "name": "Laufband im Boden",
+      "mod": "Chipped",
       "was": "Ein Band aus einer Chipped-Variante als Laufweg von der Produktionstür zur Barrel-Reihe.",
-      "orte": [[[23, 0, 18], [40, 0, 18]]], "status": "offen" },
-
-    { "id": "laborplaetze", "zelle": "Labor & Zucht", "name": "Laborplätze", "mod": "Productive Bees, Handcrafted",
+      "aussehen": "Ein schmaler Streifen mit anderem Muster im Boden, der wie eine Laufwegmarkierung von der Produktionstür bis zu den Fässern führt.",
+      "bauen": [
+        "In der Mitte des Wegs eine Blockreihe im Boden ersetzen.",
+        "Am Mason Table aus dem Bodenmaterial (Quartz oder Concrete) eine gemusterte Chipped-Variante machen, die sich deutlich, aber ruhig abhebt.",
+        "Die Reihe von der Produktionstür bis zur Barrel-Reihe durchziehen."
+      ],
+      "material": [
+        "18× Chipped-Variante von Quartz oder White Concrete"
+      ],
+      "orte": [
+        [
+          [
+            23,
+            0,
+            18
+          ],
+          [
+            40,
+            0,
+            18
+          ]
+        ]
+      ],
+      "status": "offen"
+    },
+    {
+      "id": "laborplaetze",
+      "zelle": "Labor & Zucht",
+      "name": "Laborplätze",
+      "mod": "Productive Bees, Handcrafted",
       "was": "Breeding Chamber, Incubator, Bottler, Gene Indexer und Catcher an den Außenwänden, Lücken mit Handcrafted Counters füllen.",
-      "block": "x-lab", "status": "offen" },
-    { "id": "testbeuten", "zelle": "Labor & Zucht", "name": "Testbeuten", "mod": "Productive Bees",
+      "aussehen": "Das Labor sieht aus wie eine Laborküche: entlang der Wände eine durchgehende helle Arbeitsfläche, in der die Productive-Bees-Geräte eingelassen sind.",
+      "bauen": [
+        "Die Geräte an die Außenwände: Breeding Chamber, Incubator, Bottler, Gene Indexer, Catcher.",
+        "Lücken dazwischen mit Birch Counters (Handcrafted) füllen, damit es eine durchgehende Arbeitsfläche ergibt.",
+        "Über der Arbeitsfläche Item Shelves für Honeycombs und Gene."
+      ],
+      "material": [
+        "Birch Counters (Handcrafted) für die Lücken",
+        "Item Shelves (Supplementaries)"
+      ],
+      "block": "x-lab",
+      "status": "offen"
+    },
+    {
+      "id": "testbeuten",
+      "zelle": "Labor & Zucht",
+      "name": "Testbeuten",
+      "mod": "Productive Bees",
       "was": "Drei Advanced Beehives mit Expansion Box für neue Bienenarten, bevor sie in den Modular Beehive kommen.",
-      "orte": [[[-10, 1, 14], [-10, 2, 14]], [[-7, 1, 14], [-7, 2, 14]], [[-4, 1, 14], [-4, 2, 14]]], "status": "offen" },
-    { "id": "labortisch", "zelle": "Labor & Zucht", "name": "Labortisch", "mod": "Handcrafted, Supplementaries",
+      "aussehen": "Drei Bienenstöcke nebeneinander, jeder mit Aufsatz, wie ein kleiner Bienenstand im Labor. Dort leben neue Bienenarten zum Testen.",
+      "bauen": [
+        "Drei Advanced Beehives (Birch) aus Productive Bees mit je zwei Blöcken Abstand.",
+        "Auf jede eine Expansion Box setzen, dadurch werden sie zwei Blöcke hoch.",
+        "Davor je ein Blumentopf oder eine Flower Box, damit die Bienen Blumen haben."
+      ],
+      "material": [
+        "3× Advanced Birch Beehive (Productive Bees)",
+        "3× Expansion Box (Productive Bees)",
+        "3× Flower Box oder Flower Pot"
+      ],
+      "orte": [
+        [
+          [
+            -10,
+            1,
+            14
+          ],
+          [
+            -10,
+            2,
+            14
+          ]
+        ],
+        [
+          [
+            -7,
+            1,
+            14
+          ],
+          [
+            -7,
+            2,
+            14
+          ]
+        ],
+        [
+          [
+            -4,
+            1,
+            14
+          ],
+          [
+            -4,
+            2,
+            14
+          ]
+        ]
+      ],
+      "status": "offen"
+    },
+    {
+      "id": "labortisch",
+      "zelle": "Labor & Zucht",
+      "name": "Labortisch",
+      "mod": "Handcrafted, Supplementaries",
       "was": "Großer Tisch mit Stühlen, darauf Item Shelves oder Pedestals mit Honeycombs der aktuellen Zuchtlinie.",
-      "orte": [[[-9, 1, 21], [-4, 1, 23]]], "status": "offen" },
-    { "id": "zuchtbaum", "zelle": "Labor & Zucht", "name": "Zuchtbaum", "mod": "Supplementaries",
+      "aussehen": "Ein großer Tisch in der Mitte des Labors, um den Stühle stehen. Auf dem Tisch liegen auf kleinen Regalen die Waben der Bienen, die gerade gezüchtet werden.",
+      "bauen": [
+        "Birch Tables (Handcrafted) zu einer Fläche von 6 × 3 zusammenstellen.",
+        "Birch Chairs rundum, z. B. 3 an jeder langen Seite.",
+        "Auf den Tisch zwei bis drei Pedestals oder Item Shelves mit den Honeycombs der aktuellen Zuchtlinie.",
+        "Optional eine weiße Tischdecke, wenn Handcrafted Sheets auf Tischen anbietet."
+      ],
+      "material": [
+        "Birch Tables (Handcrafted) für 6 × 3",
+        "6× Birch Chair (Handcrafted)",
+        "2–3× Pedestal oder Item Shelf (Supplementaries)"
+      ],
+      "orte": [
+        [
+          [
+            -9,
+            1,
+            21
+          ],
+          [
+            -4,
+            1,
+            23
+          ]
+        ]
+      ],
+      "status": "offen"
+    },
+    {
+      "id": "zuchtbaum",
+      "zelle": "Labor & Zucht",
+      "name": "Zuchtbaum",
+      "mod": "Supplementaries",
       "was": "Großes Notice Board an der Wand zur Produktion mit der Zuchtreihe, die gerade läuft.",
-      "orte": [[[2, 2, 17], [2, 2, 17]]], "status": "offen" },
-    { "id": "laborfenster", "zelle": "Labor & Zucht", "name": "Fenster in der Fassade", "mod": "Macaw's Windows",
+      "aussehen": "An der Wand zur Produktion hängt ein großer Aushang mit dem Stammbaum: welche Biene aus welchen zwei gezüchtet wird.",
+      "bauen": [
+        "Notice Board (Supplementaries) auf Augenhöhe an die Wand.",
+        "Book and Quill: eine Seite pro Zuchtschritt, z. B. „Rocky + Common → Stone“.",
+        "Signieren, einlegen. Bei neuer Zuchtlinie Buch tauschen."
+      ],
+      "material": [
+        "1× Notice Board (Supplementaries)",
+        "1× Book and Quill"
+      ],
+      "orte": [
+        [
+          [
+            2,
+            2,
+            17
+          ],
+          [
+            2,
+            2,
+            17
+          ]
+        ]
+      ],
+      "status": "offen"
+    },
+    {
+      "id": "laborfenster",
+      "zelle": "Labor & Zucht",
+      "name": "Fenster in der Fassade",
+      "mod": "Macaw's Windows",
       "was": "Zwei Fenster auf Augenhöhe in der Lamellenfassade.",
-      "orte": [[[-16, 2, 27], [-16, 3, 28]]], "status": "offen" },
-
-    { "id": "turmkrone", "zelle": "Honigturm", "name": "Turmkrone", "mod": "Create",
+      "aussehen": "Zwei echte Fenster mit hellem Holzrahmen in der Lamellenfassade, auf Augenhöhe. Von innen sieht man raus, von außen ins Labor.",
+      "bauen": [
+        "In der Fassade an der markierten Stelle zwei Blöcke breit und zwei hoch öffnen.",
+        "Birch-Fenster aus Macaw's Windows einsetzen.",
+        "Innen darunter eine Fensterbank, darauf eine Flower Box."
+      ],
+      "material": [
+        "Birch-Fenster für 2 × 2 (Macaw's Windows)",
+        "Fensterbank (Macaw's Windows)",
+        "1× Flower Box (Supplementaries)"
+      ],
+      "orte": [
+        [
+          [
+            -16,
+            2,
+            27
+          ],
+          [
+            -16,
+            3,
+            28
+          ]
+        ]
+      ],
+      "status": "offen"
+    },
+    {
+      "id": "turmkrone",
+      "zelle": "Honigturm",
+      "name": "Turmkrone",
+      "mod": "Create",
       "was": "Waxed Cut Copper gegen Copper Shingles tauschen, wirkt wie ein Dach.",
-      "orte": [[[26, 34, -5], [37, 34, 6]]], "status": "offen" },
-    { "id": "galerie", "zelle": "Honigturm", "name": "Galerie am Turm", "mod": "Macaw's Fences and Walls",
+      "aussehen": "Der Abschluss oben am Honigturm sieht aus wie ein kleines Kupferdach mit Schindeln, statt glatter Kupferblöcke. Wirkt wie die Kuppel eines Bienenstocks.",
+      "bauen": [
+        "Die oberste Lage Waxed Cut Copper abbauen.",
+        "Waxed Copper Shingles (Create) setzen, wo es geht als Treppen- bzw. Slab-Varianten für eine leichte Schräge zur Mitte.",
+        "Ganz oben in der Mitte optional ein Lightning Rod als Spitze."
+      ],
+      "material": [
+        "Waxed Copper Shingles (Create), auch als Stairs und Slabs",
+        "optional 1× Lightning Rod"
+      ],
+      "orte": [
+        [
+          [
+            26,
+            34,
+            -5
+          ],
+          [
+            37,
+            34,
+            6
+          ]
+        ]
+      ],
+      "status": "offen"
+    },
+    {
+      "id": "galerie",
+      "zelle": "Honigturm",
+      "name": "Galerie am Turm",
+      "mod": "Macaw's Fences and Walls",
       "was": "Geländer rund um den Zylinder auf Höhe des Zellendachs.",
-      "orte": [[[25, 10, -6], [38, 10, 7]]], "status": "offen" },
-    { "id": "turmsockel", "zelle": "Honigturm", "name": "Blumen am Turmfuß", "mod": "Supplementaries",
+      "aussehen": "Ein schmaler Balkon mit Geländer rund um den Turm, auf Höhe des Dachs der Turmzelle. Von dort schaut man über den Campus.",
+      "bauen": [
+        "Auf Höhe des Zellendachs einen Block breiten Umlauf rund um den Zylinder legen, aus Polished Deepslate Slabs.",
+        "Außen ein Geländer aus Macaw's Fences and Walls drauf, schlicht und hell oder Kupferton.",
+        "Zugang über eine Leiter oder Treppe vom Zellendach."
+      ],
+      "material": [
+        "Polished Deepslate Slabs für den Umlauf",
+        "Geländer aus Macaw's Fences and Walls"
+      ],
+      "orte": [
+        [
+          [
+            25,
+            10,
+            -6
+          ],
+          [
+            38,
+            10,
+            7
+          ]
+        ]
+      ],
+      "status": "offen"
+    },
+    {
+      "id": "turmsockel",
+      "zelle": "Honigturm",
+      "name": "Blumen am Turmfuß",
+      "mod": "Supplementaries",
       "was": "Rund um den Zylinder innen in der Zelle eine Reihe Flower Boxes.",
-      "orte": [[[25, 1, -6], [38, 1, 7]]], "status": "offen" },
-
-    { "id": "gartenmauer", "zelle": "Bienengarten", "name": "Geländer auf der Mauer", "mod": "Macaw's Fences and Walls",
+      "aussehen": "Innen in der Turmzelle steht unten rund um den Zylinder eine Reihe Blumenkästen. Grün und bunt am Fuß des Turms.",
+      "bauen": [
+        "Rund um den Zylinder auf Bodenhöhe eine Reihe Flower Boxes (Supplementaries) setzen.",
+        "In jede Box bis zu drei Blumen, gemischt.",
+        "Node-Zonen und Wege frei lassen."
+      ],
+      "material": [
+        "Flower Boxes (Supplementaries) rundum",
+        "gemischte Blumen"
+      ],
+      "orte": [
+        [
+          [
+            25,
+            1,
+            -6
+          ],
+          [
+            38,
+            1,
+            7
+          ]
+        ]
+      ],
+      "status": "offen"
+    },
+    {
+      "id": "gartenmauer",
+      "zelle": "Bienengarten",
+      "name": "Geländer auf der Mauer",
+      "mod": "Macaw's Fences and Walls",
       "was": "Geländer auf der Lamellenmauer rundum.",
-      "orte": [[[-19, 6, -11], [6, 6, 11]]], "status": "offen" },
-    { "id": "beete", "zelle": "Bienengarten", "name": "Blumenbeete", "mod": "Supplementaries",
+      "aussehen": "Auf der Mauer um den Bienengarten verläuft oben ein durchgehendes Geländer. Der Garten wirkt dadurch abgeschlossen, aber nicht wie eine Festung.",
+      "bauen": [
+        "Auf die Mauerkrone eine Reihe Geländer aus Macaw's Fences and Walls, im selben Stil wie am Turm.",
+        "Ecken mit den passenden Eckteilen sauber schließen."
+      ],
+      "material": [
+        "Geländer aus Macaw's Fences and Walls, ganze Mauerlänge"
+      ],
+      "orte": [
+        [
+          [
+            -19,
+            6,
+            -11
+          ],
+          [
+            6,
+            6,
+            11
+          ]
+        ]
+      ],
+      "status": "offen"
+    },
+    {
+      "id": "beete",
+      "zelle": "Bienengarten",
+      "name": "Blumenbeete",
+      "mod": "Supplementaries",
       "was": "Flower Boxes entlang der Mauer, dazu die gemischten Blumen im Gras. Bienen brauchen Blumen in der Nähe.",
-      "block": "flower", "status": "offen" },
-    { "id": "baenke-garten", "zelle": "Bienengarten", "name": "Bänke am Platz", "mod": "Handcrafted",
+      "aussehen": "Entlang der Mauer innen eine Reihe Blumenkästen, im Gras dazwischen bunt gemischte Blumen. Der Garten soll wie eine Blumenwiese aussehen.",
+      "bauen": [
+        "Innen an der Mauer eine Reihe Flower Boxes.",
+        "Im Gras gemischte Blumen verteilen, nicht in Reihen.",
+        "Wege zu Bänken und Nestern freilassen."
+      ],
+      "material": [
+        "Flower Boxes (Supplementaries)",
+        "gemischte Blumen"
+      ],
+      "block": "flower",
+      "status": "offen"
+    },
+    {
+      "id": "baenke-garten",
+      "zelle": "Bienengarten",
+      "name": "Bänke am Platz",
+      "mod": "Handcrafted",
       "was": "Vier Handcrafted Benches rund um die Azalee.",
-      "orte": [[[-7, 1, -4], [-6, 1, -4]], [[-7, 1, 3], [-6, 1, 3]], [[-11, 1, -1], [-11, 1, 0]], [[-2, 1, -1], [-2, 1, 0]]], "status": "offen" },
-    { "id": "nester", "zelle": "Bienengarten", "name": "Schau-Nester", "mod": "Productive Bees",
+      "aussehen": "Vier Bänke stehen im Kreis rund um die Azalee in der Mitte, alle mit Blick zum Baum. Ein kleiner Platz zum Sitzen.",
+      "bauen": [
+        "Vier Birch Benches (Handcrafted) an die markierten Stellen.",
+        "Alle mit der Sitzfläche zur Azalee drehen."
+      ],
+      "material": [
+        "4× Birch Bench (Handcrafted)"
+      ],
+      "orte": [
+        [
+          [
+            -7,
+            1,
+            -4
+          ],
+          [
+            -6,
+            1,
+            -4
+          ]
+        ],
+        [
+          [
+            -7,
+            1,
+            3
+          ],
+          [
+            -6,
+            1,
+            3
+          ]
+        ],
+        [
+          [
+            -11,
+            1,
+            -1
+          ],
+          [
+            -11,
+            1,
+            0
+          ]
+        ],
+        [
+          [
+            -2,
+            1,
+            -1
+          ],
+          [
+            -2,
+            1,
+            0
+          ]
+        ]
+      ],
+      "status": "offen"
+    },
+    {
+      "id": "nester",
+      "zelle": "Bienengarten",
+      "name": "Schau-Nester",
+      "mod": "Productive Bees",
       "was": "Ein paar Nester für die Optik zwischen den Blumen.",
-      "orte": [[[-14, 1, -3], [-14, 1, -3]], [[1, 1, 4], [1, 1, 4]], [[-10, 1, 6], [-10, 1, 6]]], "status": "offen" },
-
-    { "id": "erweiterung-frei", "zelle": "Erweiterung", "name": "Node-Rahmen freihalten", "mod": null,
+      "aussehen": "Zwischen den Blumen stehen ein paar natürliche Bienennester, so dass der Garten bewohnt aussieht.",
+      "bauen": [
+        "Drei Nester aus Productive Bees an die markierten Stellen.",
+        "Gut eignen sich Nester, die zum Gras passen, z. B. ein Oak Wood Nest oder ein Stone Nest."
+      ],
+      "material": [
+        "3× Nest (Productive Bees)"
+      ],
+      "orte": [
+        [
+          [
+            -14,
+            1,
+            -3
+          ],
+          [
+            -14,
+            1,
+            -3
+          ]
+        ],
+        [
+          [
+            1,
+            1,
+            4
+          ],
+          [
+            1,
+            1,
+            4
+          ]
+        ],
+        [
+          [
+            -10,
+            1,
+            6
+          ],
+          [
+            -10,
+            1,
+            6
+          ]
+        ]
+      ],
+      "status": "offen"
+    },
+    {
+      "id": "erweiterung-frei",
+      "zelle": "Erweiterung",
+      "name": "Node-Rahmen freihalten",
+      "mod": null,
       "was": "Bleibt leer, bis Hive 2 und Zentrifuge 2 kommen. Als Zwischenlager okay, aber nichts auf die dunklen Rahmen stellen.",
-      "orte": [[[5, 0, -13], [20, 0, -9]]], "status": "fertig" },
-
-    { "id": "attika", "zelle": "Außen", "name": "Dachkanten", "mod": "Macaw's Roofs",
+      "aussehen": "Die Erweiterungszelle bleibt leer, bis Hive 2 und Zentrifuge 2 kommen.",
+      "bauen": [
+        "Nichts auf die dunklen Bodenrahmen stellen. Als Zwischenlager okay."
+      ],
+      "material": [],
+      "orte": [
+        [
+          [
+            5,
+            0,
+            -13
+          ],
+          [
+            20,
+            0,
+            -9
+          ]
+        ]
+      ],
+      "status": "fertig"
+    },
+    {
+      "id": "attika",
+      "zelle": "Außen",
+      "name": "Dachkanten",
+      "mod": "Macaw's Roofs",
       "was": "Dünne dunkle Attika rundum statt der Dachkante aus Polished Deepslate.",
-      "orte": [], "status": "offen" },
-    { "id": "steg", "zelle": "Außen", "name": "Steg zum ME-Gebäude", "mod": "Macaw's Bridges",
+      "aussehen": "Die Dachkanten werden dünner und eleganter: statt eines vollen dunklen Blockrands läuft oben ein schmaler dunkler Abschluss rundum.",
+      "bauen": [
+        "An einer Seite testen: die Kante aus Polished Deepslate durch ein flaches dunkles Teil aus Macaw's Roofs ersetzen.",
+        "Wenn es passt, rundum an allen Zellen ersetzen."
+      ],
+      "material": [
+        "Dunkle Dachkanten aus Macaw's Roofs, ganze Dachumfänge"
+      ],
+      "orte": [],
+      "status": "offen"
+    },
+    {
+      "id": "steg",
+      "zelle": "Außen",
+      "name": "Steg zum ME-Gebäude",
+      "mod": "Macaw's Bridges",
       "was": "Vom Foyer-Eingang zum ME-Gebäude, sobald dessen Lage feststeht.",
-      "orte": [], "status": "offen" }
+      "aussehen": "Ein Steg verbindet den Foyer-Eingang mit dem ME-Gebäude, hell und schlicht wie der Rest des Campus.",
+      "bauen": [
+        "Lage steht jetzt fest: ME-Gebäude liegt nordwestlich, Ecke bei Welt 246, 65, −385.",
+        "Verlauf festlegen und mit einer Brücke aus Macaw's Bridges bauen, Birch oder Metall."
+      ],
+      "material": [
+        "Brückenteile aus Macaw's Bridges"
+      ],
+      "orte": [],
+      "status": "offen"
+    }
   ]
 }

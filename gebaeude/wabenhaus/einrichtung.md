@@ -33,8 +33,11 @@ In `einrichtung.json` unter `teile` einen Eintrag ergänzen:
 
 ```json
 { "id": "kurzname", "zelle": "Foyer", "name": "Anzeigename", "mod": "Handcrafted",
-  "was": "Was genau hinkommt.",
+  "was": "Kurz: was hinkommt.",
+  "aussehen": "Wie es fertig aussieht, so wie man es im Raum sieht.",
+  "bauen": ["Schritt 1", "Schritt 2"],
+  "material": ["2× Birch Chair (Handcrafted)"],
   "orte": [[[x1, y1, z1], [x2, y2, z2]]], "status": "offen" }
 ```
 
-`orte` ist eine Liste von Bereichen, jeweils von–bis in Plan-Koordinaten. Ist ein Teil fertig, `status` auf `fertig` setzen.
+`orte` ist eine Liste von Bereichen, jeweils von–bis in Plan-Koordinaten. `aussehen`, `bauen` und `material` sind optional, die Website zeigt sie unter „So baust du es“. Ist ein Teil fertig, `status` auf `fertig` setzen.
