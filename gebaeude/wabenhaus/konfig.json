@@ -2,10 +2,10 @@
   "hinweis": "Maschinendaten für die Website. Positionen relativ zu P0, [x, y, z]. Lesbare Fassung: konfig.md",
   "netzwerke": [
     {
-      "id": "bienchen",
-      "name": "Bienchen",
+      "id": "bienschen",
+      "name": "Bienschen",
       "mod": "Logistics Network",
-      "upgrade": "Netherite Upgrade in allen Nodes",
+      "upgrade": "Netherite Upgrade in allen Nodes. Ersetzt nach und nach das alte Netz „Bienchen“.",
       "kanaele": [
         {
           "nr": 0,
@@ -233,7 +233,8 @@
               "richtung": "rein",
               "filter": "Wax"
             }
-          ]
+          ],
+          "hinweis": "Prüfen, ob die Nodes noch dran sind. Ohne Wax-Quelle tun sie nichts."
         },
         {
           "label": "Heater",

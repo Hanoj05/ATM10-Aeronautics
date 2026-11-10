@@ -62,7 +62,9 @@ O = Centrifuge Overclocker (12), G = Centrifuge Gearbox (6), H = Centrifuge Heat
 
 Zwei Import Hatches nie aufeinander zeigen lassen, das erzeugt Geister-Combs.
 
-## Logistics Network „Bienchen“
+## Logistics Network „Bienschen“
+
+Bienschen ist die überarbeitete Fassung und ersetzt auf lange Sicht das alte Netz „Bienchen“ komplett. Unterschiede: K3 fällt weg, jeder Kanal hat einen festen Takt. K8 bleibt.
 
 Alle Nodes mit Netherite Upgrade. Kanalnummern wie im Spiel, ab 0 gezählt. Den Takt (Tick Delay) stellt man am **sendenden** Node ein, die Mod rechnet die Wartezeit pro Sender-Kanal.
 
@@ -82,11 +84,10 @@ K3 (Wax aus der Zentrifuge in die Gearboxen) ist gestrichen: Mit Heater gibt die
 
 Gemessen mit Spark am 10.11.2026, 4 Minuten, ganzer Server bei rund 57 ms pro Tick (TPS 17). Logistics Networks lag bei etwa **1 ms pro Tick, knapp 2 %**. Die Nodes sind also nicht der Grund für die Ruckler. Trotzdem lässt sich das Netz entlasten:
 
-1. **K8 ist der Wecker.** Energie-Kanäle laufen in der Mod fest jeden Tick, unabhängig vom eingestellten Takt. Weil die 23 Overclocker und der Heater dauernd Strom ziehen, ist jede Übertragung erfolgreich, und die Mod weckt das ganze Netz „Bienchen“ im nächsten Tick wieder auf. Dann baut sie jedes Mal für alle 44 Nodes ihre Listen neu auf, auch wenn kein Item-Kanal dran ist. Das ist der größte Teil der 1 ms.
-2. **Ohne K8 schläft das Netz.** Den Strom für Overclocker und Heater per Kabel liefern statt über Nodes, z. B. mit Mekanism Universal Cables oder Powah Energy Cables an die gemusterte Seite. Dann wacht „Bienchen“ nur noch auf, wenn ein Item- oder Flüssigkeitskanal dran ist. Nachteil: Kabel rund um Hive und Zentrifuge, die man verkleiden muss.
-3. **Takte hochsetzen.** Nachschub (K2) reicht alle 10 Sekunden, mit Netherite Upgrade gehen pro Durchgang bis zu 10.000 Items. Produkte und Honig (K0, K5) alle 2 Sekunden. Wirkt erst richtig, wenn K8 weg ist.
-4. **K3 abbauen**, siehe oben. Spart pro Gearbox und am Centr Export einen Kanal.
-5. **Redstone-Modus auf „Ignored“ lassen.** Jeder Kanal mit Redstone-Bedingung lässt die Mod bei jedem Durchlauf die Signale aller Nodes prüfen.
+1. **K8 bleibt, das ist entschieden.** Zur Info: Energie-Kanäle laufen in der Mod fest jeden Tick, unabhängig vom eingestellten Takt. Weil die 23 Overclocker und der Heater dauernd Strom ziehen, weckt K8 das ganze Netz jeden Tick wieder auf, und die Mod baut dabei ihre Listen für alle Nodes neu auf. Das ist der größte Teil der 1 ms. Die Alternative wäre Strom per Kabel, das hätte aber Kabel rund um Hive und Zentrifuge bedeutet.
+2. **Takte hochsetzen.** Nachschub (K2) reicht alle 10 Sekunden, mit Netherite Upgrade gehen pro Durchgang bis zu 10.000 Items. Produkte und Honig (K0, K5) alle 2 Sekunden. Weil K8 das Netz ohnehin jeden Tick weckt, sparen die Takte vor allem die eigentlichen Transporte, nicht das Aufwachen.
+3. **K3 abbauen**, siehe oben. Spart pro Gearbox und am Centr Export einen Kanal.
+4. **Redstone-Modus auf „Ignored“ lassen.** Jeder Kanal mit Redstone-Bedingung lässt die Mod bei jedem Durchlauf die Signale aller Nodes prüfen.
 
 Was im selben Profil wirklich Zeit kostet:
 
@@ -152,8 +153,10 @@ Kommen in die Erweiterungszelle, an dieselben relativen Positionen: Hive 2 bei x
 
 - [x] Hive gebaut
 - [x] Zentrifuge gebaut
-- [x] Anbindung ans ME-Gebäude: wireless, Barrels bleiben in der Technik
+- [x] Anbindung ans ME-Gebäude: wireless
+- [x] Barrels stehen im Haus. In der Campus-Schematic vom 10.11.2026 sind sie noch nicht drin, Positionen deshalb ungeprüft
 - [ ] Wax-Quelle für das Wax Barrel
-- [ ] Leistung: K3 abbauen, Takte setzen (K0/K5 40, K2 200 Ticks)
-- [ ] Leistung: Strom per Kabel statt K8, dann schläft das Netz
+- [ ] Bienschen: K3 abbauen, Takte setzen (K0/K5 40, K1 20, K2 200 Ticks)
+- [ ] Bienschen ersetzt Bienchen komplett, dann das alte Netz abbauen
+- [ ] Gearbox-Nodes prüfen: noch dran? Ohne Wax-Quelle tun sie nichts
 - [ ] Hive 2 und Zentrifuge 2

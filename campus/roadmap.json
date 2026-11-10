@@ -143,7 +143,7 @@
       "ziel": "Für jedes Gebäude ist nachlesbar, wie es eingestellt ist, und die Technik läuft sparsam.",
       "punkte": [
         {
-          "titel": "Spark-Profil ausgewertet, Bienchen-Konfig überarbeitet",
+          "titel": "Spark-Profil ausgewertet, Konfig zu „Bienschen“ überarbeitet",
           "wo": "Website",
           "bereich": "Doku",
           "status": "erledigt",
@@ -152,22 +152,22 @@
           "text": "Logistics Networks ca. 1 ms pro Tick. Größere Posten: Mobs, AE2-Speicher, Aeronautics-Physik."
         },
         {
-          "titel": "Bienchen entlasten: K3 abbauen, Takte setzen",
+          "titel": "Bienschen: K3 abbauen, Takte setzen",
           "wo": "Minecraft",
           "bereich": "Gebäude",
           "status": "offen",
           "gebaeude": "wabenhaus",
           "tab": "konfig",
-          "text": "K0 und K5 auf 40 Ticks, K2 auf 200 Ticks, am sendenden Node."
+          "text": "K0 und K5 auf 40 Ticks, K1 auf 20, K2 auf 200, am sendenden Node. K8 bleibt."
         },
         {
-          "titel": "Bienchen: Strom per Kabel statt K8",
+          "titel": "Bienschen ersetzt Bienchen komplett",
           "wo": "Minecraft",
           "bereich": "Gebäude",
-          "status": "offen",
+          "status": "in Arbeit",
           "gebaeude": "wabenhaus",
           "tab": "konfig",
-          "text": "Energie-Kanäle wecken das Netz jeden Tick. Ohne K8 schläft es zwischen den Transporten."
+          "text": "Wenn alles auf Bienschen läuft, das alte Netz abbauen."
         },
         {
           "titel": "ME-Gebäude: Zellen, Prioritäten, Kanäle und Energie dokumentieren",
