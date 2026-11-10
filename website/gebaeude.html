@@ -17,8 +17,6 @@
 <nav class="subtabs" aria-label="Bereiche des Gebäudes">
   <a href="#ansicht" data-view="ansicht">3D-Ansicht</a>
   <a href="#konfig" data-view="konfig">Konfiguration</a>
-  <a href="#einrichtung" data-view="einrichtung">Einrichtung</a>
-  <a href="#dokumente" data-view="dokumente">Dokumente</a>
   <a href="#bauplan" data-view="bauplan" id="bauplanTab">Bauplan</a>
 </nav>
 
@@ -27,12 +25,6 @@
     <div class="viewport" id="viewport">
       <div class="loading" id="loading">Lade Gebäude …</div>
       <div class="controls">
-        <span class="ctl">Ebene
-          <span class="seg2" role="group" aria-label="Ebene">
-            <button type="button" data-ebene="technik" aria-pressed="true">Technik</button>
-            <button type="button" data-ebene="einrichtung" aria-pressed="false">Einrichtung</button>
-          </span>
-        </span>
         <label class="ctl" for="schnitt">Schnitt bei <input type="range" id="schnitt" min="0" max="40" value="5"> <span id="schnittWert">y 5</span></label>
         <span class="ctl"><button type="button" id="ansichtReset">Ansicht zurücksetzen</button></span>
       </div>
@@ -50,26 +42,11 @@
     <div class="box scrollx"><table class="matrix" id="matrix"></table></div>
     <h2>Flüsse pro Kanal</h2>
     <div class="flows" id="fluesse"></div>
-  </div>
-</section>
-
-<section class="view" id="view-einrichtung">
-  <div class="page">
-    <h2>Einrichtung</h2>
-    <p class="lead" id="einrLead">Was in die Räume kommt. „Im 3D zeigen“ springt zur Stelle im Modell.</p>
-    <div class="fortschritt" id="fortschritt"></div>
-    <div id="stil"></div>
-    <div class="gruppe" id="einrListe"></div>
-  </div>
-</section>
-
-<section class="view" id="view-dokumente">
-  <div class="page">
-    <div class="tabs" role="group" aria-label="Dokumente">
-      <button type="button" data-doc="konfig" aria-pressed="true">konfig.md</button>
-      <button type="button" data-doc="einrichtung" aria-pressed="false">einrichtung.md</button>
+    <div id="notizenBox">
+      <h2>Details und Hinweise</h2>
+      <p class="lead">Aus <code>konfig.md</code>: Aufbau der Maschinen, Einstellungen, Stand.</p>
+      <article class="md box" id="doc"></article>
     </div>
-    <article class="md" id="doc"></article>
   </div>
 </section>
 

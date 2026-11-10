@@ -1,5 +1,5 @@
 {
-  "hinweis": "Roadmap für Campus und Website. wo: Minecraft (im Spiel zu tun) oder Website (am Repo und an der Seite). status: erledigt, in Arbeit oder offen. bereich: Gebäude, 3D, Doku, Website oder Betrieb. gebaeude (optional) = ID, dann verlinkt die Seite dorthin; tab (optional) = Tab der Gebäudeseite.",
+  "hinweis": "Roadmap für Campus und Website. wo: Minecraft (im Spiel zu tun) oder Website (am Repo und an der Seite). status: erledigt, in Arbeit oder offen. bereich: Gebäude, 3D, Doku, Website oder Betrieb. gebaeude (optional) = ID, dann verlinkt die Seite dorthin; tab (optional) = Tab der Gebäudeseite (ansicht, konfig, bauplan).",
   "phasen": [
     {
       "id": "fundament",
@@ -20,7 +20,7 @@
           "gebaeude": "wabenhaus"
         },
         {
-          "titel": "Wabenhaus: Bauplan, Blockmodell, Konfiguration und Einrichtung",
+          "titel": "Wabenhaus: Bauplan, Blockmodell und Konfiguration",
           "wo": "Website",
           "bereich": "Gebäude",
           "status": "erledigt",
@@ -61,6 +61,12 @@
         },
         {
           "titel": "Roadmap-Seite",
+          "wo": "Website",
+          "bereich": "Website",
+          "status": "erledigt"
+        },
+        {
+          "titel": "Website entschlackt: Einrichtung raus, konfig.md im Tab Konfiguration",
           "wo": "Website",
           "bereich": "Website",
           "status": "erledigt"
@@ -113,17 +119,35 @@
     },
     {
       "id": "doku",
-      "titel": "Technik und Einrichtung",
-      "ziel": "Für jedes Gebäude ist nachlesbar, wie es eingestellt und eingerichtet ist.",
+      "titel": "Technik",
+      "ziel": "Für jedes Gebäude ist nachlesbar, wie es eingestellt ist, und die Technik läuft sparsam.",
       "punkte": [
         {
-          "titel": "Wabenhaus: Einrichtung umsetzen",
-          "wo": "Minecraft",
+          "titel": "Spark-Profil ausgewertet, Bienchen-Konfig überarbeitet",
+          "wo": "Website",
           "bereich": "Doku",
-          "status": "in Arbeit",
+          "status": "erledigt",
           "gebaeude": "wabenhaus",
-          "tab": "einrichtung",
-          "fortschritt": "einrichtung"
+          "tab": "konfig",
+          "text": "Logistics Networks ca. 1 ms pro Tick. Größere Posten: Mobs, AE2-Speicher, Aeronautics-Physik."
+        },
+        {
+          "titel": "Bienchen entlasten: K3 abbauen, Takte setzen",
+          "wo": "Minecraft",
+          "bereich": "Gebäude",
+          "status": "offen",
+          "gebaeude": "wabenhaus",
+          "tab": "konfig",
+          "text": "K0 und K5 auf 40 Ticks, K2 auf 200 Ticks, am sendenden Node."
+        },
+        {
+          "titel": "Bienchen: Strom per Kabel statt K8",
+          "wo": "Minecraft",
+          "bereich": "Gebäude",
+          "status": "offen",
+          "gebaeude": "wabenhaus",
+          "tab": "konfig",
+          "text": "Energie-Kanäle wecken das Netz jeden Tick. Ohne K8 schläft es zwischen den Transporten."
         },
         {
           "titel": "ME-Gebäude: Zellen, Prioritäten, Kanäle und Energie dokumentieren",
@@ -132,14 +156,6 @@
           "status": "offen",
           "gebaeude": "me-zentrale",
           "tab": "konfig"
-        },
-        {
-          "titel": "ME-Gebäude: Einrichtung planen und bauen",
-          "wo": "Minecraft",
-          "bereich": "Doku",
-          "status": "offen",
-          "gebaeude": "me-zentrale",
-          "tab": "einrichtung"
         },
         {
           "titel": "Weitere Gebäude des Campus bauen",

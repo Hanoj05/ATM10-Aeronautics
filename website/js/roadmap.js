@@ -7,7 +7,7 @@
 
   var STATUS = { "erledigt": "erledigt", "in Arbeit": "arbeit", "offen": "offen" };
   var filter = "alle", filterWo = "alle", daten = null;
-  var WO = { "Minecraft": { kl: "mc", text: "Im Spiel zu tun: bauen, einrichten, exportieren" }, "Website": { kl: "web", text: "Am Repo und an der Seite" } };
+  var WO = { "Minecraft": { kl: "mc", text: "Im Spiel zu tun: bauen, einstellen, exportieren" }, "Website": { kl: "web", text: "Am Repo und an der Seite" } };
   function passt(p) { return (filter === "alle" || p.status === filter) && (filterWo === "alle" || p.wo === filterWo); }
   function naechster(punkte) {
     return punkte.filter(function (p) { return p.status === "in Arbeit"; })[0] || punkte.filter(function (p) { return p.status === "offen"; })[0];
@@ -26,17 +26,7 @@
   ]).then(function (r) {
     var roadmap = r[0], namen = {};
     r[1].gebaeude.forEach(function (g) { namen[g.id] = g.name; });
-    /* Fortschritt aus den Gebäudedaten holen, wo ein Punkt das will */
-    var holen = [];
-    roadmap.phasen.forEach(function (ph) { ph.punkte.forEach(function (p) {
-      if (p.fortschritt === "einrichtung" && p.gebaeude) {
-        holen.push(C.ladeJSON("gebaeude/" + p.gebaeude + "/einrichtung.json").then(function (e) {
-          var t = e.teile || [];
-          p.messung = { fertig: t.filter(function (x) { return x.status === "fertig"; }).length, von: t.length };
-        }).catch(function () {}));
-      }
-    }); });
-    return Promise.all(holen).then(function () { daten = { roadmap: roadmap, namen: namen }; zeige(); });
+    daten = { roadmap: roadmap, namen: namen }; zeige();
   }).catch(function (e) { $("stand").innerHTML = "<p class='note'>Fehler: " + esc(e.message) + "</p>"; });
 
   function knopfGruppe(id, setze) {
@@ -100,7 +90,6 @@
           var kl = STATUS[p.status] || "offen";
           h += "<li class='box rm-punkt " + kl + "'><span class='rm-status " + kl + "'>" + esc(p.status) + "</span><div class='rm-text'><strong>" + esc(p.titel) + "</strong>";
           if (p.text) h += "<p>" + esc(p.text) + "</p>";
-          if (p.messung && p.messung.von) h += "<div class='rm-messung'><small>" + p.messung.fertig + " von " + p.messung.von + " fertig</small><div class='balken'><i style='width:" + Math.round(p.messung.fertig / p.messung.von * 100) + "%'></i></div></div>";
           var wk = (WO[p.wo] || {}).kl || "web";
           h += "</div><div class='rm-meta'><span class='rm-wo " + wk + "'>" + esc(p.wo || "Website") + "</span><span class='rm-bereich'>" + esc(p.bereich || "") + "</span>";
           if (p.gebaeude && daten.namen[p.gebaeude]) h += "<a href='gebaeude.html?id=" + encodeURIComponent(p.gebaeude) + "#" + esc(p.tab || "ansicht") + "'>" + esc(daten.namen[p.gebaeude]) + " →</a>";

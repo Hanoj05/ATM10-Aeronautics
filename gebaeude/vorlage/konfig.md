@@ -1,6 +1,6 @@
 # Gebäudename – Technik und Konfiguration
 
-Maschinen, Netzwerke, Filter und Energie. Einrichtung und Deko stehen in [einrichtung.md](einrichtung.md).
+Maschinen, Netzwerke, Filter und Energie.
 
 Koordinaten sind relativ zu P0 (x nach Osten, z nach Süden, y = 0 ist der Boden).
 

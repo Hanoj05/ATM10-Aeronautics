@@ -1,6 +1,6 @@
 # ME-Gebäude – Technik und Konfiguration
 
-AE2-Hauptsystem. Einrichtung und Deko stehen in [einrichtung.md](einrichtung.md).
+AE2-Hauptsystem.
 
 Koordinaten sind relativ zur Ecke (0, 0, 0) der Schematic `schematics/me-zentrale.nbt`, das ist die Ecke unten im Nordwesten, in der Welt 246, 65, -385 (x nach Osten, z nach Süden, y = 0 ist die Bodenebene). Das Gebäude ist 53 × 53 Blöcke groß und 98 hoch.
 

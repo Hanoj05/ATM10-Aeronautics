@@ -47,9 +47,7 @@
     "bauplan": null,
     "modell": "modell.json",
     "konfigDaten": "konfig.json",
-    "einrichtungDaten": "einrichtung.json",
     "konfig": "konfig.md",
-    "einrichtung": "einrichtung.md",
     "schematic": "schematics/me-zentrale.nbt"
   }
 }

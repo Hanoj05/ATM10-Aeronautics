@@ -8,7 +8,6 @@ Zentrale des AE2-Hauptsystems: ein ME Controller als Säule in der Mitte, vier D
 | [modell.json](modell.json) | Blockmodell, erzeugt aus [schematics/me-zentrale.nbt](../../schematics/me-zentrale.nbt) |
 | [konfig.json](konfig.json) | Teile mit Position (für die Hover-Ansicht) |
 | [konfig.md](konfig.md) | Technik und Konfiguration zum Lesen |
-| [einrichtung.md](einrichtung.md) | Einrichtung und Deko |
 
 Modell neu erzeugen, wenn die Schematic ersetzt wurde:
 

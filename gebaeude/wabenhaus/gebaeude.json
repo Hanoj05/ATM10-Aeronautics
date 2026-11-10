@@ -4,35 +4,151 @@
   "zweck": "Bienen: Modular Beehive und Modular Centrifuge (Modular Bees), Zucht, Honig",
   "status": "gebaut",
   "welt": {
-    "p0": [392, 65, -286],
+    "p0": [
+      392,
+      65,
+      -286
+    ],
     "drehung": 90,
     "hinweis": "Gebaut um 90 Grad im Uhrzeigersinn gedreht: Plan-Norden zeigt in der Welt nach Osten, das Foyer liegt im Westen. Plan-Koordinate (x, y, z) -> Welt (392 - z, 65 + y, -286 + x). Eingemessen am Messpunkt, der Quartz Pillar bei Plan (6, 14, 0) = Welt (392, 79, -280)."
   },
-  "masse": { "breite": 64, "tiefe": 67, "hoehe": 35 },
-  "wabe": { "kante": 14, "stufen": 6, "zelle": [26, 23] },
+  "masse": {
+    "breite": 64,
+    "tiefe": 67,
+    "hoehe": 35
+  },
+  "wabe": {
+    "kante": 14,
+    "stufen": 6,
+    "zelle": [
+      26,
+      23
+    ]
+  },
   "zellen": [
-    { "id": "prod",   "name": "Produktion",    "ursprung": [0, 0],     "dach": 14, "dachart": "Glas" },
-    { "id": "foyer",  "name": "Foyer",         "ursprung": [0, 22],    "dach": 9,  "dachart": "Beton" },
-    { "id": "tech",   "name": "Technik",       "ursprung": [19, 11],   "dach": 7,  "dachart": "Beton" },
-    { "id": "lab",    "name": "Labor & Zucht", "ursprung": [-19, 11],  "dach": 11, "dachart": "Beton" },
-    { "id": "tower",  "name": "Honigturm",     "ursprung": [19, -11],  "dach": 9,  "dachart": "Beton", "turm": 34 },
-    { "id": "garden", "name": "Bienengarten",  "ursprung": [-19, -11], "dach": null, "mauer": 5 },
-    { "id": "exp",    "name": "Erweiterung",   "ursprung": [0, -22],   "dach": 14, "dachart": "Glas" }
+    {
+      "id": "prod",
+      "name": "Produktion",
+      "ursprung": [
+        0,
+        0
+      ],
+      "dach": 14,
+      "dachart": "Glas"
+    },
+    {
+      "id": "foyer",
+      "name": "Foyer",
+      "ursprung": [
+        0,
+        22
+      ],
+      "dach": 9,
+      "dachart": "Beton"
+    },
+    {
+      "id": "tech",
+      "name": "Technik",
+      "ursprung": [
+        19,
+        11
+      ],
+      "dach": 7,
+      "dachart": "Beton"
+    },
+    {
+      "id": "lab",
+      "name": "Labor & Zucht",
+      "ursprung": [
+        -19,
+        11
+      ],
+      "dach": 11,
+      "dachart": "Beton"
+    },
+    {
+      "id": "tower",
+      "name": "Honigturm",
+      "ursprung": [
+        19,
+        -11
+      ],
+      "dach": 9,
+      "dachart": "Beton",
+      "turm": 34
+    },
+    {
+      "id": "garden",
+      "name": "Bienengarten",
+      "ursprung": [
+        -19,
+        -11
+      ],
+      "dach": null,
+      "mauer": 5
+    },
+    {
+      "id": "exp",
+      "name": "Erweiterung",
+      "ursprung": [
+        0,
+        -22
+      ],
+      "dach": 14,
+      "dachart": "Glas"
+    }
   ],
   "maschinen": [
-    { "name": "Modular Beehive",    "zelle": "prod", "von": [6, 1, 10],  "bis": [8, 3, 12],  "nodes": 16 },
-    { "name": "Modular Centrifuge", "zelle": "prod", "von": [17, 1, 10], "bis": [19, 3, 12], "nodes": 21 }
+    {
+      "name": "Modular Beehive",
+      "zelle": "prod",
+      "von": [
+        6,
+        1,
+        10
+      ],
+      "bis": [
+        8,
+        3,
+        12
+      ],
+      "nodes": 16
+    },
+    {
+      "name": "Modular Centrifuge",
+      "zelle": "prod",
+      "von": [
+        17,
+        1,
+        10
+      ],
+      "bis": [
+        19,
+        3,
+        12
+      ],
+      "nodes": 21
+    }
   ],
   "netzwerke": [
-    { "mod": "Logistics Network", "name": "Bienchen", "kanaele": [0, 1, 2, 3, 5, 8] }
+    {
+      "mod": "Logistics Network",
+      "name": "Bienchen",
+      "kanaele": [
+        0,
+        1,
+        2,
+        3,
+        5,
+        8
+      ]
+    }
   ],
   "dateien": {
     "bauplan": "bauplan.html",
     "modell": "modell.json",
     "konfigDaten": "konfig.json",
-    "einrichtungDaten": "einrichtung.json",
     "konfig": "konfig.md",
-    "einrichtung": "einrichtung.md",
     "schematic": null
   }
 }

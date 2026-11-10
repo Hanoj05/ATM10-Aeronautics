@@ -229,10 +229,9 @@
       var d = geb.dateien || {};
       return Promise.all([
         opt(d.modell === undefined ? "modell.json" : d.modell),
-        opt(d.konfigDaten === undefined ? "konfig.json" : d.konfigDaten),
-        opt(d.einrichtungDaten === undefined ? "einrichtung.json" : d.einrichtungDaten)
+        opt(d.konfigDaten === undefined ? "konfig.json" : d.konfigDaten)
       ]).then(function (r) {
-        return { id: id, ordner: ordner, geb: geb, modell: r[0], konfig: r[1] || { netzwerke: [], teile: [] }, einr: r[2] || { teile: [] } };
+        return { id: id, ordner: ordner, geb: geb, modell: r[0], konfig: r[1] || { netzwerke: [], teile: [] } };
       });
     });
   }

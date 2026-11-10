@@ -21,9 +21,8 @@ Pro Gebäude:
 | Feld | Bedeutung |
 | --- | --- |
 | `titel` | Was zu tun ist |
-| `wo` | `Minecraft` (im Spiel: bauen, einrichten, exportieren) oder `Website` (am Repo und an der Seite) |
+| `wo` | `Minecraft` (im Spiel: bauen, einstellen, exportieren) oder `Website` (am Repo und an der Seite) |
 | `status` | `erledigt`, `in Arbeit` oder `offen` |
 | `bereich` | `Gebäude`, `3D`, `Doku`, `Website` oder `Betrieb` |
 | `text` | Optional: ein Satz mehr dazu |
-| `gebaeude`, `tab` | Optional: verlinkt auf die Gebäudeseite, z. B. Tab `einrichtung` |
-| `fortschritt` | Optional: `einrichtung` zeigt den Stand aus der `einrichtung.json` des Gebäudes |
+| `gebaeude`, `tab` | Optional: verlinkt auf die Gebäudeseite, z. B. Tab `konfig` |

@@ -1,6 +1,6 @@
 # Website
 
-Ziel: eine Seite mit 3D-Ansicht vom ganzen Campus. Jedes Gebäude lässt sich anklicken und zeigt dann seine Übersicht aus `gebaeude.json`, `einrichtung.md` und `konfig.md`.
+Ziel: eine Seite mit 3D-Ansicht vom ganzen Campus. Jedes Gebäude lässt sich anklicken und zeigt dann seine Übersicht aus `gebaeude.json`, `konfig.json` und `konfig.md`.
 
 ## Anschauen
 
@@ -15,14 +15,12 @@ Dann im Browser `http://localhost:8000` öffnen. Die Startseite leitet auf die C
 
 ## Seiten
 
-- `index.html` – **Übersicht:** eine Karte pro Gebäude mit Kennzahlen, Stand der Einrichtung und Sprungmarken, darunter alle Netzwerke.
+- `index.html` – **Übersicht:** eine Karte pro Gebäude mit Kennzahlen und Sprungmarken, darunter alle Netzwerke.
 - `map.html` – **Map:** der Campus in 3D. Hover zeigt den Gebäudenamen, Klick öffnet die Gebäudeseite.
-- `roadmap.html` – **Roadmap:** Phasen mit Stand, Filter nach Status. Daten aus `campus/roadmap.json`.
+- `roadmap.html` – **Roadmap:** Phasen mit Stand, getrennt nach Minecraft und Website, Filter nach Ort und Status. Daten aus `campus/roadmap.json`.
 - `gebaeude.html?id=<id>` – **Gebäude** mit Unter-Tabs:
-  - `#ansicht`: 3D-Modell mit Schnitt-Regler und zwei Ebenen. *Technik* zeigt beim Hovern die Konfiguration eines Teils, *Einrichtung* zeigt die geplanten Deko-Plätze als Kästen (orange offen, grau fertig).
-  - `#konfig`: Matrix, welches Teil auf welchem Kanal sendet oder empfängt, und die Flüsse pro Kanal.
-  - `#einrichtung`: Fortschritt pro Zelle und alle Einrichtungsteile als Karten mit „Im 3D zeigen“.
-  - `#dokumente`: `konfig.md` und `einrichtung.md`.
+  - `#ansicht`: 3D-Modell mit Schnitt-Regler. Hover zeigt die Konfiguration eines Teils, Kanäle lassen sich markieren.
+  - `#konfig`: Matrix, welches Teil auf welchem Kanal sendet oder empfängt, die Flüsse pro Kanal und darunter `konfig.md`.
   - `#bauplan`: der Bauplan eingebettet.
 
 ## Daten pro Gebäude
@@ -32,14 +30,13 @@ Dann im Browser `http://localhost:8000` öffnen. Die Startseite leitet auf die C
 | `gebaeude.json` | Steckbrief, Zellen, Dateiliste |
 | `modell.json` | Blockmodell. Erzeugt mit `tools/modell-aus-bauplan.py` oder aus einer Schematic mit `tools/modell-aus-schematic.py` |
 | `konfig.json` | Teile mit Position (`von`, `bis`), Einstellungen, Nodes und Kanälen. Das liest die Hover-Ansicht |
-| `einrichtung.json` | Einrichtungsteile mit Orten (`orte` oder `block`), Mod und Status. Das liest der Tab Einrichtung und die Ebene Einrichtung |
-| `konfig.md`, `einrichtung.md` | Lesbare Dokumente im Tab Dokumente |
+| `konfig.md` | Lesbare Details, erscheinen im Tab Konfiguration unter der Matrix |
 
 ## Ursprünglicher Plan
 
 - Statische Seite ohne Build-Schritt: eine `index.html` plus ein paar JavaScript-Dateien. Läuft auf jedem Webserver.
 - 3D mit three.js. Die Seite liest `campus/campus.json`, platziert jedes Gebäude an seiner Weltkoordinate und lädt dessen Daten.
-- Übersicht pro Gebäude: Steckbrief aus `gebaeude.json`, dazu `einrichtung.md` und `konfig.md` als formatierte Seiten.
+- Übersicht pro Gebäude: Steckbrief aus `gebaeude.json`, dazu `konfig.md` als formatierte Seite.
 
 ## 3D-Modelle in zwei Stufen
 

@@ -1,6 +1,6 @@
 # Wabenhaus – Technik und Konfiguration
 
-Alles, was eingestellt werden muss: Maschinen, Logistics Network, Filter, Energie. Einrichtung und Deko stehen in [einrichtung.md](einrichtung.md).
+Alles, was eingestellt werden muss: Maschinen, Logistics Network, Filter, Energie.
 
 Koordinaten sind Plan-Koordinaten relativ zu P0 (x nach Plan-Osten, z nach Plan-Süden, y = 0 ist der Boden).
 
@@ -64,18 +64,40 @@ Zwei Import Hatches nie aufeinander zeigen lassen, das erzeugt Geister-Combs.
 
 ## Logistics Network „Bienchen“
 
-Alle Nodes mit Netherite Upgrade. Kanalnummern wie im Spiel, ab 0 gezählt.
+Alle Nodes mit Netherite Upgrade. Kanalnummern wie im Spiel, ab 0 gezählt. Den Takt (Tick Delay) stellt man am **sendenden** Node ein, die Mod rechnet die Wartezeit pro Sender-Kanal.
 
 ### Kanäle
 
-| Kanal | Typ | Sender | Empfänger |
-| --- | --- | --- | --- |
-| 0 | Items | Hive Core (Honigflaschen), Centr Export (Draconic Dust, Obsidian Shard, Wither Skull Chip, Wax; Priorität −1) | Receiver Barrel (alles) |
-| 1 | Items | Hive Core (Comb-Blöcke: Draconic, Obsidian, Withered) | Centr Import (dieselben drei) |
-| 2 | Items | Overclocker Barrel, Honey Block Barrel, Bottle Barrel, Wax Barrel (Round Robin) | Overclocker (Netherite-Elektroden), Treater (Honey Treats, Honey Blocks), Hive Core (Glass Bottles), Gearbox (Wax) |
-| 3 | Items | Centr Export (Wax, Round Robin) | Gearbox (ohne Filter) |
-| 5 | Flüssigkeit | Hive Core, Centr Export | Output Tank |
-| 8 | Energie | Energy Source am Energy Cube (alle Seiten) | Overclocker (alle Seiten), Heater |
+| Kanal | Typ | Sender | Empfänger | Takt |
+| --- | --- | --- | --- | --- |
+| 0 | Items | Hive Core (Honigflaschen), Centr Export (Draconic Dust, Obsidian Shard, Wither Skull Chip; Priorität −1) | Receiver Barrel (alles) | 40 Ticks |
+| 1 | Items | Hive Core (Comb-Blöcke: Draconic, Obsidian, Withered) | Centr Import (dieselben drei) | 20 Ticks |
+| 2 | Items | Overclocker Barrel, Honey Block Barrel, Bottle Barrel, Wax Barrel (Round Robin) | Overclocker (Netherite-Elektroden), Treater (Honey Treats, Honey Blocks), Hive Core (Glass Bottles), Gearbox (Wax) | 200 Ticks |
+| 5 | Flüssigkeit | Hive Core, Centr Export | Output Tank | 40 Ticks |
+| 8 | Energie | Energy Source am Energy Cube (alle Seiten) | Overclocker (alle Seiten), Heater | jeden Tick, fest in der Mod |
+
+K3 (Wax aus der Zentrifuge in die Gearboxen) ist gestrichen: Mit Heater gibt die Zentrifuge kein Wax aus, der Kanal hat nie etwas transportiert.
+
+### Leistung
+
+Gemessen mit Spark am 10.11.2026, 4 Minuten, ganzer Server bei rund 57 ms pro Tick (TPS 17). Logistics Networks lag bei etwa **1 ms pro Tick, knapp 2 %**. Die Nodes sind also nicht der Grund für die Ruckler. Trotzdem lässt sich das Netz entlasten:
+
+1. **K8 ist der Wecker.** Energie-Kanäle laufen in der Mod fest jeden Tick, unabhängig vom eingestellten Takt. Weil die 23 Overclocker und der Heater dauernd Strom ziehen, ist jede Übertragung erfolgreich, und die Mod weckt das ganze Netz „Bienchen“ im nächsten Tick wieder auf. Dann baut sie jedes Mal für alle 44 Nodes ihre Listen neu auf, auch wenn kein Item-Kanal dran ist. Das ist der größte Teil der 1 ms.
+2. **Ohne K8 schläft das Netz.** Den Strom für Overclocker und Heater per Kabel liefern statt über Nodes, z. B. mit Mekanism Universal Cables oder Powah Energy Cables an die gemusterte Seite. Dann wacht „Bienchen“ nur noch auf, wenn ein Item- oder Flüssigkeitskanal dran ist. Nachteil: Kabel rund um Hive und Zentrifuge, die man verkleiden muss.
+3. **Takte hochsetzen.** Nachschub (K2) reicht alle 10 Sekunden, mit Netherite Upgrade gehen pro Durchgang bis zu 10.000 Items. Produkte und Honig (K0, K5) alle 2 Sekunden. Wirkt erst richtig, wenn K8 weg ist.
+4. **K3 abbauen**, siehe oben. Spart pro Gearbox und am Centr Export einen Kanal.
+5. **Redstone-Modus auf „Ignored“ lassen.** Jeder Kanal mit Redstone-Bedingung lässt die Mod bei jedem Durchlauf die Signale aller Nodes prüfen.
+
+Was im selben Profil wirklich Zeit kostet:
+
+| Was | Anteil | pro Tick |
+| --- | --- | --- |
+| Mobs, vor allem Zombies, Skelette und Creeper, mit ihrer KI | gut 23 % | ca. 13 ms |
+| Tick-Events von Curios, Accessories, Mahou Tsukai, Draconic Evolution, die pro Lebewesen laufen | gut 5 % | ca. 3 ms |
+| AE2: Speicherinhalt jeden Tick neu zusammenzählen | 8,5 % | ca. 4,9 ms |
+| Aeronautics-Physik, davon Simulated Coasters ca. 3,3 ms | 8 % | ca. 4,6 ms |
+| Logistics Networks | 1,8 % | ca. 1 ms |
+| Productive Bees (fliegende Bienen) | 1,2 % | ca. 0,7 ms |
 
 ### Nodes
 
@@ -85,8 +107,8 @@ Alle Nodes mit Netherite Upgrade. Kanalnummern wie im Spiel, ab 0 gezählt.
 | Treater | 4 | K2 rein (Honey Treats, Honey Blocks) |
 | Hive Core | 1 | K0 raus, K1 raus, K2 rein (Glass Bottles), K5 raus |
 | Centr Import | 1 | K1 rein |
-| Centr Export | 1 | K0 raus, K3 raus (Round Robin), K5 raus |
-| Gearbox | 6 | K2 rein (Wax), K3 rein |
+| Centr Export | 1 | K0 raus, K5 raus |
+| Gearbox | 6 | K2 rein (Wax) |
 | Heater | 1 | K8 rein (FE) |
 | Energy Source | 1 | K8 raus |
 | Overclocker Barrel | 1 | K2 raus |
@@ -106,7 +128,7 @@ Zusammen 44 Nodes.
 
 ## Wichtige Hinweise
 
-- **Wax:** Mit Heater gibt die Zentrifuge kein Wax aus, der Heater löscht es (steht so im Quellcode von Modular Bees). Die Gearboxen hängen also komplett am Wax Barrel, und das braucht eine eigene Wax-Quelle. K3 und das Wax im K0-Filter von Centr Export sind dadurch wirkungslos, aber harmlos.
+- **Wax:** Mit Heater gibt die Zentrifuge kein Wax aus, der Heater löscht es (steht so im Quellcode von Modular Bees). Die Gearboxen hängen also komplett am Wax Barrel, und das braucht eine eigene Wax-Quelle. Solange es keine gibt, tun die 6 Gearbox-Nodes nichts und können auch ganz weg.
 - **Neue Bienen:** Was die Zentrifuge ausgibt und nicht im K0-Filter von Centr Export steht, bleibt liegen und verstopft sie irgendwann. Bei neuen Comb-Sorten den Filter erweitern.
 
 ## Anbindung ans ME-Gebäude
@@ -132,4 +154,6 @@ Kommen in die Erweiterungszelle, an dieselben relativen Positionen: Hive 2 bei x
 - [x] Zentrifuge gebaut
 - [x] Anbindung ans ME-Gebäude: wireless, Barrels bleiben in der Technik
 - [ ] Wax-Quelle für das Wax Barrel
+- [ ] Leistung: K3 abbauen, Takte setzen (K0/K5 40, K2 200 Ticks)
+- [ ] Leistung: Strom per Kabel statt K8, dann schläft das Netz
 - [ ] Hive 2 und Zentrifuge 2

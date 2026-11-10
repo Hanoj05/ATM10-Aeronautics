@@ -248,9 +248,3 @@ ul.hinweise { margin: 0; padding-left: 18px; display: grid; gap: 4px; font-size:
 .rm-quelle { margin-left: auto; }
 @media (max-width: 640px) { .rm-quelle { margin-left: 0; } }
 
-/* ---------- Einrichtung: Aussehen und Bauanleitung ---------- */
-p.aussehen { margin: 0; padding: 8px 10px; border-left: 3px solid var(--honey); background: var(--raised); color: var(--fg); font-size: 14px; border-radius: 0 4px 4px 0; }
-details.bauen { font-size: 14px; }
-details.bauen summary { cursor: pointer; font: 600 12px var(--f-mono); letter-spacing: .04em; color: var(--honey-ink); padding: 2px 0; }
-details.bauen ol, details.bauen ul { margin: 6px 0 0; padding-left: 20px; display: grid; gap: 4px; }
-details.bauen h4 { margin: 10px 0 0; font: 600 11px var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }

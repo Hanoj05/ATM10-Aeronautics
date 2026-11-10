@@ -1,6 +1,6 @@
 # ATM10 Aeronautics – Campus
 
-Doku zu unserem Tech-Campus in der ATM10-Aeronautics-Welt. Jedes Gebäude hat eine Aufgabe (Bienen, ME, …) und einen eigenen Ordner mit Bauplan, Einrichtung und Konfiguration. Daraus soll später eine Website werden: eine 3D-Ansicht vom ganzen Campus, in der man jedes Gebäude anklicken kann und dann dessen Übersicht bekommt.
+Doku zu unserem Tech-Campus in der ATM10-Aeronautics-Welt. Jedes Gebäude hat eine Aufgabe (Bienen, ME, …) und einen eigenen Ordner mit Modell und Konfiguration. Daraus soll später eine Website werden: eine 3D-Ansicht vom ganzen Campus, in der man jedes Gebäude anklicken kann und dann dessen Übersicht bekommt.
 
 ## Aufbau
 
@@ -15,9 +15,7 @@ gebaeude/
     bauplan.html       Bauanleitung Block für Block
     modell.json        Blockmodell für die 3D-Ansicht
     konfig.json        Teile mit Position, Nodes und Kanälen (für die Website)
-    einrichtung.json   Einrichtungsteile mit Position und Status (für die Website)
     konfig.md          Technik und Konfiguration zum Lesen
-    einrichtung.md     Stilregeln und Mods zum Lesen
   me-zentrale/         ME-Gebäude, Modell aus der Schematic
 schematics/            Exportierte Gebäude aus der Welt für die 3D-Ansicht
 tools/                 Hilfsskripte: modell.json aus Bauplan oder Schematic, Zip bauen
@@ -33,14 +31,14 @@ python3 -m http.server 8000
 
 im Repo-Ordner starten und `http://localhost:8000` öffnen. Details in [website/README.md](website/README.md).
 
-Ohne Server und ohne Technik/Einrichtung: [download/campus-ansicht.zip](download/campus-ansicht.zip) entpacken und `index.html` öffnen.
+Ohne Server und ohne Technik: [download/campus-ansicht.zip](download/campus-ansicht.zip) entpacken und `index.html` öffnen.
 
 ## Neues Gebäude anlegen
 
 1. Ordner `gebaeude/vorlage` kopieren und umbenennen, zum Beispiel `gebaeude/me-zentrale`.
 2. `gebaeude.json` ausfüllen, vor allem `id`, `name` und `zweck`.
 3. Das Gebäude in `campus/campus.json` eintragen.
-4. `konfig.json` und `einrichtung.json` nach und nach füllen, dann erscheinen die Teile auf der Website.
+4. `konfig.json` und `konfig.md` nach und nach füllen, dann erscheinen die Teile auf der Website.
 
 ## Gebäude
 

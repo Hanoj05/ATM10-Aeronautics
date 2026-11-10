@@ -7,12 +7,41 @@
       "mod": "Logistics Network",
       "upgrade": "Netherite Upgrade in allen Nodes",
       "kanaele": [
-        { "nr": 0, "typ": "Items",       "farbe": "#7a8696", "zweck": "Produkte zum Receiver Barrel" },
-        { "nr": 1, "typ": "Items",       "farbe": "#d08a12", "zweck": "Comb-Blöcke vom Hive in die Zentrifuge" },
-        { "nr": 2, "typ": "Items",       "farbe": "#3a7fc2", "zweck": "Nachschub: Elektroden, Honey Blocks, Glass Bottles, Wax" },
-        { "nr": 3, "typ": "Items",       "farbe": "#9a7650", "zweck": "Wax aus der Zentrifuge in die Gearboxen (mit Heater wirkungslos)" },
-        { "nr": 5, "typ": "Flüssigkeit", "farbe": "#1f9a96", "zweck": "Honig in den Output Tank" },
-        { "nr": 8, "typ": "Energie",     "farbe": "#cc4444", "zweck": "Strom für Overclocker und Heater" }
+        {
+          "nr": 0,
+          "typ": "Items",
+          "farbe": "#7a8696",
+          "zweck": "Produkte zum Receiver Barrel",
+          "takt": "alle 40 Ticks"
+        },
+        {
+          "nr": 1,
+          "typ": "Items",
+          "farbe": "#d08a12",
+          "zweck": "Comb-Blöcke vom Hive in die Zentrifuge",
+          "takt": "alle 20 Ticks"
+        },
+        {
+          "nr": 2,
+          "typ": "Items",
+          "farbe": "#3a7fc2",
+          "zweck": "Nachschub: Elektroden, Honey Blocks, Glass Bottles, Wax",
+          "takt": "alle 200 Ticks"
+        },
+        {
+          "nr": 5,
+          "typ": "Flüssigkeit",
+          "farbe": "#1f9a96",
+          "zweck": "Honig in den Output Tank",
+          "takt": "alle 40 Ticks"
+        },
+        {
+          "nr": 8,
+          "typ": "Energie",
+          "farbe": "#cc4444",
+          "zweck": "Strom für Overclocker und Heater",
+          "takt": "jeden Tick (fest in der Mod)"
+        }
       ]
     }
   ],
@@ -22,58 +51,202 @@
       "name": "Modular Beehive",
       "art": "Maschine",
       "zelle": "Produktion",
-      "von": [6, 1, 10],
-      "bis": [8, 3, 12],
+      "von": [
+        6,
+        1,
+        10
+      ],
+      "bis": [
+        8,
+        3,
+        12
+      ],
       "einstellungen": [
-        ["Core", "4 × Productivity Upgrade: Omega"],
-        ["Bienen", "Draconic, Obsidian, Withered"],
-        ["Feeder", "Blumenblöcke, für Draconic Bees ein Dragon Egg"],
-        ["Treater", "Honey Blocks (+15 %) oder Honey Treats"],
-        ["Overclocker", "Strom über die gemusterte Seite plus Elektrode"]
+        [
+          "Core",
+          "4 × Productivity Upgrade: Omega"
+        ],
+        [
+          "Bienen",
+          "Draconic, Obsidian, Withered"
+        ],
+        [
+          "Feeder",
+          "Blumenblöcke, für Draconic Bees ein Dragon Egg"
+        ],
+        [
+          "Treater",
+          "Honey Blocks (+15 %) oder Honey Treats"
+        ],
+        [
+          "Overclocker",
+          "Strom über die gemusterte Seite plus Elektrode"
+        ]
       ],
       "aufbau": "10 Alveary, 11 Overclocker, 4 Treater, 1 Feeder, 1 Core",
       "nodes": [
-        { "label": "Hive Core", "anzahl": 1, "block": "m-C", "kanaele": [
-          { "k": 0, "richtung": "raus", "filter": "Honigflaschen" },
-          { "k": 1, "richtung": "raus", "filter": "Comb-Blöcke: Draconic, Obsidian, Withered" },
-          { "k": 2, "richtung": "rein", "filter": "Glass Bottles" },
-          { "k": 5, "richtung": "raus", "filter": "Honig" } ] },
-        { "label": "Overclocker", "anzahl": 11, "block": "m-O", "kanaele": [
-          { "k": 2, "richtung": "rein", "filter": "Netherite-Elektroden" },
-          { "k": 8, "richtung": "rein", "filter": "FE, alle Seiten" } ] },
-        { "label": "Treater", "anzahl": 4, "block": "m-R", "kanaele": [
-          { "k": 2, "richtung": "rein", "filter": "Honey Treats, Honey Blocks" } ] }
+        {
+          "label": "Hive Core",
+          "anzahl": 1,
+          "block": "m-C",
+          "kanaele": [
+            {
+              "k": 0,
+              "richtung": "raus",
+              "filter": "Honigflaschen"
+            },
+            {
+              "k": 1,
+              "richtung": "raus",
+              "filter": "Comb-Blöcke: Draconic, Obsidian, Withered"
+            },
+            {
+              "k": 2,
+              "richtung": "rein",
+              "filter": "Glass Bottles"
+            },
+            {
+              "k": 5,
+              "richtung": "raus",
+              "filter": "Honig"
+            }
+          ]
+        },
+        {
+          "label": "Overclocker",
+          "anzahl": 11,
+          "block": "m-O",
+          "kanaele": [
+            {
+              "k": 2,
+              "richtung": "rein",
+              "filter": "Netherite-Elektroden"
+            },
+            {
+              "k": 8,
+              "richtung": "rein",
+              "filter": "FE, alle Seiten"
+            }
+          ]
+        },
+        {
+          "label": "Treater",
+          "anzahl": 4,
+          "block": "m-R",
+          "kanaele": [
+            {
+              "k": 2,
+              "richtung": "rein",
+              "filter": "Honey Treats, Honey Blocks"
+            }
+          ]
+        }
       ],
-      "hinweise": ["Die Alveary-Ebene unten braucht keine Nodes."]
+      "hinweise": [
+        "Die Alveary-Ebene unten braucht keine Nodes."
+      ]
     },
     {
       "id": "zentrifuge",
       "name": "Modular Centrifuge",
       "art": "Maschine",
       "zelle": "Produktion",
-      "von": [17, 1, 10],
-      "bis": [19, 3, 12],
+      "von": [
+        17,
+        1,
+        10
+      ],
+      "bis": [
+        19,
+        3,
+        12
+      ],
       "einstellungen": [
-        ["Heater", "3 × Tempo, Comb-Blöcke mit 4 × Ausbeute, löscht alles Wax"],
-        ["Gearbox", "40 Wax pro Zyklus für 1,5 × Combs"],
-        ["Core", "Productivity, Time oder Stability Upgrades"]
+        [
+          "Heater",
+          "3 × Tempo, Comb-Blöcke mit 4 × Ausbeute, löscht alles Wax"
+        ],
+        [
+          "Gearbox",
+          "40 Wax pro Zyklus für 1,5 × Combs"
+        ],
+        [
+          "Core",
+          "Productivity, Time oder Stability Upgrades"
+        ]
       ],
       "aufbau": "12 Overclocker, 6 Gearbox, 1 Heater, 1 Import, 1 Export, 1 Core",
       "nodes": [
-        { "label": "Centr Import", "anzahl": 1, "block": "m-I", "kanaele": [
-          { "k": 1, "richtung": "rein", "filter": "Comb-Blöcke: Draconic, Obsidian, Withered" } ] },
-        { "label": "Centr Export", "anzahl": 1, "block": "m-E", "kanaele": [
-          { "k": 0, "richtung": "raus", "filter": "Draconic Dust, Obsidian Shard, Wither Skull Chip, Wax (Priorität −1)" },
-          { "k": 3, "richtung": "raus", "filter": "Wax, Round Robin" },
-          { "k": 5, "richtung": "raus", "filter": "Flüssigkeiten" } ] },
-        { "label": "Overclocker", "anzahl": 12, "block": "m-O", "kanaele": [
-          { "k": 2, "richtung": "rein", "filter": "Netherite-Elektroden" },
-          { "k": 8, "richtung": "rein", "filter": "FE, alle Seiten" } ] },
-        { "label": "Gearbox", "anzahl": 6, "block": "m-G", "kanaele": [
-          { "k": 2, "richtung": "rein", "filter": "Wax" },
-          { "k": 3, "richtung": "rein", "filter": "ohne Filter" } ] },
-        { "label": "Heater", "anzahl": 1, "block": "m-H", "kanaele": [
-          { "k": 8, "richtung": "rein", "filter": "FE, Node unter dem Heater" } ] }
+        {
+          "label": "Centr Import",
+          "anzahl": 1,
+          "block": "m-I",
+          "kanaele": [
+            {
+              "k": 1,
+              "richtung": "rein",
+              "filter": "Comb-Blöcke: Draconic, Obsidian, Withered"
+            }
+          ]
+        },
+        {
+          "label": "Centr Export",
+          "anzahl": 1,
+          "block": "m-E",
+          "kanaele": [
+            {
+              "k": 0,
+              "richtung": "raus",
+              "filter": "Draconic Dust, Obsidian Shard, Wither Skull Chip (Priorität −1)"
+            },
+            {
+              "k": 5,
+              "richtung": "raus",
+              "filter": "Flüssigkeiten"
+            }
+          ]
+        },
+        {
+          "label": "Overclocker",
+          "anzahl": 12,
+          "block": "m-O",
+          "kanaele": [
+            {
+              "k": 2,
+              "richtung": "rein",
+              "filter": "Netherite-Elektroden"
+            },
+            {
+              "k": 8,
+              "richtung": "rein",
+              "filter": "FE, alle Seiten"
+            }
+          ]
+        },
+        {
+          "label": "Gearbox",
+          "anzahl": 6,
+          "block": "m-G",
+          "kanaele": [
+            {
+              "k": 2,
+              "richtung": "rein",
+              "filter": "Wax"
+            }
+          ]
+        },
+        {
+          "label": "Heater",
+          "anzahl": 1,
+          "block": "m-H",
+          "kanaele": [
+            {
+              "k": 8,
+              "richtung": "rein",
+              "filter": "FE, Node unter dem Heater"
+            }
+          ]
+        }
       ],
       "hinweise": [
         "Höchstens ein Heater, sonst bildet sich die Struktur nicht.",
@@ -86,63 +259,245 @@
       "name": "Overclocker Barrel",
       "art": "Nachschub",
       "zelle": "Technik",
-      "von": [41, 1, 20], "bis": [41, 1, 20],
-      "einstellungen": [["Inhalt", "Netherite-Elektroden, aus dem ME nachgefüllt"]],
-      "nodes": [{ "label": "Overclocker Barrel", "anzahl": 1, "kanaele": [{ "k": 2, "richtung": "raus", "filter": "Elektroden" }] }]
+      "von": [
+        41,
+        1,
+        20
+      ],
+      "bis": [
+        41,
+        1,
+        20
+      ],
+      "einstellungen": [
+        [
+          "Inhalt",
+          "Netherite-Elektroden, aus dem ME nachgefüllt"
+        ]
+      ],
+      "nodes": [
+        {
+          "label": "Overclocker Barrel",
+          "anzahl": 1,
+          "kanaele": [
+            {
+              "k": 2,
+              "richtung": "raus",
+              "filter": "Elektroden"
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "honey-block-barrel",
       "name": "Honey Block Barrel",
       "art": "Nachschub",
       "zelle": "Technik",
-      "von": [41, 1, 21], "bis": [41, 1, 21],
-      "einstellungen": [["Inhalt", "Honey Blocks und Honey Treats für die Treater"]],
-      "nodes": [{ "label": "Honey Block Barrel", "anzahl": 1, "kanaele": [{ "k": 2, "richtung": "raus", "filter": "Honey Blocks, Honey Treats" }] }]
+      "von": [
+        41,
+        1,
+        21
+      ],
+      "bis": [
+        41,
+        1,
+        21
+      ],
+      "einstellungen": [
+        [
+          "Inhalt",
+          "Honey Blocks und Honey Treats für die Treater"
+        ]
+      ],
+      "nodes": [
+        {
+          "label": "Honey Block Barrel",
+          "anzahl": 1,
+          "kanaele": [
+            {
+              "k": 2,
+              "richtung": "raus",
+              "filter": "Honey Blocks, Honey Treats"
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "bottle-barrel",
       "name": "Bottle Barrel",
       "art": "Nachschub",
       "zelle": "Technik",
-      "von": [41, 1, 22], "bis": [41, 1, 22],
-      "einstellungen": [["Inhalt", "Glass Bottles für den Hive Core"]],
-      "nodes": [{ "label": "Bottle Barrel", "anzahl": 1, "kanaele": [{ "k": 2, "richtung": "raus", "filter": "Glass Bottles" }] }]
+      "von": [
+        41,
+        1,
+        22
+      ],
+      "bis": [
+        41,
+        1,
+        22
+      ],
+      "einstellungen": [
+        [
+          "Inhalt",
+          "Glass Bottles für den Hive Core"
+        ]
+      ],
+      "nodes": [
+        {
+          "label": "Bottle Barrel",
+          "anzahl": 1,
+          "kanaele": [
+            {
+              "k": 2,
+              "richtung": "raus",
+              "filter": "Glass Bottles"
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "wax-barrel",
       "name": "Wax Barrel",
       "art": "Nachschub",
       "zelle": "Technik",
-      "von": [41, 1, 23], "bis": [41, 1, 23],
-      "einstellungen": [["Inhalt", "Wax für die Gearboxen, braucht eine Wax-Quelle im ME"]],
-      "nodes": [{ "label": "Wax Barrel", "anzahl": 1, "kanaele": [{ "k": 2, "richtung": "raus", "filter": "Wax, Round Robin" }] }]
+      "von": [
+        41,
+        1,
+        23
+      ],
+      "bis": [
+        41,
+        1,
+        23
+      ],
+      "einstellungen": [
+        [
+          "Inhalt",
+          "Wax für die Gearboxen, braucht eine Wax-Quelle im ME"
+        ]
+      ],
+      "nodes": [
+        {
+          "label": "Wax Barrel",
+          "anzahl": 1,
+          "kanaele": [
+            {
+              "k": 2,
+              "richtung": "raus",
+              "filter": "Wax, Round Robin"
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "receiver-barrel",
       "name": "Receiver Barrel",
       "art": "Ausgang",
       "zelle": "Technik",
-      "von": [41, 1, 24], "bis": [41, 2, 24],
-      "einstellungen": [["Weiter", "ME Import Bus obendrauf, wireless ins ME-Gebäude"]],
-      "nodes": [{ "label": "Receiver Barrel", "anzahl": 1, "kanaele": [{ "k": 0, "richtung": "rein", "filter": "alles" }] }]
+      "von": [
+        41,
+        1,
+        24
+      ],
+      "bis": [
+        41,
+        2,
+        24
+      ],
+      "einstellungen": [
+        [
+          "Weiter",
+          "ME Import Bus obendrauf, wireless ins ME-Gebäude"
+        ]
+      ],
+      "nodes": [
+        {
+          "label": "Receiver Barrel",
+          "anzahl": 1,
+          "kanaele": [
+            {
+              "k": 0,
+              "richtung": "rein",
+              "filter": "alles"
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "energy-cube",
       "name": "Energy Cube",
       "art": "Energie",
       "zelle": "Technik",
-      "von": [37, 1, 15], "bis": [37, 1, 15],
-      "einstellungen": [["Funktion", "Speist das Netzwerk mit Strom"]],
-      "nodes": [{ "label": "Energy Source", "anzahl": 1, "kanaele": [{ "k": 8, "richtung": "raus", "filter": "FE, alle Seiten" }] }]
+      "von": [
+        37,
+        1,
+        15
+      ],
+      "bis": [
+        37,
+        1,
+        15
+      ],
+      "einstellungen": [
+        [
+          "Funktion",
+          "Speist das Netzwerk mit Strom"
+        ]
+      ],
+      "nodes": [
+        {
+          "label": "Energy Source",
+          "anzahl": 1,
+          "kanaele": [
+            {
+              "k": 8,
+              "richtung": "raus",
+              "filter": "FE, alle Seiten"
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "output-tank",
       "name": "Output Tank",
       "art": "Ausgang",
       "zelle": "Honigturm",
-      "von": [31, 1, 0], "bis": [31, 1, 0],
-      "einstellungen": [["Inhalt", "Honig aus Hive und Zentrifuge"]],
-      "nodes": [{ "label": "Output Tank", "anzahl": 1, "kanaele": [{ "k": 5, "richtung": "rein", "filter": "Honig" }] }]
+      "von": [
+        31,
+        1,
+        0
+      ],
+      "bis": [
+        31,
+        1,
+        0
+      ],
+      "einstellungen": [
+        [
+          "Inhalt",
+          "Honig aus Hive und Zentrifuge"
+        ]
+      ],
+      "nodes": [
+        {
+          "label": "Output Tank",
+          "anzahl": 1,
+          "kanaele": [
+            {
+              "k": 5,
+              "richtung": "rein",
+              "filter": "Honig"
+            }
+          ]
+        }
+      ]
     }
   ]
 }

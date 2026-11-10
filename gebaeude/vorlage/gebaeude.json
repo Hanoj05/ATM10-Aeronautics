@@ -7,7 +7,11 @@
     "p0": null,
     "hinweis": "P0 = Bezugspunkt des Gebäudes, meist die Nordwest-Ecke. Weltkoordinate [x, y, z] mit F3 ablesen."
   },
-  "masse": { "breite": null, "tiefe": null, "hoehe": null },
+  "masse": {
+    "breite": null,
+    "tiefe": null,
+    "hoehe": null
+  },
   "zellen": [],
   "maschinen": [],
   "netzwerke": [],
@@ -15,9 +19,7 @@
     "bauplan": null,
     "modell": null,
     "konfigDaten": "konfig.json",
-    "einrichtungDaten": "einrichtung.json",
     "konfig": "konfig.md",
-    "einrichtung": "einrichtung.md",
     "schematic": null
   }
 }

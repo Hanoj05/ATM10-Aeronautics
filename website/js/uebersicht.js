@@ -19,14 +19,12 @@
       if (geb) {
         var teile = d.konfig.teile.length, nodes = 0;
         d.konfig.teile.forEach(function (t) { (t.nodes || []).forEach(function (n) { nodes += n.anzahl || 1; }); });
-        var et = d.einr.teile.length, ef = d.einr.teile.filter(function (t) { return t.status === "fertig"; }).length;
         h += "<div class='kz'>";
         if (geb.masse && geb.masse.breite) h += "<span>Größe <b>" + geb.masse.breite + " × " + geb.masse.tiefe + "</b></span>";
         h += "<span>Teile <b>" + teile + "</b></span><span>Nodes <b>" + nodes + "</b></span>";
         h += "<span>P0 <b>" + (g.position ? g.position.join(", ") : "fehlt") + "</b></span></div>";
-        if (et) h += "<div><small class='note'>Einrichtung " + ef + " von " + et + " fertig</small><div class='balken'><i style='width:" + Math.round(ef / et * 100) + "%'></i></div></div>";
         var base = "gebaeude.html?id=" + encodeURIComponent(g.id);
-        h += "<div class='links'><a href='" + base + "#ansicht'>3D-Ansicht</a><a href='" + base + "#konfig'>Konfiguration</a><a href='" + base + "#einrichtung'>Einrichtung</a>" + (geb.dateien && geb.dateien.bauplan ? "<a href='" + base + "#bauplan'>Bauplan</a>" : "") + "</div>";
+        h += "<div class='links'><a href='" + base + "#ansicht'>3D-Ansicht</a><a href='" + base + "#konfig'>Konfiguration</a>" + (geb.dateien && geb.dateien.bauplan ? "<a href='" + base + "#bauplan'>Bauplan</a>" : "") + "</div>";
         d.konfig.netzwerke.forEach(function (n) {
           netze += "<div class='box flow' style='grid-template-columns:220px minmax(0,1fr)'><div class='kopf'><strong>" + esc(n.name) + "</strong><small>" + esc(n.mod) + " · " + esc(g.name) + "</small></div><div class='wer'>";
           n.kanaele.forEach(function (k) { netze += "<span><span class='k' style='background:" + k.farbe + "'>K" + k.nr + "</span> " + esc(k.zweck) + "</span>"; });
