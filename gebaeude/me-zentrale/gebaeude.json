@@ -4,9 +4,13 @@
   "zweck": "AE2-Hauptsystem: ME Controller, Extended Drives, Wireless Hub",
   "status": "im Bau",
   "welt": {
-    "p0": null,
+    "p0": [
+      246,
+      65,
+      -385
+    ],
     "drehung": 0,
-    "hinweis": "P0 = Ecke (0, 0, 0) der Schematic: kleinstes x, y und z der Auswahl, also unten im Nordwesten. Create speichert ungedreht, deshalb drehung 0. Eingemessen über einen Block mit bekannter Schematic-Position, z. B. ME Wireless Hub bei (26, 32, 26): P0 = Welt des Hubs minus (26, 32, 26)."
+    "hinweis": "P0 = Ecke (0, 0, 0) der Schematic: kleinstes x, y und z der Auswahl, also unten im Nordwesten. Create speichert ungedreht, deshalb drehung 0. Eingemessen am ME Wireless Hub: Schematic (26, 32, 26) = Welt (272, 97, -359)."
   },
   "masse": {
     "breite": 53,

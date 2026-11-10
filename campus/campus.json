@@ -23,7 +23,11 @@
       "ordner": "gebaeude/me-zentrale",
       "zweck": "AE2-Hauptsystem",
       "status": "im Bau",
-      "position": null,
+      "position": [
+        246,
+        65,
+        -385
+      ],
       "drehung": 0
     }
   ]

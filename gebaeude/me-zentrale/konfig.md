@@ -2,7 +2,7 @@
 
 AE2-Hauptsystem. Einrichtung und Deko stehen in [einrichtung.md](einrichtung.md).
 
-Koordinaten sind relativ zur Ecke (0, 0, 0) der Schematic `schematics/me-zentrale.nbt`, das ist die Ecke unten im Nordwesten (x nach Osten, z nach Süden, y = 0 ist die Bodenebene). Das Gebäude ist 53 × 53 Blöcke groß und 98 hoch.
+Koordinaten sind relativ zur Ecke (0, 0, 0) der Schematic `schematics/me-zentrale.nbt`, das ist die Ecke unten im Nordwesten, in der Welt 246, 65, -385 (x nach Osten, z nach Süden, y = 0 ist die Bodenebene). Das Gebäude ist 53 × 53 Blöcke groß und 98 hoch.
 
 ## Übersicht
 
@@ -32,5 +32,5 @@ Aus der Schematic ausgelesen:
 
 ## Stand
 
-- [ ] Weltkoordinate von P0 in `gebaeude.json` und `campus/campus.json` eintragen
+- [x] Weltkoordinate von P0 eingetragen: 246, 65, -385 (eingemessen am ME Wireless Hub = Welt 272, 97, -359)
 - [ ] Einstellungen (Zellen, Prioritäten, Kanäle) ergänzen

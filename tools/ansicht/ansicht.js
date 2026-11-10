@@ -67,7 +67,12 @@
     gitter.position.set((gesamt.min[0] + gesamt.max[0]) / 2, -0.01, (gesamt.min[2] + gesamt.max[2]) / 2);
     gitter.material.transparent = true; gitter.material.opacity = 0.45;
     sz.scene.add(gitter);
-    function reset() { C.blickeAuf(sz, gesamt.min, [gesamt.max[0], Math.min(gesamt.max[1], 30), gesamt.max[2]]); }
+    function reset() {
+      C.blickeAuf(sz, gesamt.min, [gesamt.max[0], gesamt.max[1] * 0.4, gesamt.max[2]]);
+      /* etwas weiter weg, damit alle Gebäude ganz ins Bild passen */
+      var t = sz.steuerung.target; sz.kamera.position.sub(t).multiplyScalar(1.3).add(t);
+      sz.steuerung.update(); sz.neu();
+    }
     $("reset").addEventListener("click", reset);
     reset();
     $("laden").hidden = !!liste.length;
