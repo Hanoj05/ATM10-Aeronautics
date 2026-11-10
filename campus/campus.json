@@ -2,7 +2,7 @@
   "name": "Tech-Campus",
   "welt": "ATM10 Aeronautics",
   "dimension": "minecraft:overworld",
-  "hinweis": "position = Weltkoordinate von P0 des Gebäudes [x, y, z]. null, solange noch nicht eingetragen.",
+  "hinweis": "position = Weltkoordinate von P0 des Gebäudes [x, y, z]. drehung = Grad im Uhrzeigersinn, um die der Plan gedreht gebaut wurde (90 = Plan-Norden zeigt nach Osten). null, solange noch nicht eingetragen.",
   "gebaeude": [
     {
       "id": "wabenhaus",
@@ -10,7 +10,12 @@
       "ordner": "gebaeude/wabenhaus",
       "zweck": "Bienen",
       "status": "gebaut",
-      "position": null
+      "position": [
+        392,
+        65,
+        -285
+      ],
+      "drehung": 90
     },
     {
       "id": "me-zentrale",

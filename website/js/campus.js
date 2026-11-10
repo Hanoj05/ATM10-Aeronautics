@@ -45,17 +45,15 @@
       var vs;
       if (e.g.position && basis) vs = [e.g.position[0] - basis[0], e.g.position[1] - basis[1], e.g.position[2] - basis[2]];
       else { vs = [reserve, 0, 0]; reserve += (e.geb && e.geb.masse && e.geb.masse.breite || 40) + 20; }
-      var m = C.baueModell(e.modell, { versatz: vs });
+      var halter = C.drehGruppe(e.g.drehung);
+      halter.position.x += vs[0]; halter.position.y += vs[1]; halter.position.z += vs[2];
+      var m = C.baueModell(e.modell);
+      halter.add(m.gruppe);
       m.pickbar.forEach(function (p) { p.userData.eintrag = e; pick.push(p); });
-      sz.scene.add(m.gruppe);
-      var min = [Infinity, 0, Infinity], max = [-Infinity, 0, -Infinity];
-      e.modell.bloecke.forEach(function (b) {
-        min[0] = Math.min(min[0], b[0] + vs[0]); min[2] = Math.min(min[2], b[2] + vs[2]);
-        max[0] = Math.max(max[0], b[0] + vs[0] + 1); max[2] = Math.max(max[2], b[2] + vs[2] + 1); max[1] = Math.max(max[1], b[1] + vs[1] + 1);
-      });
-      min[1] = vs[1];
-      e.box = [min, max];
-      for (var a = 0; a < 3; a++) { gesamt.min[a] = Math.min(gesamt.min[a], min[a]); gesamt.max[a] = Math.max(gesamt.max[a], max[a]); }
+      sz.scene.add(halter);
+      var b3 = C.weltBox(halter, e.modell);
+      e.box = [[b3.min.x, b3.min.y, b3.min.z], [b3.max.x, b3.max.y, b3.max.z]];
+      for (var a = 0; a < 3; a++) { gesamt.min[a] = Math.min(gesamt.min[a], e.box[0][a]); gesamt.max[a] = Math.max(gesamt.max[a], e.box[1][a]); }
     });
     /* Boden */
     var spanne = Math.max(200, (gesamt.max[0] - gesamt.min[0]) * 3, (gesamt.max[2] - gesamt.min[2]) * 3);

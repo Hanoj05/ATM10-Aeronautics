@@ -152,7 +152,35 @@
     return gr;
   }
 
+  /* Gebäude gedreht gebaut? drehung in Grad im Uhrzeigersinn (90 = Plan-Norden zeigt nach Osten). */
+  var KORREKTUR = { 0: [0, 0], 90: [1, 0], 180: [1, 1], 270: [0, 1] };
+  function drehGruppe(drehung) {
+    var d = ((drehung || 0) % 360 + 360) % 360, g = new THREE.Group();
+    g.rotation.y = -d * Math.PI / 180;
+    g.userData.korrektur = KORREKTUR[d] || [0, 0];
+    g.position.set(g.userData.korrektur[0], 0, g.userData.korrektur[1]);
+    return g;
+  }
+  /* Umrandung eines Modells in Szenen-Koordinaten (InstancedMesh liefert in three r147 keine eigene). */
+  function weltBox(halter, modell) {
+    var mn = [Infinity, Infinity, Infinity], mx = [-Infinity, -Infinity, -Infinity];
+    modell.bloecke.forEach(function (b) { for (var a = 0; a < 3; a++) { mn[a] = Math.min(mn[a], b[a]); mx[a] = Math.max(mx[a], b[a] + 1); } });
+    halter.updateMatrixWorld(true);
+    var box = new THREE.Box3();
+    [mn[0], mx[0]].forEach(function (x) { [mn[1], mx[1]].forEach(function (y) { [mn[2], mx[2]].forEach(function (z) {
+      box.expandByPoint(halter.localToWorld(new THREE.Vector3(x, y, z)));
+    }); }); });
+    return box;
+  }
+  /* Plan-Koordinate eines Blocks in Weltkoordinate umrechnen. */
+  function weltVon(p0, drehung, x, y, z) {
+    if (!p0) return null;
+    var d = ((drehung || 0) % 360 + 360) % 360, dx = x, dz = z;
+    if (d === 90) { dx = -z; dz = x; } else if (d === 180) { dx = -x; dz = -z; } else if (d === 270) { dx = z; dz = -x; }
+    return [p0[0] + dx, p0[1] + y, p0[2] + dz];
+  }
+
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;" }[c]; }); }
 
-  window.Campus = { ladeJSON: ladeJSON, ladeText: ladeText, baueModell: baueModell, baueSzene: baueSzene, blickeAuf: blickeAuf, rahmen: rahmen, cssVar: cssVar, esc: esc };
+  window.Campus = { ladeJSON: ladeJSON, ladeText: ladeText, baueModell: baueModell, baueSzene: baueSzene, blickeAuf: blickeAuf, rahmen: rahmen, cssVar: cssVar, esc: esc, drehGruppe: drehGruppe, weltVon: weltVon, weltBox: weltBox };
 })();

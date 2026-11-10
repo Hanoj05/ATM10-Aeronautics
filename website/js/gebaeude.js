@@ -9,7 +9,7 @@
   var panel = $("panel"), tooltip = $("tooltip"), viewport = $("viewport");
   var geb, konfig = { netzwerke: [], teile: [] }, modell = null;
   var kanaele = {};
-  var sz, aktuell = null, maxY = 0;
+  var sz, aktuell = null, maxY = 0, halter = null;
   var hoverRahmen = null, festRahmen = null, kanalRahmen = [];
   var fest = null, aktiveKanaele = {};
 
@@ -37,6 +37,8 @@
   /* ---------- 3D ---------- */
   function starte3D() {
     sz = C.baueSzene(viewport);
+    halter = C.drehGruppe(geb.welt && geb.welt.drehung);
+    sz.scene.add(halter);
     modell.bloecke.forEach(function (b) { if (b[1] > maxY) maxY = b[1]; });
     var sl = $("schnitt"); sl.max = maxY;
     sl.addEventListener("input", function () { setzeSchnitt(+sl.value); });
@@ -56,7 +58,8 @@
       var b = aktuell.gibBlock(treffer.object, treffer.instanceId);
       var teil = teilBei(b.x, b.y, b.z);
       hover(teil, b);
-      tooltip.textContent = (teil ? teil.name + " · " : "") + b.sorte.name + " · " + zelleBei(b.x, b.z) + " · " + b.x + ", " + b.y + ", " + b.z;
+      var w = welt(b.x, b.y, b.z);
+      tooltip.textContent = (teil ? teil.name + " · " : "") + b.sorte.name + " · " + zelleBei(b.x, b.z) + " · " + (w ? "Welt " + w.join(", ") : "Plan " + b.x + ", " + b.y + ", " + b.z);
       var vr = viewport.getBoundingClientRect();
       tooltip.style.left = (ev.clientX - vr.left) + "px";
       tooltip.style.top = (ev.clientY - vr.top) + "px";
@@ -72,17 +75,15 @@
 
   function setzeSchnitt(y) {
     $("schnittWert").textContent = "y " + y;
-    if (aktuell) sz.scene.remove(aktuell.gruppe);
+    if (aktuell) halter.remove(aktuell.gruppe);
     aktuell = C.baueModell(modell, { maxY: y });
-    sz.scene.add(aktuell.gruppe);
+    halter.add(aktuell.gruppe);
     sz.neu();
   }
 
   function ansicht() {
-    var min = [Infinity, 0, Infinity], max = [-Infinity, 0, -Infinity];
-    modell.bloecke.forEach(function (b) { min[0] = Math.min(min[0], b[0]); min[2] = Math.min(min[2], b[2]); max[0] = Math.max(max[0], b[0] + 1); max[2] = Math.max(max[2], b[2] + 1); });
-    max[1] = 8;
-    C.blickeAuf(sz, min, max);
+    var box = C.weltBox(halter, modell);
+    C.blickeAuf(sz, [box.min.x, 0, box.min.z], [box.max.x, 8, box.max.z]);
   }
 
   function teilBei(x, y, z) {
@@ -101,6 +102,7 @@
     });
     return best ? best.name : geb.name;
   }
+  function welt(x, y, z) { return geb.welt ? C.weltVon(geb.welt.p0, geb.welt.drehung, x, y, z) : null; }
   function boxVon(t) { return [[t.von[0], t.von[1], t.von[2]], [t.bis[0] + 1, t.bis[1] + 1, t.bis[2] + 1]]; }
 
   var letzterHover = null;
@@ -109,11 +111,11 @@
     var key = teil ? teil.id + "|" + (block ? block.sorte.id : "") : "";
     if (hover.key === key) return;
     hover.key = key;
-    if (hoverRahmen) { sz.scene.remove(hoverRahmen); hoverRahmen = null; }
+    if (hoverRahmen) { halter.remove(hoverRahmen); hoverRahmen = null; }
     if (teil && teil !== fest) {
       var b = boxVon(teil);
       hoverRahmen = C.rahmen(b[0], b[1], C.cssVar("--honey") || "#d9840b", 0.8);
-      sz.scene.add(hoverRahmen);
+      halter.add(hoverRahmen);
     }
     sz.renderer.domElement.classList.toggle("hovering", !!teil);
     if (!fest) { if (teil) zeigeTeil(teil, block); else uebersicht(); }
@@ -121,24 +123,24 @@
   }
   function halteFest(teil, block) {
     fest = teil || null;
-    if (festRahmen) { sz.scene.remove(festRahmen); festRahmen = null; }
+    if (festRahmen) { halter.remove(festRahmen); festRahmen = null; }
     if (fest) {
       var b = boxVon(fest);
       festRahmen = C.rahmen(b[0], b[1], C.cssVar("--honey") || "#d9840b", 1);
-      sz.scene.add(festRahmen);
+      halter.add(festRahmen);
       zeigeTeil(fest, block);
     } else uebersicht();
     sz.neu();
   }
 
   function kanalRahmenNeu() {
-    kanalRahmen.forEach(function (r) { sz.scene.remove(r); }); kanalRahmen = [];
+    kanalRahmen.forEach(function (r) { halter.remove(r); }); kanalRahmen = [];
     Object.keys(aktiveKanaele).forEach(function (nr) {
       konfig.teile.forEach(function (t) {
         var nutzt = (t.nodes || []).some(function (n) { return n.kanaele.some(function (k) { return String(k.k) === nr; }); });
         if (!nutzt) return;
         var b = boxVon(t), r = C.rahmen(b[0], b[1], kanaele[nr].farbe, 1);
-        kanalRahmen.push(r); sz.scene.add(r);
+        kanalRahmen.push(r); halter.add(r);
       });
     });
     if (sz) sz.neu();
@@ -154,7 +156,9 @@
     h += "<dl class='kv'>";
     if (geb.masse && geb.masse.breite) h += "<dt>Größe</dt><dd>" + geb.masse.breite + " × " + geb.masse.tiefe + " Blöcke, " + geb.masse.hoehe + " hoch</dd>";
     if (geb.zellen) h += "<dt>Zellen</dt><dd>" + geb.zellen.map(function (c) { return esc(c.name); }).join(", ") + "</dd>";
-    h += "<dt>P0 in der Welt</dt><dd>" + (geb.welt && geb.welt.p0 ? geb.welt.p0.join(", ") : "noch nicht eingetragen") + "</dd></dl>";
+    h += "<dt>P0 in der Welt</dt><dd>" + (geb.welt && geb.welt.p0 ? geb.welt.p0.join(", ") : "noch nicht eingetragen") + "</dd>";
+    if (geb.welt && geb.welt.drehung) h += "<dt>Drehung</dt><dd>" + geb.welt.drehung + "° im Uhrzeigersinn, die Ansicht ist wie in der Welt ausgerichtet</dd>";
+    h += "</dl>";
     konfig.netzwerke.forEach(function (n) {
       h += "<div><h3>" + esc(n.mod) + " „" + esc(n.name) + "“</h3><div class='channels'>";
       n.kanaele.forEach(function (k) {
@@ -184,7 +188,7 @@
         var bx = boxVon(t);
         if (+$("schnitt").value < t.bis[1]) { $("schnitt").value = t.bis[1] + 1; setzeSchnitt(t.bis[1] + 1); }
         halteFest(t, null);
-        var c = new THREE.Vector3((bx[0][0] + bx[1][0]) / 2, (bx[0][1] + bx[1][1]) / 2, (bx[0][2] + bx[1][2]) / 2);
+        var c = halter.localToWorld(new THREE.Vector3((bx[0][0] + bx[1][0]) / 2, (bx[0][1] + bx[1][1]) / 2, (bx[0][2] + bx[1][2]) / 2));
         var off = sz.kamera.position.clone().sub(sz.steuerung.target).setLength(26);
         sz.steuerung.target.copy(c); sz.kamera.position.copy(c).add(off); sz.steuerung.update(); sz.neu();
       });
@@ -193,7 +197,12 @@
 
   function zeigeTeil(t, block) {
     var h = "<div><h2>" + esc(t.name) + "</h2><p class='meta'>" + esc(t.art || "") + (t.zelle ? " · " + esc(t.zelle) : "") + "</p></div>";
-    h += "<dl class='kv'><dt>Position</dt><dd>" + t.von.join(", ") + (t.bis.join() !== t.von.join() ? " bis " + t.bis.join(", ") : "") + "</dd>";
+    var w0 = welt(t.von[0], t.von[1], t.von[2]), w1 = welt(t.bis[0], t.bis[1], t.bis[2]), eins = t.bis.join() === t.von.join();
+    h += "<dl class='kv'><dt>Plan</dt><dd>" + t.von.join(", ") + (eins ? "" : " bis " + t.bis.join(", ")) + "</dd>";
+    if (w0) {
+      var lo = [0, 1, 2].map(function (i) { return Math.min(w0[i], w1[i]); }), hi = [0, 1, 2].map(function (i) { return Math.max(w0[i], w1[i]); });
+      h += "<dt>Welt</dt><dd>" + lo.join(", ") + (eins ? "" : " bis " + hi.join(", ")) + "</dd>";
+    }
     if (t.aufbau) h += "<dt>Aufbau</dt><dd>" + esc(t.aufbau) + "</dd>";
     (t.einstellungen || []).forEach(function (e) { h += "<dt>" + esc(e[0]) + "</dt><dd>" + esc(e[1]) + "</dd>"; });
     h += "</dl>";
