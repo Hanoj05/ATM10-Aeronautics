@@ -21,6 +21,7 @@ Pro Gebäude:
 | Feld | Bedeutung |
 | --- | --- |
 | `titel` | Was zu tun ist |
+| `wo` | `Minecraft` (im Spiel: bauen, einrichten, exportieren) oder `Website` (am Repo und an der Seite) |
 | `status` | `erledigt`, `in Arbeit` oder `offen` |
 | `bereich` | `Gebäude`, `3D`, `Doku`, `Website` oder `Betrieb` |
 | `text` | Optional: ein Satz mehr dazu |

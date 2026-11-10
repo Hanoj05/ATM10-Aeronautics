@@ -6,7 +6,12 @@
   C.navi("roadmap");
 
   var STATUS = { "erledigt": "erledigt", "in Arbeit": "arbeit", "offen": "offen" };
-  var filter = "alle", daten = null;
+  var filter = "alle", filterWo = "alle", daten = null;
+  var WO = { "Minecraft": { kl: "mc", text: "Im Spiel zu tun: bauen, einrichten, exportieren" }, "Website": { kl: "web", text: "Am Repo und an der Seite" } };
+  function passt(p) { return (filter === "alle" || p.status === filter) && (filterWo === "alle" || p.wo === filterWo); }
+  function naechster(punkte) {
+    return punkte.filter(function (p) { return p.status === "in Arbeit"; })[0] || punkte.filter(function (p) { return p.status === "offen"; })[0];
+  }
 
   function zaehle(punkte) {
     var z = { erledigt: 0, "in Arbeit": 0, offen: 0, alle: punkte.length };
@@ -34,13 +39,22 @@
     return Promise.all(holen).then(function () { daten = { roadmap: roadmap, namen: namen }; zeige(); });
   }).catch(function (e) { $("stand").innerHTML = "<p class='note'>Fehler: " + esc(e.message) + "</p>"; });
 
-  $("filter").addEventListener("click", function (ev) {
-    var b = ev.target.closest("button[data-f]");
-    if (!b) return;
-    filter = b.getAttribute("data-f");
-    $("filter").querySelectorAll("button").forEach(function (x) { x.setAttribute("aria-pressed", String(x === b)); });
+  function knopfGruppe(id, setze) {
+    $(id).addEventListener("click", function (ev) {
+      var b = ev.target.closest("button[data-f]");
+      if (!b) return;
+      setze(b.getAttribute("data-f"));
+      $(id).querySelectorAll("button").forEach(function (x) { x.setAttribute("aria-pressed", String(x === b)); });
+      zeige();
+    });
+  }
+  knopfGruppe("filter", function (f) { filter = f; });
+  knopfGruppe("filterWo", function (f) { filterWo = f; });
+  function setzeWo(f) {
+    filterWo = f;
+    $("filterWo").querySelectorAll("button").forEach(function (x) { x.setAttribute("aria-pressed", String(x.getAttribute("data-f") === f)); });
     zeige();
-  });
+  }
 
   function zeige() {
     var phasen = daten.roadmap.phasen, alle = [];
@@ -56,11 +70,27 @@
     s += "</div>";
     $("stand").innerHTML = s;
 
+    /* Stand getrennt nach Minecraft und Website */
+    var t = "";
+    Object.keys(WO).forEach(function (wo) {
+      var teil = alle.filter(function (p) { return p.wo === wo; }), zt = zaehle(teil), n = naechster(teil);
+      t += "<button type='button' class='box rm-teil " + WO[wo].kl + (filterWo === wo ? " an" : "") + "' data-wo='" + wo + "' aria-pressed='" + (filterWo === wo) + "'>";
+      t += "<span class='rm-teil-kopf'><span class='rm-wo " + WO[wo].kl + "'>" + wo + "</span><small>" + esc(WO[wo].text) + "</small></span>";
+      t += "<span class='rm-teil-zahl'><b>" + zt.erledigt + "</b> von " + zt.alle + " erledigt" + (zt["in Arbeit"] ? " · " + zt["in Arbeit"] + " in Arbeit" : "") + "</span>";
+      t += "<span class='balken'><i style='width:" + prozent(zt) + "%'></i></span>";
+      if (n) t += "<span class='rm-naechst'>Als Nächstes: <b>" + esc(n.titel) + "</b></span>";
+      t += "</button>";
+    });
+    $("teile").innerHTML = t;
+    $("teile").querySelectorAll("[data-wo]").forEach(function (b) {
+      b.addEventListener("click", function () { var w = b.getAttribute("data-wo"); setzeWo(filterWo === w ? "alle" : w); });
+    });
+
     var h = "";
     phasen.forEach(function (ph, i) {
       var zp = zaehle(ph.punkte);
       var art = zp.erledigt === zp.alle ? "fertig" : ph === aktuell ? "aktuell" : "spaeter";
-      var sichtbar = ph.punkte.filter(function (p) { return filter === "alle" || p.status === filter; });
+      var sichtbar = ph.punkte.filter(passt);
       h += "<li class='rm-phase " + art + "'><div class='rm-marke' aria-hidden='true'>" + (art === "fertig" ? "✓" : i + 1) + "</div><div class='rm-inhalt'>";
       h += "<div class='rm-kopf'><div><h2>" + esc(ph.titel) + (art === "aktuell" ? " <span class='chip ok'>jetzt</span>" : "") + "</h2><p>" + esc(ph.ziel) + "</p></div>";
       h += "<div class='rm-mini'><small>" + zp.erledigt + " / " + zp.alle + "</small><div class='balken'><i style='width:" + prozent(zp) + "%'></i></div></div></div>";
@@ -71,13 +101,14 @@
           h += "<li class='box rm-punkt " + kl + "'><span class='rm-status " + kl + "'>" + esc(p.status) + "</span><div class='rm-text'><strong>" + esc(p.titel) + "</strong>";
           if (p.text) h += "<p>" + esc(p.text) + "</p>";
           if (p.messung && p.messung.von) h += "<div class='rm-messung'><small>" + p.messung.fertig + " von " + p.messung.von + " fertig</small><div class='balken'><i style='width:" + Math.round(p.messung.fertig / p.messung.von * 100) + "%'></i></div></div>";
-          h += "</div><div class='rm-meta'><span class='rm-bereich'>" + esc(p.bereich || "") + "</span>";
+          var wk = (WO[p.wo] || {}).kl || "web";
+          h += "</div><div class='rm-meta'><span class='rm-wo " + wk + "'>" + esc(p.wo || "Website") + "</span><span class='rm-bereich'>" + esc(p.bereich || "") + "</span>";
           if (p.gebaeude && daten.namen[p.gebaeude]) h += "<a href='gebaeude.html?id=" + encodeURIComponent(p.gebaeude) + "#" + esc(p.tab || "ansicht") + "'>" + esc(daten.namen[p.gebaeude]) + " →</a>";
           h += "</div></li>";
         });
         h += "</ul>";
       } else {
-        h += "<p class='note rm-leer'>Nichts mit diesem Status.</p>";
+        h += "<p class='note rm-leer'>Nichts passend zum Filter.</p>";
       }
       h += "</div></li>";
     });

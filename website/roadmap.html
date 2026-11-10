@@ -15,14 +15,20 @@
 </header>
 <main class="page">
   <section class="box rm-stand" id="stand" aria-live="polite"><p class="note">Lade Roadmap …</p></section>
+  <div class="rm-teile" id="teile"></div>
   <div class="rm-filter">
+    <div class="seg2" role="group" aria-label="Nach Ort filtern" id="filterWo">
+      <button type="button" data-f="alle" aria-pressed="true">Alles</button>
+      <button type="button" data-f="Minecraft" aria-pressed="false">Minecraft</button>
+      <button type="button" data-f="Website" aria-pressed="false">Website</button>
+    </div>
     <div class="seg2" role="group" aria-label="Nach Status filtern" id="filter">
       <button type="button" data-f="alle" aria-pressed="true">Alle</button>
       <button type="button" data-f="offen" aria-pressed="false">Offen</button>
       <button type="button" data-f="in Arbeit" aria-pressed="false">In Arbeit</button>
       <button type="button" data-f="erledigt" aria-pressed="false">Erledigt</button>
     </div>
-    <span class="note">Gepflegt in <code>campus/roadmap.json</code></span>
+    <span class="note rm-quelle">Gepflegt in <code>campus/roadmap.json</code></span>
   </div>
   <ol class="rm-phasen" id="phasen"></ol>
 </main>

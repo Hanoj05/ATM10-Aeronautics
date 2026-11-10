@@ -1,18 +1,70 @@
 {
-  "hinweis": "Roadmap für Campus und Website. status: erledigt, in Arbeit oder offen. bereich: Gebäude, 3D, Doku, Website oder Betrieb. gebaeude (optional) = ID, dann verlinkt die Seite dorthin; tab (optional) = Tab der Gebäudeseite.",
+  "hinweis": "Roadmap für Campus und Website. wo: Minecraft (im Spiel zu tun) oder Website (am Repo und an der Seite). status: erledigt, in Arbeit oder offen. bereich: Gebäude, 3D, Doku, Website oder Betrieb. gebaeude (optional) = ID, dann verlinkt die Seite dorthin; tab (optional) = Tab der Gebäudeseite.",
   "phasen": [
     {
       "id": "fundament",
       "titel": "Fundament",
       "ziel": "Repo, Datenformat und Website stehen, das erste Gebäude ist drin.",
       "punkte": [
-        { "titel": "Repo-Aufbau mit Vorlage für neue Gebäude", "bereich": "Doku", "status": "erledigt" },
-        { "titel": "Wabenhaus: Bauplan, Blockmodell, Konfiguration und Einrichtung", "bereich": "Gebäude", "status": "erledigt", "gebaeude": "wabenhaus" },
-        { "titel": "Website mit Übersicht, Map und Gebäudeseite", "bereich": "Website", "status": "erledigt" },
-        { "titel": "Schematic-Import mit tools/modell-aus-schematic.py, AE2-Kabel als Stränge", "bereich": "3D", "status": "erledigt" },
-        { "titel": "ME-Gebäude aus der Schematic, in der Welt eingemessen", "bereich": "Gebäude", "status": "erledigt", "gebaeude": "me-zentrale" },
-        { "titel": "Abgespeckte Ansicht als Zip, läuft offline", "bereich": "Website", "status": "erledigt", "text": "download/campus-ansicht.zip, gebaut mit tools/baue-ansicht-zip.py" },
-        { "titel": "Roadmap-Seite", "bereich": "Website", "status": "erledigt" }
+        {
+          "titel": "Repo-Aufbau mit Vorlage für neue Gebäude",
+          "wo": "Website",
+          "bereich": "Doku",
+          "status": "erledigt"
+        },
+        {
+          "titel": "Wabenhaus in der Welt gebaut",
+          "wo": "Minecraft",
+          "bereich": "Gebäude",
+          "status": "erledigt",
+          "gebaeude": "wabenhaus"
+        },
+        {
+          "titel": "Wabenhaus: Bauplan, Blockmodell, Konfiguration und Einrichtung",
+          "wo": "Website",
+          "bereich": "Gebäude",
+          "status": "erledigt",
+          "gebaeude": "wabenhaus"
+        },
+        {
+          "titel": "Website mit Übersicht, Map und Gebäudeseite",
+          "wo": "Website",
+          "bereich": "Website",
+          "status": "erledigt"
+        },
+        {
+          "titel": "Schematic-Import mit tools/modell-aus-schematic.py, AE2-Kabel als Stränge",
+          "wo": "Website",
+          "bereich": "3D",
+          "status": "erledigt"
+        },
+        {
+          "titel": "ME-Gebäude als Schematic exportiert",
+          "wo": "Minecraft",
+          "bereich": "Gebäude",
+          "status": "erledigt",
+          "gebaeude": "me-zentrale"
+        },
+        {
+          "titel": "ME-Gebäude auf der Website, in der Welt eingemessen",
+          "wo": "Website",
+          "bereich": "Gebäude",
+          "status": "erledigt",
+          "gebaeude": "me-zentrale"
+        },
+        {
+          "titel": "Abgespeckte Ansicht als Zip, läuft offline",
+          "wo": "Website",
+          "bereich": "Website",
+          "status": "erledigt",
+          "text": "download/campus-ansicht.zip, gebaut mit tools/baue-ansicht-zip.py"
+        },
+        {
+          "titel": "Roadmap-Seite",
+          "wo": "Website",
+          "bereich": "Website",
+          "status": "erledigt"
+        }
       ]
     },
     {
@@ -20,11 +72,43 @@
       "titel": "Gebäude echt abbilden",
       "ziel": "Jedes Gebäude kommt als Schematic aus der Welt und sieht im Modell aus wie im Spiel.",
       "punkte": [
-        { "titel": "ME-Gebäude fertig bauen und neu exportieren", "bereich": "Gebäude", "status": "in Arbeit", "gebaeude": "me-zentrale", "tab": "ansicht" },
-        { "titel": "Wabenhaus als Schematic exportieren", "bereich": "Gebäude", "status": "offen", "gebaeude": "wabenhaus", "text": "Ersetzt das Modell aus dem Bauplan durch die echte Welt." },
-        { "titel": "P2P Tunnels und andere Parts an Kabeln zeichnen", "bereich": "3D", "status": "offen", "text": "Stecken schon in der Schematic, im ME-Gebäude sind es 58." },
-        { "titel": "Dünne Blöcke in echter Form", "bereich": "3D", "status": "offen", "text": "Panels, Slabs, Ketten und Scheiben statt ganzer Würfel." },
-        { "titel": "Verdeckte Innenblöcke weglassen", "bereich": "3D", "status": "offen", "text": "Damit große Gebäude auch auf schwächeren Rechnern flüssig laufen." }
+        {
+          "titel": "ME-Gebäude fertig bauen und neu exportieren",
+          "wo": "Minecraft",
+          "bereich": "Gebäude",
+          "status": "in Arbeit",
+          "gebaeude": "me-zentrale",
+          "tab": "ansicht"
+        },
+        {
+          "titel": "Wabenhaus als Schematic exportieren",
+          "wo": "Minecraft",
+          "bereich": "Gebäude",
+          "status": "offen",
+          "gebaeude": "wabenhaus",
+          "text": "Ersetzt das Modell aus dem Bauplan durch die echte Welt."
+        },
+        {
+          "titel": "P2P Tunnels und andere Parts an Kabeln zeichnen",
+          "wo": "Website",
+          "bereich": "3D",
+          "status": "offen",
+          "text": "Stecken schon in der Schematic, im ME-Gebäude sind es 58."
+        },
+        {
+          "titel": "Dünne Blöcke in echter Form",
+          "wo": "Website",
+          "bereich": "3D",
+          "status": "offen",
+          "text": "Panels, Slabs, Ketten und Scheiben statt ganzer Würfel."
+        },
+        {
+          "titel": "Verdeckte Innenblöcke weglassen",
+          "wo": "Website",
+          "bereich": "3D",
+          "status": "offen",
+          "text": "Damit große Gebäude auch auf schwächeren Rechnern flüssig laufen."
+        }
       ]
     },
     {
@@ -32,10 +116,38 @@
       "titel": "Technik und Einrichtung",
       "ziel": "Für jedes Gebäude ist nachlesbar, wie es eingestellt und eingerichtet ist.",
       "punkte": [
-        { "titel": "Wabenhaus: Einrichtung umsetzen", "bereich": "Doku", "status": "in Arbeit", "gebaeude": "wabenhaus", "tab": "einrichtung", "fortschritt": "einrichtung" },
-        { "titel": "ME-Gebäude: Zellen, Prioritäten, Kanäle und Energie eintragen", "bereich": "Doku", "status": "offen", "gebaeude": "me-zentrale", "tab": "konfig" },
-        { "titel": "ME-Gebäude: Einrichtung planen", "bereich": "Doku", "status": "offen", "gebaeude": "me-zentrale", "tab": "einrichtung" },
-        { "titel": "Weitere Gebäude des Campus anlegen", "bereich": "Gebäude", "status": "offen", "text": "Ordner aus gebaeude/vorlage kopieren, in campus.json eintragen, Schematic exportieren." }
+        {
+          "titel": "Wabenhaus: Einrichtung umsetzen",
+          "wo": "Minecraft",
+          "bereich": "Doku",
+          "status": "in Arbeit",
+          "gebaeude": "wabenhaus",
+          "tab": "einrichtung",
+          "fortschritt": "einrichtung"
+        },
+        {
+          "titel": "ME-Gebäude: Zellen, Prioritäten, Kanäle und Energie dokumentieren",
+          "wo": "Website",
+          "bereich": "Doku",
+          "status": "offen",
+          "gebaeude": "me-zentrale",
+          "tab": "konfig"
+        },
+        {
+          "titel": "ME-Gebäude: Einrichtung planen und bauen",
+          "wo": "Minecraft",
+          "bereich": "Doku",
+          "status": "offen",
+          "gebaeude": "me-zentrale",
+          "tab": "einrichtung"
+        },
+        {
+          "titel": "Weitere Gebäude des Campus bauen",
+          "wo": "Minecraft",
+          "bereich": "Gebäude",
+          "status": "offen",
+          "text": "Im Spiel bauen und als Schematic exportieren, dann Ordner aus gebaeude/vorlage anlegen."
+        }
       ]
     },
     {
@@ -43,9 +155,25 @@
       "titel": "Nach Minecraft aussehen",
       "ziel": "Die 3D-Ansicht zeigt echte Blöcke statt Farbwürfel.",
       "punkte": [
-        { "titel": "Echte Block-Texturen aus den Mod-JARs", "bereich": "3D", "status": "offen" },
-        { "titel": "Map: Gelände und Wege zwischen den Gebäuden", "bereich": "3D", "status": "offen" },
-        { "titel": "Materialliste pro Gebäude aus der Schematic", "bereich": "Website", "status": "offen", "text": "Welche Blöcke wie oft verbaut sind." }
+        {
+          "titel": "Echte Block-Texturen aus den Mod-JARs",
+          "wo": "Website",
+          "bereich": "3D",
+          "status": "offen"
+        },
+        {
+          "titel": "Map: Gelände und Wege zwischen den Gebäuden",
+          "wo": "Website",
+          "bereich": "3D",
+          "status": "offen"
+        },
+        {
+          "titel": "Materialliste pro Gebäude aus der Schematic",
+          "wo": "Website",
+          "bereich": "Website",
+          "status": "offen",
+          "text": "Welche Blöcke wie oft verbaut sind."
+        }
       ]
     },
     {
@@ -53,9 +181,25 @@
       "titel": "Online stellen",
       "ziel": "Mitspieler können die Website öffnen, ohne selbst etwas einzurichten.",
       "punkte": [
-        { "titel": "Hosting entscheiden", "bereich": "Betrieb", "status": "offen", "text": "Cloudflare Pages, eigener Debian-Server oder Netlify. Vergleich in website/README.md." },
-        { "titel": "Zugriff nur für Mitspieler", "bereich": "Betrieb", "status": "offen" },
-        { "titel": "Modelle und Zip bei jedem Push automatisch bauen", "bereich": "Betrieb", "status": "offen" }
+        {
+          "titel": "Hosting entscheiden",
+          "wo": "Website",
+          "bereich": "Betrieb",
+          "status": "offen",
+          "text": "Cloudflare Pages, eigener Debian-Server oder Netlify. Vergleich in website/README.md."
+        },
+        {
+          "titel": "Zugriff nur für Mitspieler",
+          "wo": "Website",
+          "bereich": "Betrieb",
+          "status": "offen"
+        },
+        {
+          "titel": "Modelle und Zip bei jedem Push automatisch bauen",
+          "wo": "Website",
+          "bereich": "Betrieb",
+          "status": "offen"
+        }
       ]
     }
   ]

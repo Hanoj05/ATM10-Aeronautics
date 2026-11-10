@@ -227,3 +227,23 @@ ul.hinweise { margin: 0; padding-left: 18px; display: grid; gap: 4px; font-size:
   .rm-meta { justify-items: start; text-align: left; grid-auto-flow: column; justify-content: start; gap: 12px; }
   .rm-zahlen .rm-jetzt { margin-left: 0; }
 }
+.rm-teile { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; }
+.rm-teil { display: grid; gap: 8px; padding: 14px 16px; text-align: left; font: inherit; color: var(--fg); cursor: pointer; }
+.rm-teil:hover { border-color: var(--muted); }
+.rm-teil.an { border-color: var(--honey); box-shadow: 0 0 0 1px var(--honey); }
+.rm-teil-kopf { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; }
+.rm-teil-kopf small { color: var(--muted); font-size: 13px; }
+.rm-teil-zahl { font: 13px var(--f-mono); color: var(--muted); }
+.rm-teil-zahl b { color: var(--fg); font-size: 18px; }
+.rm-teil .balken { display: block; }
+.rm-naechst { font-size: 14px; color: var(--muted); }
+.rm-naechst b { color: var(--fg); font-weight: 600; }
+.rm-wo { display: inline-flex; align-items: center; gap: 5px; font: 600 11px var(--f-mono); letter-spacing: .05em; text-transform: uppercase; padding: 2px 8px; border-radius: 3px; white-space: nowrap; }
+.rm-wo::before { content: ""; width: 7px; height: 7px; }
+.rm-wo.mc { background: var(--fg); color: var(--bg); }
+.rm-wo.mc::before { background: var(--honey); }
+.rm-wo.web { border: 1px solid var(--line); color: var(--fg); background: var(--raised); }
+.rm-wo.web::before { border: 1.5px solid var(--muted); border-radius: 50%; width: 5px; height: 5px; }
+.rm-filter { justify-content: flex-start; }
+.rm-quelle { margin-left: auto; }
+@media (max-width: 640px) { .rm-quelle { margin-left: 0; } }
