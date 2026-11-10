@@ -68,7 +68,12 @@
     gitter.material.transparent = true; gitter.material.opacity = 0.45;
     sz.scene.add(gitter);
 
-    function ansicht() { C.blickeAuf(sz, gesamt.min, [gesamt.max[0], 12, gesamt.max[2]]); }
+    function ansicht() {
+      C.blickeAuf(sz, gesamt.min, [gesamt.max[0], gesamt.max[1] * 0.4, gesamt.max[2]]);
+      /* etwas weiter weg, damit alle Gebäude ganz ins Bild passen */
+      var t = sz.steuerung.target; sz.kamera.position.sub(t).multiplyScalar(1.3).add(t);
+      sz.steuerung.update(); sz.neu();
+    }
     $("ansicht").addEventListener("click", ansicht);
     ansicht();
     $("loading").hidden = !!mitModell.length;
