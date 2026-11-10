@@ -2,7 +2,7 @@
 
 Was in die fertige Hülle kommt: Möbel, Deko, Licht und Feinschliff. Technik und Netzwerk stehen in [konfig.md](konfig.md), die Hülle selbst in [bauplan.html](bauplan.html).
 
-Koordinaten sind Plan-Koordinaten relativ zu P0. Das Gebäude ist gedreht gebaut, in der Welt gilt: **Welt = (392 − z, 65 + y, −285 + x)**. Wo hier Süden steht, ist in der Welt Westen.
+Koordinaten sind Plan-Koordinaten relativ zu P0. Das Gebäude ist gedreht gebaut, in der Welt gilt: **Welt = (392 − z, 65 + y, −286 + x)**. Wo hier Süden steht, ist in der Welt Westen.
 
 ## Stilregeln
 

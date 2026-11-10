@@ -4,7 +4,7 @@ Alles, was eingestellt werden muss: Maschinen, Logistics Network, Filter, Energi
 
 Koordinaten sind Plan-Koordinaten relativ zu P0 (x nach Plan-Osten, z nach Plan-Süden, y = 0 ist der Boden).
 
-Das Wabenhaus ist um 90° im Uhrzeigersinn gedreht gebaut: Plan-Norden zeigt in der Welt nach Osten, das Foyer liegt im Westen. Umrechnung in Weltkoordinaten: **Welt = (392 − z, 65 + y, −285 + x)**. Beispiel: Hive-Core (7, 2, 12) liegt in der Welt bei (380, 67, −278).
+Das Wabenhaus ist um 90° im Uhrzeigersinn gedreht gebaut: Plan-Norden zeigt in der Welt nach Osten, das Foyer liegt im Westen. Umrechnung in Weltkoordinaten: **Welt = (392 − z, 65 + y, −286 + x)**. Beispiel: Hive-Core (7, 2, 12) liegt in der Welt bei (380, 67, −279).
 
 ## Übersicht
 
