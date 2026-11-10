@@ -17,6 +17,7 @@ Dann im Browser `http://localhost:8000` öffnen. Die Startseite leitet auf die C
 
 - `index.html` – **Übersicht:** eine Karte pro Gebäude mit Kennzahlen, Stand der Einrichtung und Sprungmarken, darunter alle Netzwerke.
 - `map.html` – **Map:** der Campus in 3D. Hover zeigt den Gebäudenamen, Klick öffnet die Gebäudeseite.
+- `roadmap.html` – **Roadmap:** Phasen mit Stand, Filter nach Status. Daten aus `campus/roadmap.json`.
 - `gebaeude.html?id=<id>` – **Gebäude** mit Unter-Tabs:
   - `#ansicht`: 3D-Modell mit Schnitt-Regler und zwei Ebenen. *Technik* zeigt beim Hovern die Konfiguration eines Teils, *Einrichtung* zeigt die geplanten Deko-Plätze als Kästen (orange offen, grau fertig).
   - `#konfig`: Matrix, welches Teil auf welchem Kanal sendet oder empfängt, und die Flüsse pro Kanal.

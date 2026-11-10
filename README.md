@@ -7,6 +7,7 @@ Doku zu unserem Tech-Campus in der ATM10-Aeronautics-Welt. Jedes Gebäude hat ei
 ```
 campus/
   campus.json          Liste aller Gebäude mit Lage in der Welt
+  roadmap.json         Roadmap, angezeigt auf website/roadmap.html
 gebaeude/
   vorlage/             Kopiervorlage für ein neues Gebäude
   wabenhaus/           Bienengebäude

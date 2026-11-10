@@ -13,3 +13,16 @@ Pro Gebäude:
 | `status` | `geplant`, `im Bau` oder `gebaut` |
 | `position` | Weltkoordinate von P0 als `[x, y, z]`, im Spiel mit F3 ablesen |
 | `drehung` | 0, 90, 180 oder 270: um wie viel Grad im Uhrzeigersinn das Gebäude gegenüber dem Plan gedreht gebaut ist. 90 heißt: Plan-Norden zeigt nach Osten |
+
+## Roadmap
+
+`roadmap.json` ist die Roadmap für Campus und Website, die Seite `website/roadmap.html` zeigt sie an. Pro Phase `titel`, `ziel` und `punkte`. Pro Punkt:
+
+| Feld | Bedeutung |
+| --- | --- |
+| `titel` | Was zu tun ist |
+| `status` | `erledigt`, `in Arbeit` oder `offen` |
+| `bereich` | `Gebäude`, `3D`, `Doku`, `Website` oder `Betrieb` |
+| `text` | Optional: ein Satz mehr dazu |
+| `gebaeude`, `tab` | Optional: verlinkt auf die Gebäudeseite, z. B. Tab `einrichtung` |
+| `fortschritt` | Optional: `einrichtung` zeigt den Stand aus der `einrichtung.json` des Gebäudes |

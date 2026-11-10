@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Roadmap</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,500..800&family=IBM+Plex+Sans:wght@400;600&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site"><a class="brand" href="index.html">Tech<b>·</b>Campus</a><nav id="nav" aria-label="Hauptnavigation"></nav></header>
+<header class="topbar">
+  <h1>Roadmap</h1>
+  <span class="sub">Was fertig ist und was als Nächstes kommt</span>
+</header>
+<main class="page">
+  <section class="box rm-stand" id="stand" aria-live="polite"><p class="note">Lade Roadmap …</p></section>
+  <div class="rm-filter">
+    <div class="seg2" role="group" aria-label="Nach Status filtern" id="filter">
+      <button type="button" data-f="alle" aria-pressed="true">Alle</button>
+      <button type="button" data-f="offen" aria-pressed="false">Offen</button>
+      <button type="button" data-f="in Arbeit" aria-pressed="false">In Arbeit</button>
+      <button type="button" data-f="erledigt" aria-pressed="false">Erledigt</button>
+    </div>
+    <span class="note">Gepflegt in <code>campus/roadmap.json</code></span>
+  </div>
+  <ol class="rm-phasen" id="phasen"></ol>
+</main>
+<script src="js/voxel.js"></script>
+<script src="js/roadmap.js"></script>
+</body>
+</html>
