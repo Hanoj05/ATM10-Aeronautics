@@ -10,20 +10,32 @@ campus/
 gebaeude/
   vorlage/             Kopiervorlage für ein neues Gebäude
   wabenhaus/           Bienengebäude
-    gebaeude.json      Steckbrief: Zellen, Maße, Netzwerke, Dateien
-    bauplan.html       Bauanleitung Block für Block (im Browser öffnen)
-    einrichtung.md     Inneneinrichtung und Deko
-    konfig.md          Technik und Konfiguration (Nodes, Kanäle, Filter)
+    gebaeude.json      Steckbrief: Zellen, Maße, P0, Drehung, Dateien
+    bauplan.html       Bauanleitung Block für Block
+    modell.json        Blockmodell für die 3D-Ansicht
+    konfig.json        Teile mit Position, Nodes und Kanälen (für die Website)
+    einrichtung.json   Einrichtungsteile mit Position und Status (für die Website)
+    konfig.md          Technik und Konfiguration zum Lesen
+    einrichtung.md     Stilregeln und Mods zum Lesen
 schematics/            Exportierte Gebäude aus der Welt für die 3D-Ansicht
-website/               Die spätere Campus-Website
+tools/                 Hilfsskripte, z. B. modell.json aus dem Bauplan erzeugen
+website/               Die Campus-Website
 ```
+
+## Website ansehen
+
+```
+python3 -m http.server 8000
+```
+
+im Repo-Ordner starten und `http://localhost:8000` öffnen. Details in [website/README.md](website/README.md).
 
 ## Neues Gebäude anlegen
 
 1. Ordner `gebaeude/vorlage` kopieren und umbenennen, zum Beispiel `gebaeude/me-zentrale`.
 2. `gebaeude.json` ausfüllen, vor allem `id`, `name` und `zweck`.
 3. Das Gebäude in `campus/campus.json` eintragen.
-4. `einrichtung.md` und `konfig.md` nach und nach füllen.
+4. `konfig.json` und `einrichtung.json` nach und nach füllen, dann erscheinen die Teile auf der Website.
 
 ## Gebäude
 

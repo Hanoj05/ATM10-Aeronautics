@@ -15,8 +15,14 @@ Dann im Browser `http://localhost:8000` öffnen. Die Startseite leitet auf die C
 
 ## Seiten
 
-- `index.html`: Campus in 3D. Hover zeigt den Gebäudenamen, Klick öffnet die Gebäudeseite.
-- `gebaeude.html?id=<id>`: Gebäude in 3D mit Schnitt-Regler. Hover über ein Teil aus `konfig.json` zeigt dessen Konfiguration, Klick hält sie fest. Kanäle lassen sich markieren. Darunter `konfig.md`, `einrichtung.md` und ein Link zum Bauplan.
+- `index.html` – **Übersicht:** eine Karte pro Gebäude mit Kennzahlen, Stand der Einrichtung und Sprungmarken, darunter alle Netzwerke.
+- `map.html` – **Map:** der Campus in 3D. Hover zeigt den Gebäudenamen, Klick öffnet die Gebäudeseite.
+- `gebaeude.html?id=<id>` – **Gebäude** mit Unter-Tabs:
+  - `#ansicht`: 3D-Modell mit Schnitt-Regler und zwei Ebenen. *Technik* zeigt beim Hovern die Konfiguration eines Teils, *Einrichtung* zeigt die geplanten Deko-Plätze als Kästen (orange offen, grau fertig).
+  - `#konfig`: Matrix, welches Teil auf welchem Kanal sendet oder empfängt, und die Flüsse pro Kanal.
+  - `#einrichtung`: Fortschritt pro Zelle und alle Einrichtungsteile als Karten mit „Im 3D zeigen“.
+  - `#dokumente`: `konfig.md` und `einrichtung.md`.
+  - `#bauplan`: der Bauplan eingebettet.
 
 ## Daten pro Gebäude
 
@@ -25,7 +31,8 @@ Dann im Browser `http://localhost:8000` öffnen. Die Startseite leitet auf die C
 | `gebaeude.json` | Steckbrief, Zellen, Dateiliste |
 | `modell.json` | Blockmodell. Erzeugt mit `tools/modell-aus-bauplan.py`, später aus einer Schematic |
 | `konfig.json` | Teile mit Position (`von`, `bis`), Einstellungen, Nodes und Kanälen. Das liest die Hover-Ansicht |
-| `konfig.md`, `einrichtung.md` | Lesbare Dokumente, werden unter dem Modell angezeigt |
+| `einrichtung.json` | Einrichtungsteile mit Orten (`orte` oder `block`), Mod und Status. Das liest der Tab Einrichtung und die Ebene Einrichtung |
+| `konfig.md`, `einrichtung.md` | Lesbare Dokumente im Tab Dokumente |
 
 ## Ursprünglicher Plan
 

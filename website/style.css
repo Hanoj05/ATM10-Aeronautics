@@ -28,7 +28,7 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 2px solid 
 .chip { display: inline-flex; align-items: center; gap: 6px; font: 600 11px var(--f-mono); letter-spacing: .05em; text-transform: uppercase; padding: 2px 8px; border-radius: 10px; border: 1px solid var(--line); color: var(--muted); }
 .chip.ok { border-color: var(--honey); color: var(--honey-ink); }
 
-.layout { display: grid; grid-template-columns: minmax(0, 1fr) 380px; min-height: calc(100vh - 80px); }
+.layout { display: grid; grid-template-columns: minmax(0, 1fr) 380px; min-height: calc(100vh - 150px); }
 @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } }
 .viewport { position: relative; background: var(--scene); min-height: 520px; overflow: hidden; }
 .viewport canvas { display: block; width: 100%; height: 100%; cursor: grab; }
@@ -42,7 +42,7 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 2px solid 
 .tooltip { position: absolute; pointer-events: none; background: var(--fg); color: var(--bg); font: 12px/1.4 var(--f-mono); padding: 6px 9px; border-radius: 3px; white-space: nowrap; transform: translate(14px, 14px); z-index: 3; }
 .loading { position: absolute; inset: 0; display: grid; place-items: center; color: var(--muted); font: 13px var(--f-mono); }
 
-.panel { border-left: 1px solid var(--line); background: var(--surface); padding: 18px 18px 28px; display: grid; gap: 18px; align-content: start; overflow-y: auto; max-height: calc(100vh - 80px); position: sticky; top: 0; }
+.panel { border-left: 1px solid var(--line); background: var(--surface); padding: 18px 18px 28px; display: grid; gap: 18px; align-content: start; overflow-y: auto; max-height: calc(100vh - 150px); position: sticky; top: 0; }
 @media (max-width: 900px) { .panel { border-left: 0; border-top: 1px solid var(--line); max-height: none; position: static; } }
 .panel h2 { margin: 0; font: 700 20px/1.2 var(--f-display); }
 .panel h3 { margin: 0 0 6px; font: 600 11px var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
@@ -89,3 +89,80 @@ ul.hinweise { margin: 0; padding-left: 18px; display: grid; gap: 4px; font-size:
 .campus-list strong { font: 700 16px var(--f-display); }
 .campus-list span { font-size: 13px; color: var(--muted); }
 .note { font-size: 13px; color: var(--muted); }
+
+/* ---------- Navigation ---------- */
+.site { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 24px; padding: 10px max(16px, env(safe-area-inset-right, 0px)) 10px max(16px, env(safe-area-inset-left, 0px)); background: var(--fg); color: var(--bg); }
+.site .brand { font: 800 16px var(--f-display); font-stretch: 110%; color: var(--bg); text-decoration: none; letter-spacing: .02em; }
+.site .brand b { color: var(--honey); }
+#nav { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; }
+#nav a { font: 600 12px var(--f-mono); letter-spacing: .05em; text-transform: uppercase; color: var(--bg); opacity: .72; text-decoration: none; padding: 6px 10px; border-radius: 3px; }
+#nav a:hover { opacity: 1; }
+#nav a[aria-current="page"] { opacity: 1; background: var(--honey); color: #1f2124; }
+#nav .sep { width: 1px; height: 18px; background: var(--bg); opacity: .25; margin: 0 6px; }
+
+/* ---------- Unter-Tabs auf der Gebäudeseite ---------- */
+.subtabs { display: flex; flex-wrap: wrap; gap: 2px; padding: 0 max(16px, env(safe-area-inset-right, 0px)) 0 max(16px, env(safe-area-inset-left, 0px)); background: var(--surface); border-bottom: 1px solid var(--line); }
+.subtabs a { font: 600 13px var(--f-body); color: var(--muted); text-decoration: none; padding: 10px 14px; border-bottom: 2px solid transparent; }
+.subtabs a:hover { color: var(--fg); }
+.subtabs a[aria-current="true"] { color: var(--fg); border-bottom-color: var(--honey); }
+.view { display: none; }
+.view.on { display: block; }
+.page { padding: 24px max(16px, env(safe-area-inset-right, 0px)) 64px max(16px, env(safe-area-inset-left, 0px)); max-width: 1240px; display: grid; gap: 22px; }
+.page > h2 { margin: 0; font: 700 24px/1.2 var(--f-display); }
+.page .lead { margin: 0; color: var(--muted); max-width: 72ch; }
+.box { background: var(--surface); border: 1px solid var(--line); border-radius: 4px; }
+.scrollx { overflow-x: auto; }
+.seg2 { display: inline-flex; gap: 2px; background: var(--bg); border: 1px solid var(--line); border-radius: 4px; padding: 2px; }
+.seg2 button { font: 600 12px var(--f-mono); border: 0; background: none; color: var(--fg); padding: 4px 10px; border-radius: 3px; cursor: pointer; }
+.seg2 button[aria-pressed="true"] { background: var(--fg); color: var(--bg); }
+
+/* ---------- Konfig-Matrix und Flüsse ---------- */
+.matrix { border-collapse: collapse; width: 100%; font-size: 14px; }
+.matrix th, .matrix td { padding: 8px 10px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: middle; }
+.matrix thead th { font: 600 11px var(--f-mono); color: var(--muted); letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; }
+.matrix td.c { text-align: center; white-space: nowrap; }
+.matrix tbody tr:hover { background: var(--raised); }
+.matrix .teil { font-weight: 600; background: none; border: 0; color: var(--fg); cursor: pointer; padding: 0; font: 600 14px var(--f-body); text-align: left; }
+.matrix .teil:hover { color: var(--honey-ink); }
+.matrix .ort { display: block; font: 12px var(--f-mono); color: var(--muted); }
+.pfeil { display: inline-flex; align-items: center; gap: 4px; font: 600 11px var(--f-mono); padding: 2px 6px; border-radius: 3px; color: #fff; }
+.pfeil.rein { background: none; border: 1.5px solid currentColor; }
+.flows { display: grid; gap: 10px; }
+.flow { display: grid; grid-template-columns: 220px minmax(0, 1fr) 28px minmax(0, 1fr); gap: 12px; align-items: center; padding: 12px 14px; }
+@media (max-width: 760px) { .flow { grid-template-columns: 1fr; } .flow .arrow { transform: rotate(90deg); justify-self: start; } }
+.flow .wer { display: flex; flex-wrap: wrap; gap: 6px; }
+.flow .wer span { font-size: 13px; padding: 3px 8px; border-radius: 3px; background: var(--raised); border: 1px solid var(--line); }
+.flow .arrow { font: 700 18px var(--f-mono); color: var(--muted); text-align: center; }
+.flow .kopf { display: grid; gap: 4px; }
+.flow .kopf small { color: var(--muted); font-size: 13px; }
+
+/* ---------- Einrichtung ---------- */
+.fortschritt { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 10px; }
+.fortschritt .zelle { padding: 10px 12px; display: grid; gap: 6px; }
+.fortschritt .zelle strong { font: 700 15px var(--f-display); }
+.balken { height: 6px; background: var(--line); border-radius: 3px; overflow: hidden; }
+.balken i { display: block; height: 100%; background: var(--honey); }
+.fortschritt small { font: 12px var(--f-mono); color: var(--muted); }
+.gruppe { display: grid; gap: 10px; }
+.gruppe h3 { margin: 6px 0 0; font: 700 18px var(--f-display); }
+.karten { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 10px; }
+.karte { padding: 12px 14px; display: grid; gap: 6px; align-content: start; }
+.karte .oben { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+.karte strong { font: 700 15px var(--f-display); }
+.karte p { margin: 0; font-size: 14px; color: var(--muted); }
+.karte .mod { font: 12px var(--f-mono); color: var(--honey-ink); }
+.karte .zeige { justify-self: start; font: 600 12px var(--f-mono); border: 1px solid var(--line); background: var(--raised); color: var(--fg); padding: 4px 10px; border-radius: 4px; cursor: pointer; }
+.status { font: 600 11px var(--f-mono); text-transform: uppercase; letter-spacing: .05em; padding: 2px 7px; border-radius: 10px; border: 1px solid var(--line); color: var(--muted); white-space: nowrap; }
+.status.fertig { border-color: var(--fg); color: var(--fg); }
+.status.offen { border-color: var(--honey); color: var(--honey-ink); }
+
+/* ---------- Übersicht ---------- */
+.gebkarten { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 14px; }
+.gebkarte { padding: 16px 18px; display: grid; gap: 10px; align-content: start; }
+.gebkarte h3 { margin: 0; font: 800 22px var(--f-display); font-stretch: 108%; }
+.gebkarte .links { display: flex; flex-wrap: wrap; gap: 6px; }
+.gebkarte .links a { font: 600 12px var(--f-mono); text-decoration: none; padding: 5px 10px; border: 1px solid var(--line); border-radius: 4px; background: var(--raised); color: var(--fg); }
+.gebkarte .links a:hover { border-color: var(--honey); }
+.kz { display: flex; flex-wrap: wrap; gap: 6px 18px; font: 13px var(--f-mono); color: var(--muted); }
+.kz b { color: var(--fg); }
+.bauplan-frame { width: 100%; height: calc(100vh - 150px); min-height: 600px; border: 1px solid var(--line); border-radius: 4px; background: var(--surface); }

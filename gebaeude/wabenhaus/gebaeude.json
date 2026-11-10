@@ -28,8 +28,11 @@
   ],
   "dateien": {
     "bauplan": "bauplan.html",
-    "einrichtung": "einrichtung.md",
+    "modell": "modell.json",
+    "konfigDaten": "konfig.json",
+    "einrichtungDaten": "einrichtung.json",
     "konfig": "konfig.md",
+    "einrichtung": "einrichtung.md",
     "schematic": null
   }
 }

@@ -8,33 +8,76 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
+<header class="site"><a class="brand" href="index.html">Tech<b>·</b>Campus</a><nav id="nav" aria-label="Hauptnavigation"></nav></header>
 <header class="topbar">
-  <a class="back" href="index.html">← Campus</a>
   <h1 id="titel">Gebäude</h1>
   <span class="chip" id="status"></span>
   <span class="sub" id="zweck"></span>
 </header>
+<nav class="subtabs" aria-label="Bereiche des Gebäudes">
+  <a href="#ansicht" data-view="ansicht">3D-Ansicht</a>
+  <a href="#konfig" data-view="konfig">Konfiguration</a>
+  <a href="#einrichtung" data-view="einrichtung">Einrichtung</a>
+  <a href="#dokumente" data-view="dokumente">Dokumente</a>
+  <a href="#bauplan" data-view="bauplan" id="bauplanTab">Bauplan</a>
+</nav>
 
-<div class="layout">
-  <div class="viewport" id="viewport">
-    <div class="loading" id="loading">Lade Gebäude …</div>
-    <div class="controls">
-      <label class="ctl" for="schnitt">Schnitt bei <input type="range" id="schnitt" min="0" max="40" value="5"> <span id="schnittWert">y 5</span></label>
-      <span class="ctl"><button type="button" id="ansicht">Ansicht zurücksetzen</button></span>
+<section class="view" id="view-ansicht">
+  <div class="layout">
+    <div class="viewport" id="viewport">
+      <div class="loading" id="loading">Lade Gebäude …</div>
+      <div class="controls">
+        <span class="ctl">Ebene
+          <span class="seg2" role="group" aria-label="Ebene">
+            <button type="button" data-ebene="technik" aria-pressed="true">Technik</button>
+            <button type="button" data-ebene="einrichtung" aria-pressed="false">Einrichtung</button>
+          </span>
+        </span>
+        <label class="ctl" for="schnitt">Schnitt bei <input type="range" id="schnitt" min="0" max="40" value="5"> <span id="schnittWert">y 5</span></label>
+        <span class="ctl"><button type="button" id="ansichtReset">Ansicht zurücksetzen</button></span>
+      </div>
+      <div class="hint">Ziehen: drehen · Rechtsklick: verschieben · Mausrad: zoomen · Klick: festhalten</div>
+      <div class="tooltip" id="tooltip" hidden></div>
     </div>
-    <div class="hint">Ziehen: drehen · Rechtsklick: verschieben · Mausrad: zoomen · Klick auf ein Teil: festhalten</div>
-    <div class="tooltip" id="tooltip" hidden></div>
+    <aside class="panel" id="panel" aria-live="polite"></aside>
   </div>
-  <aside class="panel" id="panel" aria-live="polite"></aside>
-</div>
+</section>
 
-<section class="docs">
-  <div class="tabs" role="group" aria-label="Dokumente">
-    <button type="button" data-doc="konfig" aria-pressed="true">Konfiguration</button>
-    <button type="button" data-doc="einrichtung" aria-pressed="false">Einrichtung</button>
-    <a id="bauplanLink" href="#" target="_blank" rel="noopener">Bauplan öffnen ↗</a>
+<section class="view" id="view-konfig">
+  <div class="page">
+    <h2>Konfiguration</h2>
+    <p class="lead">Welches Teil auf welchem Kanal sendet oder empfängt. Ein Klick auf ein Teil zeigt es in der 3D-Ansicht.</p>
+    <div class="box scrollx"><table class="matrix" id="matrix"></table></div>
+    <h2>Flüsse pro Kanal</h2>
+    <div class="flows" id="fluesse"></div>
   </div>
-  <article class="md" id="doc"></article>
+</section>
+
+<section class="view" id="view-einrichtung">
+  <div class="page">
+    <h2>Einrichtung</h2>
+    <p class="lead" id="einrLead">Was in die Räume kommt. „Im 3D zeigen“ springt zur Stelle im Modell.</p>
+    <div class="fortschritt" id="fortschritt"></div>
+    <div id="stil"></div>
+    <div class="gruppe" id="einrListe"></div>
+  </div>
+</section>
+
+<section class="view" id="view-dokumente">
+  <div class="page">
+    <div class="tabs" role="group" aria-label="Dokumente">
+      <button type="button" data-doc="konfig" aria-pressed="true">konfig.md</button>
+      <button type="button" data-doc="einrichtung" aria-pressed="false">einrichtung.md</button>
+    </div>
+    <article class="md" id="doc"></article>
+  </div>
+</section>
+
+<section class="view" id="view-bauplan">
+  <div class="page" style="max-width:none">
+    <p class="lead">Die Bauanleitung Block für Block. <a id="bauplanNeu" href="#" target="_blank" rel="noopener">In neuem Tab öffnen ↗</a></p>
+    <iframe class="bauplan-frame" id="bauplanFrame" title="Bauplan" loading="lazy"></iframe>
+  </div>
 </section>
 
 <script src="https://cdn.jsdelivr.net/npm/three@0.147.0/build/three.min.js"></script>

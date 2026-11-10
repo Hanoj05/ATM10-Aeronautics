@@ -180,7 +180,36 @@
     return [p0[0] + dx, p0[1] + y, p0[2] + dz];
   }
 
+  /* Navigation oben auf jeder Seite. aktiv: "uebersicht", "map" oder eine Gebäude-ID */
+  function navi(aktiv) {
+    var nav = document.getElementById("nav");
+    if (!nav) return;
+    function link(href, text, an) { return "<a href='" + href + "'" + (an ? " aria-current='page'" : "") + ">" + esc(text) + "</a>"; }
+    nav.innerHTML = link("index.html", "Übersicht", aktiv === "uebersicht") + link("map.html", "Map", aktiv === "map");
+    ladeJSON("campus/campus.json").then(function (c) {
+      var h = "";
+      c.gebaeude.forEach(function (g) { if (g.ordner) h += link("gebaeude.html?id=" + encodeURIComponent(g.id), g.name, aktiv === g.id); });
+      if (h) nav.insertAdjacentHTML("beforeend", "<span class='sep' aria-hidden='true'></span>" + h);
+    }).catch(function () {});
+  }
+
+  /* Alle Daten eines Gebäudes laden. Fehlende Dateien werden zu null. */
+  function ladeGebaeude(id) {
+    var ordner = "gebaeude/" + id + "/";
+    function opt(p) { return p ? ladeJSON(ordner + p).catch(function () { return null; }) : Promise.resolve(null); }
+    return ladeJSON(ordner + "gebaeude.json").then(function (geb) {
+      var d = geb.dateien || {};
+      return Promise.all([
+        opt(d.modell === undefined ? "modell.json" : d.modell),
+        opt(d.konfigDaten === undefined ? "konfig.json" : d.konfigDaten),
+        opt(d.einrichtungDaten === undefined ? "einrichtung.json" : d.einrichtungDaten)
+      ]).then(function (r) {
+        return { id: id, ordner: ordner, geb: geb, modell: r[0], konfig: r[1] || { netzwerke: [], teile: [] }, einr: r[2] || { teile: [] } };
+      });
+    });
+  }
+
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;" }[c]; }); }
 
-  window.Campus = { ladeJSON: ladeJSON, ladeText: ladeText, baueModell: baueModell, baueSzene: baueSzene, blickeAuf: blickeAuf, rahmen: rahmen, cssVar: cssVar, esc: esc, drehGruppe: drehGruppe, weltVon: weltVon, weltBox: weltBox };
+  window.Campus = { ladeJSON: ladeJSON, ladeText: ladeText, baueModell: baueModell, baueSzene: baueSzene, blickeAuf: blickeAuf, rahmen: rahmen, cssVar: cssVar, esc: esc, drehGruppe: drehGruppe, weltVon: weltVon, weltBox: weltBox, navi: navi, ladeGebaeude: ladeGebaeude };
 })();

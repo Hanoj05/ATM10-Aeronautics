@@ -13,8 +13,11 @@
   "netzwerke": [],
   "dateien": {
     "bauplan": null,
-    "einrichtung": "einrichtung.md",
+    "modell": null,
+    "konfigDaten": "konfig.json",
+    "einrichtungDaten": "einrichtung.json",
     "konfig": "konfig.md",
+    "einrichtung": "einrichtung.md",
     "schematic": null
   }
 }

@@ -8,27 +8,20 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
+<header class="site"><a class="brand" href="index.html">Tech<b>·</b>Campus</a><nav id="nav" aria-label="Hauptnavigation"></nav></header>
 <header class="topbar">
-  <h1>Tech-Campus</h1>
+  <h1>Übersicht</h1>
   <span class="sub" id="welt">ATM10 Aeronautics</span>
 </header>
-<div class="layout">
-  <div class="viewport" id="viewport">
-    <div class="loading" id="loading">Lade Campus …</div>
-    <div class="controls">
-      <span class="ctl"><button type="button" id="ansicht">Ansicht zurücksetzen</button></span>
-    </div>
-    <div class="hint">Ziehen: drehen · Rechtsklick: verschieben · Mausrad: zoomen · Klick auf ein Gebäude: öffnen</div>
-    <div class="tooltip" id="tooltip" hidden></div>
-  </div>
-  <aside class="panel">
-    <div><h3>Gebäude</h3><div class="campus-list" id="liste"></div></div>
-    <p class="note" id="hinweis"></p>
-  </aside>
-</div>
-<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/build/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/controls/OrbitControls.js"></script>
+<main class="page">
+  <p class="lead">Alle Gebäude des Campus mit Stand der Technik und der Einrichtung. Die <a href="map.html">Map</a> zeigt den Campus in 3D.</p>
+  <div class="gebkarten" id="karten"><p class="note">Lade Gebäude …</p></div>
+  <section class="gruppe">
+    <h3>Netzwerke</h3>
+    <div class="flows" id="netze"></div>
+  </section>
+</main>
 <script src="js/voxel.js"></script>
-<script src="js/campus.js"></script>
+<script src="js/uebersicht.js"></script>
 </body>
 </html>

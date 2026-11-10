@@ -5,6 +5,7 @@
   var $ = function (s) { return document.getElementById(s); };
   var viewport = $("viewport"), tooltip = $("tooltip");
   var eintraege = [];
+  C.navi("map");
 
   C.ladeJSON("campus/campus.json").then(function (campus) {
     if (campus.welt) $("welt").textContent = campus.welt;
@@ -21,7 +22,7 @@
     starte3D();
   }).catch(function (e) { $("loading").textContent = "Fehler: " + e.message; });
 
-  function link(e) { return "gebaeude.html?id=" + encodeURIComponent(e.g.id); }
+  function link(e) { return "gebaeude.html?id=" + encodeURIComponent(e.g.id) + "#ansicht"; }
 
   function zeigeListe() {
     var h = "", ohnePos = 0;
