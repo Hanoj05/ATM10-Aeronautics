@@ -5,7 +5,7 @@
   "status": "gebaut",
   "welt": {
     "p0": null,
-    "hinweis": "P0 = Nordwest-Ecke des Rechtecks um die Produktionszelle. Weltkoordinate [x, y, z] mit F3 ablesen, y = Höhe des Bodens."
+    "hinweis": "P0 = Nordwest-Ecke des Rechtecks um die Produktionszelle, auf Bodenhöhe. Ermitteln: Quartz Pillar, an der Produktion, Erweiterung und Bienengarten zusammenstoßen, mit F3 anschauen -> P0 = [X - 6, Y des Bodens, Z]."
   },
   "masse": { "breite": 64, "tiefe": 67, "hoehe": 35 },
   "wabe": { "kante": 14, "stufen": 6, "zelle": [26, 23] },

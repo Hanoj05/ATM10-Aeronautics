@@ -109,12 +109,10 @@ Zusammen 44 Nodes.
 
 ## Anbindung ans ME-Gebäude
 
-Das ME-System kommt ins ME-Gebäude. Damit ändert sich, wo Receiver und Nachschub sitzen. Noch offen, zwei Wege:
+Das ME-System steht im ME-Gebäude. Receiver Barrel und die vier Nachschub-Barrels bleiben in der Technik des Wabenhauses und sind wireless ans ME angebunden.
 
-1. **Barrels ins ME-Gebäude verlegen.** Receiver Barrel und die vier Nachschub-Barrels samt Nodes dorthin. Der Receiver bekommt einen ME Import Bus, die Nachschub-Barrels je einen ME Export Bus mit Filter. Dann füllt das ME die Elektroden, Honey Blocks, Glass Bottles und das Wax automatisch nach. Das ist die bessere Lösung, wenn das Netzwerk die Entfernung schafft. Vorher mit einer einzelnen Test-Node im ME-Gebäude ausprobieren.
-2. **Barrels bleiben in der Technik.** Dann braucht es eine ME-Verbindung ins Wabenhaus, zum Beispiel eine Quantum Network Bridge aus AE2.
-
-Entscheidung: _offen_
+- Receiver Barrel: ME Import Bus holt die Produkte ins ME.
+- Nachschub-Barrels: werden aus dem ME nachgefüllt (Elektroden, Honey Blocks, Glass Bottles, Wax).
 
 ## Zweiter Hive, zweite Zentrifuge
 
@@ -130,6 +128,6 @@ Kommen in die Erweiterungszelle, an dieselben relativen Positionen: Hive 2 bei x
 
 - [x] Hive gebaut
 - [x] Zentrifuge gebaut
-- [ ] Anbindung ans ME-Gebäude entschieden
+- [x] Anbindung ans ME-Gebäude: wireless, Barrels bleiben in der Technik
 - [ ] Wax-Quelle für das Wax Barrel
 - [ ] Hive 2 und Zentrifuge 2
