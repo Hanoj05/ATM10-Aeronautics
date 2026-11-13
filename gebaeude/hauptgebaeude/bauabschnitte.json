@@ -28,6 +28,12 @@
  "torWinkel": -31.94,
  "meWinkel": -85.41,
  "grundR": 84,
+ "fueller": {
+  "id": "minecraft:cobblestone",
+  "name": "Cobblestone",
+  "fuer": "minecraft:water"
+ },
+ "wasser": 574,
  "platzhalter": [
   "draconicevolution:awakened_draconium_block",
   "draconicevolution:draconium_block",
@@ -60,6 +66,7 @@
    "text": "Ein Achtel vom Ring über alle Etagen mit Glas, Decken, weißen Bändern, Dach, Vorplatz und Baumreihe. Mit dem Tor zum Wabenhaus.",
    "datei": "schematics/01-ring-1.nbt",
    "kb": 27.5,
+   "wasser": 0,
    "position": [
     177,
     65,
@@ -169,6 +176,7 @@
    "text": "Ein Achtel vom Ring über alle Etagen mit Glas, Decken, weißen Bändern, Dach, Vorplatz und Baumreihe.",
    "datei": "schematics/02-ring-2.nbt",
    "kb": 27.4,
+   "wasser": 0,
    "position": [
     177,
     65,
@@ -260,6 +268,7 @@
    "text": "Ein Achtel vom Ring über alle Etagen mit Glas, Decken, weißen Bändern, Dach, Vorplatz und Baumreihe. Mit einem Tor.",
    "datei": "schematics/03-ring-3.nbt",
    "kb": 27.8,
+   "wasser": 0,
    "position": [
     177,
     65,
@@ -351,6 +360,7 @@
    "text": "Ein Achtel vom Ring über alle Etagen mit Glas, Decken, weißen Bändern, Dach, Vorplatz und Baumreihe.",
    "datei": "schematics/04-ring-4.nbt",
    "kb": 27.4,
+   "wasser": 0,
    "position": [
     177,
     65,
@@ -442,6 +452,7 @@
    "text": "Ein Achtel vom Ring über alle Etagen mit Glas, Decken, weißen Bändern, Dach, Vorplatz und Baumreihe. Mit einem Tor.",
    "datei": "schematics/05-ring-5.nbt",
    "kb": 27.1,
+   "wasser": 0,
    "position": [
     177,
     65,
@@ -539,6 +550,7 @@
    "text": "Ein Achtel vom Ring über alle Etagen mit Glas, Decken, weißen Bändern, Dach, Vorplatz und Baumreihe.",
    "datei": "schematics/06-ring-6.nbt",
    "kb": 27.7,
+   "wasser": 0,
    "position": [
     177,
     65,
@@ -630,6 +642,7 @@
    "text": "Ein Achtel vom Ring über alle Etagen mit Glas, Decken, weißen Bändern, Dach, Vorplatz und Baumreihe. Mit einem Tor.",
    "datei": "schematics/07-ring-7.nbt",
    "kb": 27.3,
+   "wasser": 0,
    "position": [
     177,
     65,
@@ -721,6 +734,7 @@
    "text": "Ein Achtel vom Ring über alle Etagen mit Glas, Decken, weißen Bändern, Dach, Vorplatz und Baumreihe.",
    "datei": "schematics/08-ring-8.nbt",
    "kb": 27.2,
+   "wasser": 1,
    "position": [
     177,
     65,
@@ -786,12 +800,6 @@
      "anzahl": 318
     },
     {
-     "id": "minecraft:water",
-     "name": "Water",
-     "farbe": "#3d6fd6",
-     "anzahl": 1
-    },
-    {
      "id": "ars_nouveau:green_archwood_log",
      "name": "Green Archwood Log",
      "farbe": "#5b4a35",
@@ -814,6 +822,12 @@
      "name": "Dandelion",
      "farbe": "#f2d43a",
      "anzahl": 1
+    },
+    {
+     "id": "minecraft:cobblestone",
+     "name": "Cobblestone (Füller für Water)",
+     "farbe": "#7f7f7f",
+     "anzahl": 1
     }
    ]
   },
@@ -824,6 +838,7 @@
    "text": "Gelände mit Hügeln, Teich mit Inseln, Wege, Bäume und Blumen im Innenhof.",
    "datei": "schematics/09-park.nbt",
    "kb": 65.7,
+   "wasser": 517,
    "position": [
     177,
     65,
@@ -859,12 +874,6 @@
      "anzahl": 15354
     },
     {
-     "id": "minecraft:water",
-     "name": "Water",
-     "farbe": "#3d6fd6",
-     "anzahl": 517
-    },
-    {
      "id": "ars_nouveau:green_archwood_log",
      "name": "Green Archwood Log",
      "farbe": "#5b4a35",
@@ -893,6 +902,12 @@
      "name": "Dandelion",
      "farbe": "#f2d43a",
      "anzahl": 162
+    },
+    {
+     "id": "minecraft:cobblestone",
+     "name": "Cobblestone (Füller für Water)",
+     "farbe": "#7f7f7f",
+     "anzahl": 517
     }
    ]
   },
@@ -903,6 +918,7 @@
    "text": "Vier weiße Säulen, der weiße Ring und die vier Stabilizer. Die Kugel selbst fehlt: Core je nach Tier von Hand bauen.",
    "datei": "schematics/10-core.nbt",
    "kb": 0.8,
+   "wasser": 0,
    "position": [
     177,
     65,
@@ -946,6 +962,7 @@
    "text": "Weg vom Ring zum Foyer des Wabenhauses mit Sechseck-Blumenbeeten.",
    "datei": "schematics/11-bienenallee.nbt",
    "kb": 1.5,
+   "wasser": 0,
    "position": [
     177,
     65,
@@ -1019,6 +1036,7 @@
    "text": "Weg zum ME-Gebäude zwischen zwei Wasserrinnen, außen Baumreihen.",
    "datei": "schematics/12-wasserallee.nbt",
    "kb": 2.8,
+   "wasser": 56,
    "position": [
     177,
     65,
@@ -1054,12 +1072,6 @@
      "anzahl": 191
     },
     {
-     "id": "minecraft:water",
-     "name": "Water",
-     "farbe": "#3d6fd6",
-     "anzahl": 56
-    },
-    {
      "id": "ars_nouveau:green_archwood_log",
      "name": "Green Archwood Log",
      "farbe": "#5b4a35",
@@ -1070,6 +1082,12 @@
      "name": "Oak Leaves",
      "farbe": "#3f7a33",
      "anzahl": 462
+    },
+    {
+     "id": "minecraft:cobblestone",
+     "name": "Cobblestone (Füller für Water)",
+     "farbe": "#7f7f7f",
+     "anzahl": 56
     }
    ]
   }
@@ -1130,9 +1148,9 @@
    "anzahl": 1090
   },
   {
-   "id": "minecraft:water",
-   "name": "Water",
-   "farbe": "#3d6fd6",
+   "id": "minecraft:cobblestone",
+   "name": "Cobblestone (Füller für Water)",
+   "farbe": "#7f7f7f",
    "anzahl": 574
   },
   {

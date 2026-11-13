@@ -90,8 +90,10 @@ canvas { display: block; width: 100%; height: 100%; cursor: crosshair; }
     <li><div><b>Mitte markieren.</b> Auf die Mitte einen auffälligen Block stellen, zum Beispiel einen Gold Block. Von dort aus lässt sich jede Ecke leicht abzählen, und du merkst sofort, wenn ein Hologramm verrutscht ist.</div></li>
     <li><div><b>Schematics ins Spiel holen.</b> Die Dateien unten herunterladen und in den Ordner <code>schematics</code> der Prism-Instanz kopieren (neben <code>mods</code> und <code>saves</code>). Am <b>Schematic Table</b> eine <b>Empty Schematic</b> einlegen und den Abschnitt auswählen.</div></li>
     <li><div><b>Position eingeben.</b> Bei <b>jeder</b> Schematic als Position <span class="koord" id="posK2"></span> eintragen, nicht drehen und nicht spiegeln. Alle zwölf Abschnitte haben denselben Nullpunkt und denselben Rahmen, jeder füllt nur seinen Teil davon. Kontrolle: Die Mitte vom Teich muss genau über deinem markierten Block liegen.</div></li>
+    <li><div><b>Schematicannon einstellen.</b> Im Menü der Kanone den Modus <b>Replace Solid with Any</b> wählen. Dann ersetzt sie alte Blöcke im Weg (Erde, Stein, Reste) durch das, was die Schematic will, löscht aber nichts dort, wo die Schematic Luft hat. Nicht <b>Replace Solid with Empty</b> nehmen: Alle Abschnitte teilen sich denselben Rahmen, damit würde jeder Abschnitt die schon gebauten anderen wieder abreißen.</div></li>
     <li><div><b>Bauen.</b> Entweder von Hand dem Hologramm nach, oder eine <b>Schematicannon</b> danebenstellen, die Schematic einlegen und mit Material füllen. Die Ebenen-Ansicht weiter unten zeigt jede Lage mit Weltkoordinaten, falls du im Hologramm etwas nicht erkennst.</div></li>
     <li><div><b>Reihenfolge.</b> Erst die acht Ring-Achtel, dann Park, Core-Halterung und die beiden Alleen. Die Achtel schließen nahtlos aneinander an, du kannst also auch mit dem Achtel anfangen, das euch am wichtigsten ist.</div></li>
+    <li><div><b>Wasser einfüllen.</b> Die Schematicannon kann kein Wasser setzen. Darum steht überall, wo Wasser hinkommt, <b>Cobblestone</b> als Füller (sonst kommt Cobblestone nirgends vor). Zum Schluss jeden Cobblestone abbauen und das Loch mit einem <b>Water Bucket</b> füllen. Wo genau Wasser hinkommt, zeigt die Ebenen-Ansicht (blau).</div></li>
   </ol>
 </section>
 
@@ -139,6 +141,7 @@ canvas { display: block; width: 100%; height: 100%; cursor: crosshair; }
   <h2><span class="no">05</span>Hinweise</h2>
   <div>
     <div class="hinweis"><b>Energy Core:</b> Die Halterung (Säulen, Ring, Stabilizer) steckt in Abschnitt 10. Die Stabilizer stehen genau nördlich, östlich, südlich und westlich von der Mitte des Cores auf <span class="koord" id="coreK"></span>, je 14 Blöcke entfernt. Ob 14 zum gewählten Tier passt, im Spiel prüfen und die Säulen notfalls versetzen.</div>
+    <div class="hinweis"><b>Wasser:</b> Insgesamt <span id="wasserN"></span> Wasserblöcke, in der Schematic als Cobblestone. Für viel Wasser lohnt sich eine Unendlich-Quelle (2 × 2 Becken) daneben, aus der ihr die Eimer immer wieder füllt.</div>
     <div class="hinweis"><b>Laub:</b> Die Blätter in den Schematics sind auf <code>persistent</code> gesetzt und fallen deshalb nicht ab, auch wenn sie weit vom Stamm sind. Wer sie von Hand setzt, nimmt Blätter aus dem Inventar, die bleiben ebenfalls.</div>
     <div class="hinweis"><b>Lage:</b> Die Position ist aus den Modellen von Wabenhaus und ME-Gebäude gerechnet, nicht im Spiel eingemessen. Bevor du die Fläche räumst, mit F3 an der Mitte prüfen, ob der Abstand zu beiden Gebäuden passt.</div>
   </div>
@@ -166,7 +169,7 @@ canvas { display: block; width: 100%; height: 100%; cursor: crosshair; }
     B.abschnitte.forEach(function (a) {
       var tr = document.createElement("tr");
       var k = a.bereichAb.join(", ");
-      tr.innerHTML = "<td class='n'>" + String(a.nr).padStart(2, "0") + "</td><td><div class='name'>" + a.name + "</div><div class='klein'>" + a.text + "</div></td>" +
+      tr.innerHTML = "<td class='n'>" + String(a.nr).padStart(2, "0") + "</td><td><div class='name'>" + a.name + "</div><div class='klein'>" + a.text + "</div>" + (a.wasser ? "<div class='klein'><b>Wasser:</b> " + fmt(a.wasser) + " × Cobblestone als Füller, danach gegen Water tauschen.</div>" : "") + "</td>" +
         "<td><span class='m'>" + k + "</span></td>" +
         "<td class='n'>" + a.groesse.join(" × ") + "</td><td class='n'>" + fmt(a.bloecke) + "</td>" +
         "<td><a class='btn dl' href='" + a.datei + "' download>Schematic</a> <button class='mt'>Material</button></td>";
@@ -177,6 +180,7 @@ canvas { display: block; width: 100%; height: 100%; cursor: crosshair; }
       var o = document.createElement("option"); o.value = a.id; o.textContent = String(a.nr).padStart(2, "0") + " " + a.name; $("filter").appendChild(o);
     });
     var pos = B.position.join(" ");
+    $("wasserN").textContent = fmt(B.wasser || 0);
     $("posK").textContent = pos; $("posK2").textContent = pos; $("rahmenK").textContent = B.rahmen.join(" × ");
     $("posKopie").onclick = function () {
       var b = this;

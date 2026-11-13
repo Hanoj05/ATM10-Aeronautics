@@ -12,6 +12,10 @@ Blöcke in Abschnitte: acht Achtel vom Ring (mit Vorplatz und Baumreihe), der Pa
 die Halterung vom Energy Core und die beiden Alleen. Jede Datei bleibt klein genug
 für den Upload-Grenzwert von Create auf Servern.
 
+Wasser kommt NICHT als Wasser in die Schematics: Die Schematicannon kann keine
+Flüssigkeiten setzen. Stattdessen steht an jeder Wasserstelle Cobblestone als Füller.
+So sieht man im Spiel genau, was danach raus muss und mit Wasser gefüllt wird.
+
 Die Kugel vom Energy Core kommt NICHT in die Schematics: sie ist im Modell nur ein
 Platzhalter. Den echten Core je nach Tier von Hand bauen.
 
@@ -38,8 +42,9 @@ EIGENSCHAFTEN = {
     "log": {"axis": "y"},
     "leaves": {"persistent": "true", "distance": "7", "waterlogged": "false"},
     "leaves2": {"persistent": "true", "distance": "7", "waterlogged": "false"},
-    "water": {"level": "0"},
 }
+# Füller für Wasser: die Schematicannon setzt keine Flüssigkeiten
+FUELLER = ("fueller", "minecraft:cobblestone", "Cobblestone (Füller für Water)", "#7f7f7f", False, False)
 RICHTUNG = ["Ost", "Südost", "Süd", "Südwest", "West", "Nordwest", "Nord", "Nordost"]
 
 
@@ -76,7 +81,7 @@ def schematic_bytes(groesse, palette, bloecke):
         (9, "blocks", struct.pack(">bi", 10, len(bl)) + b"".join(bl)),
         (9, "entities", struct.pack(">bi", 0, 0)),
     ])
-    return gzip.compress(b"\x0a" + _s("") + root, compresslevel=9)
+    return gzip.compress(b"\x0a" + _s("") + root, compresslevel=9, mtime=0)
 
 
 # ---------------------------------------------------------------- Abschnitte
@@ -111,12 +116,14 @@ def main():
     gen.baue()
     gen.aussenanlagen()
     info = {b[0]: b for b in gen.BLOECKE}
+    info[FUELLER[0]] = FUELLER
+    ordnung = [b[0] for b in gen.BLOECKE] + [FUELLER[0]]
 
     teile = {}
     for (x, y, z), m in gen.V.items():
         a = abschnitt_von(x, y, z, m)
         if a:
-            teile.setdefault(a, []).append((x, y, z, m))
+            teile.setdefault(a, []).append((x, y, z, FUELLER[0] if m == "water" else m))
 
     reihenfolge = ["ring-%d" % k for k in range(1, 9)] + ["park", "core", "bienenallee", "wasserallee"]
     titel = {
@@ -137,7 +144,7 @@ def main():
         # Alle Abschnitte teilen sich denselben Nullpunkt (P0) und denselben Rahmen.
         # So gibt man im Spiel bei jeder Schematic dieselbe Position ein.
         rahmen = [gen.NX, max(b[1] for b in gen.V) + 1, gen.NZ]
-        schluessel = sorted({b[3] for b in bl}, key=lambda k: [x[0] for x in gen.BLOECKE].index(k))
+        schluessel = sorted({b[3] for b in bl}, key=ordnung.index)
         idx = {k: i for i, k in enumerate(schluessel)}
         palette = [(info[k][1], EIGENSCHAFTEN.get(k)) for k in schluessel]
         daten = schematic_bytes(rahmen, palette, [((x, y, z), idx[m]) for x, y, z, m in sorted(bl, key=lambda b: (b[1], b[2], b[0]))])
@@ -158,6 +165,7 @@ def main():
         ecke = [gen.P0[0] + mn[0], gen.P0[1] + mn[1], gen.P0[2] + mn[2]]
         liste.append({
             "nr": nr, "id": a, "name": name, "text": text, "datei": "schematics/" + datei, "kb": round(kb, 1),
+            "wasser": menge.get(FUELLER[0], 0),
             "position": list(gen.P0), "bereichAb": ecke, "bereichPlan": mn, "groesse": groesse, "bloecke": len(bl),
             "material": [{"id": info[k][1], "name": info[k][2], "farbe": info[k][3], "anzahl": menge[k]} for k in schluessel],
         })
@@ -178,6 +186,8 @@ def main():
         "torWinkel": round(gen.TOR_WINKEL, 2),
         "meWinkel": round(math.degrees(math.atan2(gen.ME_SUED[1] - gen.MITTE[1], gen.ME_SUED[0] - gen.MITTE[0])), 2),
         "grundR": gen.GRUND_R,
+        "fueller": {"id": FUELLER[1], "name": "Cobblestone", "fuer": "minecraft:water"},
+        "wasser": sum(t["wasser"] for t in liste),
         "platzhalter": sorted(info[k][1] for k in PLATZHALTER),
         "radien": {"glasAussen": gen.R_AUSSEN, "glasInnen": gen.R_INNEN, "vordach": gen.VORDACH, "dachUeberstand": gen.DACH_UEBERSTAND, "teich": gen.TEICH_R, "stabilizer": gen.STAB_ABSTAND},
         "etage": gen.ETAGE, "etagen": gen.ETAGEN,

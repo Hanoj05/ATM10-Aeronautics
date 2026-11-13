@@ -89,7 +89,9 @@ canvas { display: block; width: 100%; height: 100%; cursor: crosshair; }
     <li><div><b>Fläche vorbereiten.</b> Rund um die Mitte <span class="koord" id="mitteK"></span> einen Kreis mit gut 61 Blöcken Radius freiräumen und für den Keller bis Höhe <span class="koord">59</span> ausheben, also 6 Blöcke unter den Boden. Die Schematics setzen den Kellerboden selbst auf Höhe 59 und den Erdgeschossboden auf Höhe 65.</div></li>
     <li><div><b>Schematics ins Spiel holen.</b> Die Dateien unten herunterladen und in den Ordner <code>schematics</code> der Prism-Instanz kopieren (neben <code>mods</code> und <code>saves</code>). Am <b>Schematic Table</b> eine <b>Empty Schematic</b> einlegen und den Abschnitt auswählen.</div></li>
     <li><div><b>Position eingeben.</b> Bei <b>jeder</b> Schematic als Position <span class="koord" id="posK2"></span> eintragen, nicht drehen und nicht spiegeln. Alle sechs Abschnitte haben denselben Nullpunkt und denselben Rahmen, jeder füllt nur seinen Teil davon. Kontrolle: Das Wasserbecken im Atrium liegt genau auf der Mitte.</div></li>
+    <li><div><b>Schematicannon einstellen.</b> Im Menü der Kanone den Modus <b>Replace Solid with Any</b> wählen. Dann ersetzt sie alte Blöcke im Weg (Erde, Stein, Reste) durch das, was die Schematic will, löscht aber nichts dort, wo die Schematic Luft hat. Nicht <b>Replace Solid with Empty</b> nehmen: Alle Abschnitte teilen sich denselben Rahmen, damit würde jeder Abschnitt die schon gebauten anderen wieder abreißen.</div></li>
     <li><div><b>Von unten nach oben bauen.</b> Keller, Boden, Erdgeschoss, Obergeschoss, Dach, zum Schluss die Gärten. Von Hand dem Hologramm nach oder mit der Schematicannon. Die Ebenen-Ansicht zeigt jede Lage mit Weltkoordinaten.</div></li>
+    <li><div><b>Wasser einfüllen.</b> Die Schematicannon kann kein Wasser setzen. Darum steht überall, wo Wasser hinkommt, <b>Cobblestone</b> als Füller (sonst kommt Cobblestone nirgends vor). Zum Schluss jeden Cobblestone abbauen und das Loch mit einem <b>Water Bucket</b> füllen. Wo genau Wasser hinkommt, zeigt die Ebenen-Ansicht (blau).</div></li>
     <li><div><b>Einrichtung.</b> Treppe, Kabelwege, Pattern Provider, Maschinen, Ritualkreise und die Mobfarm sind Platzhalter und stehen nicht in den Schematics. In der Ebenen-Ansicht kannst du sie mit dem Filter „Platzhalter“ einblenden, ihre Bedeutung steht im Tab Konfiguration.</div></li>
   </ol>
 </section>
@@ -138,6 +140,7 @@ canvas { display: block; width: 100%; height: 100%; cursor: crosshair; }
   <h2><span class="no">05</span>Hinweise</h2>
   <div>
     <div class="hinweis"><b>Aufzüge:</b> Die Elevator stehen in den Schematics als <code>elevatorid:elevator_purple</code>. Bitte im JEI mit F3 + H prüfen, ob die ID stimmt. Wenn nicht, fehlen sie im Hologramm und werden von Hand gesetzt, Positionen siehe Tab Konfiguration.</div>
+    <div class="hinweis"><b>Wasser:</b> Insgesamt <span id="wasserN"></span> Wasserblöcke, in der Schematic als Cobblestone. Für viel Wasser lohnt sich eine Unendlich-Quelle (2 × 2 Becken) daneben, aus der ihr die Eimer immer wieder füllt.</div>
     <div class="hinweis"><b>Laub:</b> Die Blätter in den Schematics sind auf <code>persistent</code> gesetzt und fallen nicht ab.</div>
     <div class="hinweis"><b>Keller:</b> Wo im Modell die Mobfarm liegt, setzt die Schematic normalen Polished Deepslate als Boden. Die Mobfarm selbst (Spawnfläche, Tötungskammer) baut ihr danach nach eigenem Design.</div>
     <div class="hinweis"><b>Lage:</b> Die Position ist gerechnet, nicht eingemessen. Vor dem Ausheben mit F3 an der Mitte prüfen.</div>
@@ -165,7 +168,7 @@ canvas { display: block; width: 100%; height: 100%; cursor: crosshair; }
     B.abschnitte.forEach(function (a) {
       var tr = document.createElement("tr");
       var k = a.bereichAb.join(", ");
-      tr.innerHTML = "<td class='n'>" + String(a.nr).padStart(2, "0") + "</td><td><div class='name'>" + a.name + "</div><div class='klein'>" + a.text + "</div></td>" +
+      tr.innerHTML = "<td class='n'>" + String(a.nr).padStart(2, "0") + "</td><td><div class='name'>" + a.name + "</div><div class='klein'>" + a.text + "</div>" + (a.wasser ? "<div class='klein'><b>Wasser:</b> " + fmt(a.wasser) + " × Cobblestone als Füller, danach gegen Water tauschen.</div>" : "") + "</td>" +
         "<td><span class='m'>" + k + "</span></td>" +
         "<td class='n'>" + a.groesse.join(" × ") + "</td><td class='n'>" + fmt(a.bloecke) + "</td>" +
         "<td><a class='btn dl' href='" + a.datei + "' download>Schematic</a> <button class='mt'>Material</button></td>";
@@ -177,6 +180,7 @@ canvas { display: block; width: 100%; height: 100%; cursor: crosshair; }
       if (a.nr === B.abschnitte.length) { var op = document.createElement("option"); op.value = "platzhalter"; op.textContent = "Platzhalter (nicht in den Schematics)"; $("filter").appendChild(op); }
     });
     var pos = B.position.join(" ");
+    $("wasserN").textContent = fmt(B.wasser || 0);
     $("posK").textContent = pos; $("posK2").textContent = pos; $("rahmenK").textContent = B.rahmen.join(" × ");
     $("posKopie").onclick = function () {
       var b = this;

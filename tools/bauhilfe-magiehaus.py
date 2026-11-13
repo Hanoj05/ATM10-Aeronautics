@@ -12,6 +12,10 @@ Platzhalter (platzhalter:*: Kabelwege, Maschinenplätze, Mobfarm, Treppe) kommen
 die Schematics. Sie sind nur im Modell und im Bauplan zu sehen. Ausnahme: Platzhalter auf
 dem Kellerboden werden zu Polished Deepslate, damit der Boden geschlossen ist.
 
+Wasser kommt NICHT als Wasser in die Schematics: Die Schematicannon kann keine
+Flüssigkeiten setzen. Stattdessen steht an jeder Wasserstelle Cobblestone als Füller,
+damit man im Spiel sieht, was raus muss und mit Wasser gefüllt wird.
+
 Liest gebaeude/magiehaus/modell.json, ändert das Modell nicht. Braucht keine Zusatzpakete.
 """
 import importlib.util
@@ -35,7 +39,6 @@ geo = lade("magie", "modell-magiehaus.py")                  # Sternform, Höhen
 
 EIGENSCHAFTEN = {
     "ars_nouveau:purple_archwood_log": {"axis": "y"},
-    "minecraft:water": {"level": "0"},
 }
 for _blatt in ("purple", "blue", "red", "green"):
     EIGENSCHAFTEN["ars_nouveau:%s_archwood_leaves" % _blatt] = {"persistent": "true", "distance": "7", "waterlogged": "false"}
@@ -72,7 +75,11 @@ def main():
     p0 = geb["welt"]["p0"]
     mitte = geo.MITTE
     cx, cz = mitte[0] - p0[0], mitte[1] - p0[2]
-    pal = m["palette"]
+    pal = list(m["palette"])
+    # Füller für Wasser: die Schematicannon setzt keine Flüssigkeiten
+    wasser = next((n for n, q in enumerate(pal) if q["id"] == "minecraft:water"), None)
+    fueller = len(pal)
+    pal.append({"id": "minecraft:cobblestone", "name": "Cobblestone (Füller für Water)", "farbe": "#7f7f7f"})
     rahmen = m["groesse"]
 
     # Platzhalter auf dem Kellerboden (Mobfarm, Tötungskammer) werden in der Schematic
@@ -85,6 +92,9 @@ def main():
         if y == 0 and pal[i]["id"].startswith("platzhalter:"):
             b = [x, y, z, boden]
             i = boden
+        if i == wasser:
+            b = [x, y, z, fueller]
+            i = fueller
         a = abschnitt_von(x, y, z, cx, cz)
         platz = pal[i]["id"].startswith("platzhalter:")
         je_block.append("p" if platz else a)
@@ -116,6 +126,7 @@ def main():
             menge[b[3]] = menge.get(b[3], 0) + 1
         liste.append({
             "nr": nr, "id": aid, "name": name, "text": text, "datei": "schematics/" + datei, "kb": round(kb, 1),
+            "wasser": menge.get(fueller, 0),
             "position": p0, "bereichAb": [p0[0] + mn[0], p0[1] + mn[1], p0[2] + mn[2]],
             "groesse": [mx[k] - mn[k] + 1 for k in range(3)], "bloecke": len(bl),
             "material": [{"id": pal[k]["id"], "name": pal[k]["name"], "farbe": pal[k]["farbe"], "anzahl": n} for k, n in sorted(menge.items(), key=lambda t: -t[1])],
@@ -132,6 +143,8 @@ def main():
     daten = {
         "hinweis": "Erzeugt von tools/bauhilfe-magiehaus.py. Nicht von Hand ändern.",
         "p0": p0, "position": p0, "rahmen": rahmen,
+        "fueller": {"id": "minecraft:cobblestone", "name": "Cobblestone", "fuer": "minecraft:water"},
+        "wasser": sum(t["wasser"] for t in liste),
         "mitte": [mitte[0], 65, mitte[1]],
         "mittePlan": [cx, geo.G, cz],
         "abschnittNamen": [a[1] for a in ABSCHNITTE] + ["Platzhalter (nicht in den Schematics)"],
