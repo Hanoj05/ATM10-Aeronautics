@@ -249,12 +249,14 @@
     sonne2.position.set(-0.5, 0.4, -0.8);
     scene.add(sonne2);
 
-    function hintergrund() { scene.background = new THREE.Color(cssVar("--scene") || "#dedcd5"); }
+    function hintergrund() { scene.background = new THREE.Color(cssVar("--scene") || "#e9e7e0"); }
     hintergrund();
+    /* Systemfarbe oder Schalter im Profilmenü geändert: Hintergrund nachziehen */
     if (window.matchMedia) {
       var mq = window.matchMedia("(prefers-color-scheme: dark)");
       if (mq.addEventListener) mq.addEventListener("change", function () { hintergrund(); neu(); });
     }
+    document.addEventListener("campus-thema", function () { hintergrund(); neu(); });
 
     var brauchtRender = true;
     function neu() { brauchtRender = true; }
@@ -358,6 +360,56 @@
     return "<span class='avatar' style='--av:" + esc((p && p.farbe) || "#62645f") + (groesse ? ";--av-g:" + groesse + "px" : "") + "' aria-hidden='true'>" + esc(ini) + "</span>";
   }
 
+  /* --- Hell / Dunkel ---
+   * Gespeichert pro Browser in localStorage ("campus-thema": "hell" oder "dunkel", fehlt = wie das System).
+   * Jede Seite setzt das schon im <head>, damit beim Laden nichts aufblitzt. */
+  var THEMA_KEY = "campus-thema";
+  function icon(pfad) { return "<svg viewBox='0 0 24 24' width='16' height='16' fill='none' stroke='currentColor' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true'>" + pfad + "</svg>"; }
+  var ICON = {
+    system: icon("<rect x='3' y='4' width='18' height='12' rx='2'/><path d='M8 20h8M12 16v4'/>"),
+    hell: icon("<circle cx='12' cy='12' r='4'/><path d='M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4'/>"),
+    dunkel: icon("<path d='M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z'/>")
+  };
+  var THEMEN = [["system", "System"], ["hell", "Hell"], ["dunkel", "Dunkel"]];
+  function thema() {
+    try { var t = localStorage.getItem(THEMA_KEY); return t === "hell" || t === "dunkel" ? t : "system"; } catch (e) { return "system"; }
+  }
+  function setzeThema(t) {
+    try { if (t === "system") localStorage.removeItem(THEMA_KEY); else localStorage.setItem(THEMA_KEY, t); } catch (e) {}
+    var html = document.documentElement;
+    html.classList.add("thema-wechsel");
+    if (t === "system") html.removeAttribute("data-theme"); else html.setAttribute("data-theme", t);
+    clearTimeout(setzeThema.zeit);
+    setzeThema.zeit = setTimeout(function () { html.classList.remove("thema-wechsel"); }, 400);
+    document.querySelectorAll("[data-thema]").forEach(function (b) { b.setAttribute("aria-pressed", String(b.getAttribute("data-thema") === t)); });
+    document.querySelectorAll(".thema-knopf").forEach(function (k) { k.innerHTML = ICON[t]; });
+    document.dispatchEvent(new CustomEvent("campus-thema", { detail: t }));
+  }
+  /* Drei Knöpfe System / Hell / Dunkel, überall einsetzbar (Profilmenü, Team-Seite) */
+  function themaWahl() {
+    var jetzt = thema();
+    return "<div class='thema-wahl' role='group' aria-label='Darstellung'>" + THEMEN.map(function (t) {
+      return "<button type='button' data-thema='" + t[0] + "' aria-pressed='" + (t[0] === jetzt) + "'>" + ICON[t[0]] + t[1] + "</button>";
+    }).join("") + "</div>";
+  }
+  document.addEventListener("click", function (ev) {
+    var b = ev.target.closest && ev.target.closest("[data-thema]");
+    if (b) setzeThema(b.getAttribute("data-thema"));
+  }, true);   /* Capture: greift auch im Menü, das Klicks sonst abfängt */
+
+  /* Aufklappmenü am Avatar (oder am Thema-Knopf ohne Login) */
+  function menueAn(knopf, menue) {
+    function zu() { menue.hidden = true; knopf.setAttribute("aria-expanded", "false"); }
+    knopf.addEventListener("click", function (ev) {
+      ev.stopPropagation();
+      var auf = menue.hidden;
+      menue.hidden = !auf; knopf.setAttribute("aria-expanded", String(auf));
+    });
+    menue.addEventListener("click", function (ev) { ev.stopPropagation(); });
+    document.addEventListener("click", zu);
+    document.addEventListener("keydown", function (ev) { if (ev.key === "Escape" && !menue.hidden) { zu(); knopf.focus(); } });
+  }
+
   /* Navigation oben auf jeder Seite. aktiv: "uebersicht", "map", "technik", "kanban", "team", "import", "versionen", "admin" oder eine Gebäude-ID */
   function navi(aktiv) {
     var nav = document.getElementById("nav");
@@ -368,18 +420,36 @@
       var h = "";
       c.gebaeude.forEach(function (g) { if (g.ordner) h += link("gebaeude.html?id=" + encodeURIComponent(g.id), g.name, aktiv === g.id); });
       if (h) nav.insertAdjacentHTML("beforeend", "<span class='sep' aria-hidden='true'></span>" + h);
-    }).catch(function () {});
+    }).catch(function () {}).then(function () { var m = nav.querySelector(".marker"); if (m) m.remove(); navMarker(nav); });
     var site = nav.parentNode;
     Promise.all([ich(), gebaeude]).then(function (r) {
       var i = r[0];
-      if (!i || !site) return;
+      if (!site) return;
       var box = document.createElement("div");
       box.className = "wer";
-      box.innerHTML = link("import.html", "Import", aktiv === "import") + link("versionen.html", "Versionen", aktiv === "versionen") +
-        (i.admin ? link("admin.html", "Admin", aktiv === "admin") : "") +
-        "<a class='ich' href='team.html#" + encodeURIComponent(i.id) + "' title='Mein Profil'>" + avatar(i) + "<span>" + esc(i.anzeigename) + "</span></a>" +
-        "<a class='abmelden' href='/outpost.goauthentik.io/sign_out'>Abmelden</a>";
+      if (!i) {
+        /* Ohne Login (lokal): nur der Schalter für die Darstellung */
+        box.innerHTML = "<button type='button' class='thema-knopf' aria-haspopup='true' aria-expanded='false' title='Darstellung'>" + ICON[thema()] + "</button>" +
+          "<div class='menue' hidden><div class='menue-teil' style='border-top:0;margin-top:0'><span>Darstellung</span>" + themaWahl() + "</div></div>";
+      } else {
+        /* Import, Versionen und Admin wohnen im Profilmenü, damit die Leiste einzeilig bleibt */
+        var extra = [["import", "import.html", "Karte aktualisieren"], ["versionen", "versionen.html", "Versionen"]];
+        if (i.admin) extra.push(["admin", "admin.html", "Admin"]);
+        var extraAktiv = extra.filter(function (e) { return e[0] === aktiv; })[0];
+        box.innerHTML = (extraAktiv ? link(extraAktiv[1], extraAktiv[2], true) : "") +
+          "<button type='button' class='ich-knopf' aria-haspopup='true' aria-expanded='false' title='Mein Profil'>" + avatar(i) + "<span>" + esc(i.anzeigename) + "</span><span class='pfeil-runter' aria-hidden='true'></span></button>" +
+          "<div class='menue' hidden>" +
+            "<div class='menue-kopf'>" + avatar(i, 38) + "<div><b>" + esc(i.anzeigename) + "</b>" + (i.minecraft ? "<small>" + esc(i.minecraft) + "</small>" : "") + "</div></div>" +
+            "<a href='team.html#" + encodeURIComponent(i.id) + "'>Mein Profil</a>" +
+            "<a href='kanban.html?person=" + encodeURIComponent(i.id) + "'>Meine Aufgaben</a>" +
+            "<div class='menue-trenner'></div>" +
+            extra.map(function (e) { return link(e[1], e[2], e[0] === aktiv); }).join("") +
+            "<div class='menue-teil'><span>Darstellung</span>" + themaWahl() + "</div>" +
+            "<a class='abmelden' href='/outpost.goauthentik.io/sign_out'>Abmelden</a>" +
+          "</div>";
+      }
       site.appendChild(box);
+      menueAn(box.querySelector(".ich-knopf, .thema-knopf"), box.querySelector(".menue"));
     });
   }
 
@@ -398,7 +468,92 @@
     });
   }
 
+  /* --- Effekte: Einfliegen beim Scrollen, Lichtschein unter der Maus, hochzählende Zahlen, Nav-Marker ---
+   * Die Seiten bauen ihren Inhalt erst nach dem Laden, darum schaut ein MutationObserver nach neuen Elementen. */
+  (function effekte() {
+    var ruhig = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var ZIELE = ".box, .gebkarte, .team-karte, .kb-spalte, .tk-kachel, .campus-list a, .flow";
+    var io = !ruhig && "IntersectionObserver" in window ? new IntersectionObserver(function (eintraege) {
+      eintraege.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        io.unobserve(e.target);
+        e.target.classList.remove("vorher");
+        setTimeout(function () { e.target.classList.remove("einflug"); e.target.style.removeProperty("--verz"); }, 900);
+      });
+    }, { rootMargin: "0px 0px -6% 0px" }) : null;
+
+    function zaehle(el) {
+      var m = /^(\d+)(\D*)$/.exec(el.textContent.trim());
+      if (!m || ruhig) return;
+      var ziel = +m[1], rest = m[2], t0 = null;
+      if (ziel < 2) return;
+      function schritt(t) {
+        if (t0 === null) t0 = t;
+        var p = Math.min(1, (t - t0) / 900), e = 1 - Math.pow(1 - p, 3);
+        el.textContent = Math.round(ziel * e) + rest;
+        if (p < 1) requestAnimationFrame(schritt);
+      }
+      requestAnimationFrame(schritt);
+    }
+
+    function neu(wurzel) {
+      if (!wurzel.querySelectorAll) return;
+      var liste = [].slice.call(wurzel.querySelectorAll(ZIELE));
+      if (wurzel.matches && wurzel.matches(ZIELE)) liste.unshift(wurzel);
+      var nr = 0;
+      liste.forEach(function (el) {
+        if (el.dataset.fx) return;
+        el.dataset.fx = "1";
+        /* nur beim ersten Aufbau, nicht wenn Kanban & Co. später neu zeichnen */
+        if (io && !el.closest(".menue") && performance.now() < 4000) {
+          el.classList.add("einflug", "vorher");
+          el.style.setProperty("--verz", Math.min(nr++, 10) * 55 + "ms");
+          io.observe(el);
+        }
+        if (el.classList.contains("tk-kachel")) { var b = el.querySelector("b"); if (b) zaehle(b); }
+      });
+      [].slice.call(wurzel.querySelectorAll(".note")).forEach(function (n) { n.classList.toggle("laedt", /^Lade\b/.test(n.textContent.trim())); });
+    }
+
+    function start() {
+      neu(document.body);
+      new MutationObserver(function (ms) {
+        ms.forEach(function (m) { m.addedNodes.forEach(function (n) { if (n.nodeType === 1) neu(n); else if (n.parentNode) neu(n.parentNode); }); });
+      }).observe(document.body, { childList: true, subtree: true });
+    }
+    if (document.body) start(); else document.addEventListener("DOMContentLoaded", start);
+
+    /* Lichtschein: Mausposition in der Karte als CSS-Variablen */
+    document.addEventListener("pointermove", function (ev) {
+      var box = ev.target.closest && ev.target.closest(".box");
+      if (!box) return;
+      var r = box.getBoundingClientRect();
+      box.style.setProperty("--mx", (ev.clientX - r.left) + "px");
+      box.style.setProperty("--my", (ev.clientY - r.top) + "px");
+    }, { passive: true });
+  })();
+
+  /* Marker, der in der Navigation zum Link unter der Maus gleitet und zur aktiven Seite zurückkehrt */
+  function navMarker(nav) {
+    if (nav.querySelector(".marker")) return;
+    var m = document.createElement("span");
+    m.className = "marker"; m.setAttribute("aria-hidden", "true");
+    nav.appendChild(m); nav.classList.add("mit-marker");
+    function auf(a) {
+      if (!a) { m.style.opacity = "0"; return; }
+      m.style.opacity = "1"; m.style.left = a.offsetLeft + "px"; m.style.width = a.offsetWidth + "px";
+      m.style.top = a.offsetTop + "px"; m.style.height = a.offsetHeight + "px";
+    }
+    function aktiv() { auf(nav.querySelector("a[aria-current='page']")); }
+    nav.addEventListener("pointerover", function (ev) { var a = ev.target.closest("a"); if (a) auf(a); });
+    nav.addEventListener("pointerleave", aktiv);
+    window.addEventListener("resize", aktiv);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(aktiv);
+    m.style.transition = "none"; aktiv(); m.offsetWidth; m.style.transition = "";
+    return aktiv;
+  }
+
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;" }[c]; }); }
 
-  window.Campus = { bereit: bereit, ladeJSON: ladeJSON, ladeText: ladeText, baueModell: baueModell, baueSzene: baueSzene, blickeAuf: blickeAuf, rahmen: rahmen, cssVar: cssVar, esc: esc, drehGruppe: drehGruppe, weltVon: weltVon, weltBox: weltBox, navi: navi, ladeGebaeude: ladeGebaeude, api: api, ich: ich, avatar: avatar };
+  window.Campus = { bereit: bereit, ladeJSON: ladeJSON, ladeText: ladeText, baueModell: baueModell, baueSzene: baueSzene, blickeAuf: blickeAuf, rahmen: rahmen, cssVar: cssVar, esc: esc, drehGruppe: drehGruppe, weltVon: weltVon, weltBox: weltBox, navi: navi, thema: thema, setzeThema: setzeThema, themaWahl: themaWahl, ladeGebaeude: ladeGebaeude, api: api, ich: ich, avatar: avatar };
 })();
