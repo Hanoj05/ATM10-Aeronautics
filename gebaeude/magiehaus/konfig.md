@@ -1,6 +1,6 @@
 # Magiehaus – Plan und Automatisierung
 
-Mitte bei Welt 126, 65, -136. Koordinaten in konfig.json sind relativ zu P0 = Welt 65, 59, -197 (Kellerboden).
+Mitte bei Welt 88, 65, -221. Koordinaten in konfig.json sind relativ zu P0 = Welt 27, 59, -282 (Kellerboden).
 
 Blöcke mit der Kennung `platzhalter:*` im Modell sind keine echten Blöcke. Sie markieren nur, wo eine Maschine, ein Ritual oder ein Raum hinkommt.
 
@@ -18,12 +18,12 @@ Sechs Aufzugsspalten, jede mit einem Elevator auf Keller-, EG- und OG-Boden (Wel
 
 | Spalte | Welt x, z |
 | --- | --- |
-| Atrium (neben der Treppe) | 113, -133 |
-| Flügel Ars Nouveau | 145, -141 |
-| Flügel Occultism | 136, -119 |
-| Flügel Iron's Spells | 113, -121 |
-| Flügel Forbidden & Arcanus | 108, -144 |
-| Flügel EvilCraft | 128, -156 |
+| Atrium (neben der Treppe) | 78, -230 |
+| Flügel Ars Nouveau | 103, -208 |
+| Flügel Occultism | 80, -203 |
+| Flügel Iron's Spells | 68, -223 |
+| Flügel Forbidden & Arcanus | 84, -240 |
+| Flügel EvilCraft | 105, -231 |
 
 Die Block-ID `elevatorid:elevator_purple` bitte im JEI mit F3 + H prüfen.
 

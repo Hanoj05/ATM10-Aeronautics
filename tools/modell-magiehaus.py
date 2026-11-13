@@ -27,10 +27,12 @@ RING_MITTE = (263, -221)     # Mitte vom Hauptgebäude
 RING_GRUND = 84              # bis hier reicht die Anlage vom Hauptgebäude
 TOR_WINKEL = -31.94 + 180    # Ring-Tor nach Westsüdwest (Welt: 0 = Ost, 90 = Süd)
 GRUND_R = 61                 # bis hier reicht die Anlage vom Magiehaus
-ABSTAND = RING_GRUND + 16 + GRUND_R
+MITTE = (88, -221)           # Mitte vom Magiehaus (Welt x, z), genau westlich vom Ring
+# Ende der Ring-Zufahrt am Westsüdwest-Tor; dorthin zeigt der Eingang, dorthin führt die Allee
 _t = math.radians(TOR_WINKEL)
-MITTE = (round(RING_MITTE[0] + ABSTAND * math.cos(_t)), round(RING_MITTE[1] + ABSTAND * math.sin(_t)))
-ZUM_RING = math.degrees(math.atan2(RING_MITTE[1] - MITTE[1], RING_MITTE[0] - MITTE[0]))
+TOR_PUNKT = (RING_MITTE[0] + RING_GRUND * math.cos(_t), RING_MITTE[1] + RING_GRUND * math.sin(_t))
+ZUM_RING = math.degrees(math.atan2(TOR_PUNKT[1] - MITTE[1], TOR_PUNKT[0] - MITTE[0]))
+ABSTAND = math.hypot(TOR_PUNKT[0] - MITTE[0], TOR_PUNKT[1] - MITTE[1])   # Länge Mitte bis Tor
 
 # ---------------------------------------------------------------- Maße
 R_SPITZE = 54                # Radius der Zackenspitzen
@@ -433,7 +435,7 @@ def baue():
             s = (s * 1103515245 + 12345) & 0x7FFFFFFF
             if s % 9 == 0:
                 setze(x, G + 1, z, "flower")
-    lang = ABSTAND - RING_GRUND
+    lang = int(ABSTAND) + 1
     for l in range(int(R_KERBE), lang + 1):
         for q in range(-4, 5):
             x = round(l * ex - q * ez)
