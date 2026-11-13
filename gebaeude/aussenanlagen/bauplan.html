@@ -48,7 +48,7 @@ button:hover { border-color: var(--accent); color: var(--accent); }
 .sw { display: inline-block; width: 12px; height: 12px; border-radius: 2px; margin-right: 8px; vertical-align: -1px; border: 1px solid rgba(0,0,0,.15); }
 .tabs { display: flex; flex-wrap: wrap; gap: 6px; padding: 12px 14px; border-bottom: 1px solid var(--line); }
 .tabs button[aria-pressed=true] { background: var(--accent); color: #fff; border-color: var(--accent); }
-.vorlagen { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+.vorlagen { display: grid; grid-template-columns: 1fr; gap: 16px; }
 .vorlage { padding: 16px; display: grid; gap: 10px; }
 .lagen { display: flex; flex-wrap: wrap; gap: 10px; }
 .lage { display: grid; gap: 4px; justify-items: center; font: 12px var(--f-mono); color: var(--muted); }
@@ -82,14 +82,14 @@ canvas.plan { display: block; width: 100%; height: 100%; cursor: crosshair; }
     <li><div><b>Zuwege.</b> Zwei kurze gerade Wege, die von den freien Ring-Toren zur Promenade führen. Anfang und Ende stehen in der Liste.</div></li>
     <li><div><b>Laternen.</b> Jede Laterne besteht aus 2 <b>White Concrete</b> übereinander und einem Leuchtblock oben: an der Promenade <b>Sea Lantern</b>, am Magierweg <b>Amethyst Block</b>.</div></li>
     <li><div><b>Teiche.</b> Kreis mit Radius 6 ausheben (1 tief, Höhe 65), mit <b>Water</b> füllen, rundherum eine Reihe <b>Smooth Quartz</b>. Ein paar <b>Lily Pad</b> drauf.</div></li>
-    <li><div><b>Bäume.</b> Drei feste Vorlagen (Klein, Mittel, Groß). In der Baumliste steht zu jedem Baum Vorlage, Holzart und Stammposition. Den Stamm auf die Koordinate setzen und die Krone Lage für Lage nach der Vorlage bauen.</div></li>
+    <li><div><b>Bäume.</b> Fünf feste Vorlagen: Eiche, Birke, Kirsche, Zauberbaum und Prachtbaum, jede mit eigener Form, Ästen und teils Wurzeln. In der Baumliste steht zu jedem Baum Vorlage, Holzart und Stammposition. Den Stamm auf die Koordinate setzen (beim Prachtbaum ist das die Nordwest-Ecke vom 2 × 2-Stamm) und Lage für Lage nach der Vorlage bauen, Holz braun, Blätter grün.</div></li>
     <li><div><b>Blumen.</b> Auf den Wiesenflecken locker Blumen streuen: Allium, Dandelion, Cornflower, Poppy und Oxeye Daisy. Wo genau, zeigt die Ebenen-Ansicht auf Lage 1, das muss aber nicht exakt sein.</div></li>
   </ol>
 </section>
 
 <section>
   <h2><span class="no">02</span>Baum-Vorlagen</h2>
-  <p class="klein">Jede Vorlage von oben, Lage für Lage. Das Kreuz ist die Stammposition. Die Holzart hängt vom Baum in der Liste ab, die Form ist immer gleich.</p>
+  <p class="klein">Jede Vorlage von oben, Lage für Lage, beginnend bei y 1 direkt über dem Boden. Braun ist Holz (Stamm, Äste, Wurzeln), grün sind Blätter. Das rote Kreuz ist die Stammposition aus der Baumliste, Norden ist oben. Die Holzart steht beim Baum in der Liste, die Form ist immer gleich.</p>
   <div class="vorlagen" id="vorlagen"></div>
   <div class="panel scroll"><table><thead><tr><th>Holzart</th><th>Stamm</th><th>Blätter</th></tr></thead><tbody id="arten"></tbody></table></div>
 </section>
@@ -162,19 +162,24 @@ canvas.plan { display: block; width: 100%; height: 100%; cursor: crosshair; }
     Object.keys(B.vorlagen).forEach(function (k) {
       var v = B.vorlagen[k], box = document.createElement("div");
       box.className = "panel vorlage";
-      box.innerHTML = "<h3>Vorlage " + k + " · " + v.name + "</h3><div class='klein'>Stamm " + v.stamm + " hoch (y 1–" + v.stamm + "), Krone wie unten</div><div class='lagen'></div>";
-      var lagen = {};
-      v.lagen.forEach(function (c) { (lagen[c[1]] = lagen[c[1]] || []).push(c); });
-      var r = Math.ceil(v.krone) + 1;
+      box.innerHTML = "<h3>Vorlage " + k + " · " + v.name + "</h3><div class='klein'>" + v.hoehe + " hoch, " + v.holz + " Holz, " + v.blaetter + " Blätter, braucht etwa " + v.radius + " Blöcke Platz zu jeder Seite</div><div class='lagen'></div>";
+      var lagen = {}, mnx = 0, mxx = 0, mnz = 0, mxz = 0;
+      v.lagen.forEach(function (c) {
+        (lagen[c[1]] = lagen[c[1]] || []).push(c);
+        mnx = Math.min(mnx, c[0]); mxx = Math.max(mxx, c[0]); mnz = Math.min(mnz, c[2]); mxz = Math.max(mxz, c[2]);
+      });
+      var nx = mxx - mnx + 1, nz = mxz - mnz + 1, s = Math.max(6, Math.min(10, Math.floor(110 / Math.max(nx, nz))));
       Object.keys(lagen).map(Number).sort(function (a, b) { return a - b; }).forEach(function (y) {
-        var n = 2 * r + 1, s = 9, cv = document.createElement("canvas");
-        cv.width = n * s; cv.height = n * s;
+        var cv = document.createElement("canvas");
+        cv.width = nx * s; cv.height = nz * s;
         var c = cv.getContext("2d");
-        c.fillStyle = "rgba(127,127,127,.12)"; c.fillRect(0, 0, n * s, n * s);
-        c.fillStyle = "#4f8a3c";
-        lagen[y].forEach(function (p) { c.fillRect((p[0] + r) * s, (p[2] + r) * s, s - 1, s - 1); });
-        if (y <= v.stamm) { c.fillStyle = "#6b5233"; c.fillRect(r * s, r * s, s - 1, s - 1); }
-        c.strokeStyle = "#d1361f"; c.lineWidth = 1; c.beginPath(); c.moveTo(r * s + s / 2 - 3, r * s + s / 2); c.lineTo(r * s + s / 2 + 3, r * s + s / 2); c.moveTo(r * s + s / 2, r * s + s / 2 - 3); c.lineTo(r * s + s / 2, r * s + s / 2 + 3); c.stroke();
+        c.fillStyle = "rgba(127,127,127,.12)"; c.fillRect(0, 0, nx * s, nz * s);
+        lagen[y].forEach(function (p) {
+          c.fillStyle = p[3] === "H" ? "#6b4a2b" : "#4f8a3c";
+          c.fillRect((p[0] - mnx) * s, (p[2] - mnz) * s, s - 1, s - 1);
+        });
+        var kx = (-mnx) * s + s / 2, kz = (-mnz) * s + s / 2;
+        c.strokeStyle = "#d1361f"; c.lineWidth = 1.5; c.beginPath(); c.moveTo(kx - 3, kz); c.lineTo(kx + 3, kz); c.moveTo(kx, kz - 3); c.lineTo(kx, kz + 3); c.stroke();
         var l = document.createElement("div"); l.className = "lage"; l.appendChild(cv);
         var t = document.createElement("span"); t.textContent = "y " + y; l.appendChild(t);
         box.querySelector(".lagen").appendChild(l);
