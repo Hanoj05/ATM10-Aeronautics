@@ -29,11 +29,13 @@
   "maschinen": [],
   "netzwerke": [],
   "dateien": {
-    "bauplan": null,
+    "bauplan": "bauplan.html",
     "modell": "modell.json",
     "konfigDaten": "konfig.json",
     "konfig": "konfig.md",
     "schematic": null,
-    "generator": "tools/modell-hauptgebaeude.py"
+    "generator": "tools/modell-hauptgebaeude.py",
+    "bauabschnitte": "bauabschnitte.json",
+    "bauhilfe": "tools/bauhilfe-hauptgebaeude.py"
   }
 }

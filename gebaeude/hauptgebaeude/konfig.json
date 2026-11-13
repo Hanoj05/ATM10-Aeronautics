@@ -34,14 +34,14 @@
       "art": "Energie",
       "zelle": "Park",
       "von": [
-        98,
+        100,
         32,
-        106
+        113
       ],
       "bis": [
-        98,
+        100,
         32,
-        106
+        113
       ],
       "einstellungen": [
         [
@@ -50,11 +50,11 @@
         ],
         [
           "Welt",
-          "275, 97, -228"
+          "277, 97, -221"
         ],
         [
-          "Hinweis",
-          "Säulen stehen in Richtung der Tore. Echte Stabilizer müssen auf einer Achse (N/O/S/W) zum Core stehen, im Spiel also achsparallel setzen."
+          "Achse",
+          "genau nördlich, östlich, südlich bzw. westlich vom Core"
         ]
       ]
     },
@@ -64,14 +64,14 @@
       "art": "Energie",
       "zelle": "Park",
       "von": [
-        93,
+        86,
         32,
-        125
+        127
       ],
       "bis": [
-        93,
+        86,
         32,
-        125
+        127
       ],
       "einstellungen": [
         [
@@ -80,11 +80,11 @@
         ],
         [
           "Welt",
-          "270, 97, -209"
+          "263, 97, -207"
         ],
         [
-          "Hinweis",
-          "Säulen stehen in Richtung der Tore. Echte Stabilizer müssen auf einer Achse (N/O/S/W) zum Core stehen, im Spiel also achsparallel setzen."
+          "Achse",
+          "genau nördlich, östlich, südlich bzw. westlich vom Core"
         ]
       ]
     },
@@ -94,14 +94,14 @@
       "art": "Energie",
       "zelle": "Park",
       "von": [
-        74,
+        72,
         32,
-        120
+        113
       ],
       "bis": [
-        74,
+        72,
         32,
-        120
+        113
       ],
       "einstellungen": [
         [
@@ -110,11 +110,11 @@
         ],
         [
           "Welt",
-          "251, 97, -214"
+          "249, 97, -221"
         ],
         [
-          "Hinweis",
-          "Säulen stehen in Richtung der Tore. Echte Stabilizer müssen auf einer Achse (N/O/S/W) zum Core stehen, im Spiel also achsparallel setzen."
+          "Achse",
+          "genau nördlich, östlich, südlich bzw. westlich vom Core"
         ]
       ]
     },
@@ -124,14 +124,14 @@
       "art": "Energie",
       "zelle": "Park",
       "von": [
-        79,
+        86,
         32,
-        101
+        99
       ],
       "bis": [
-        79,
+        86,
         32,
-        101
+        99
       ],
       "einstellungen": [
         [
@@ -140,11 +140,11 @@
         ],
         [
           "Welt",
-          "256, 97, -233"
+          "263, 97, -235"
         ],
         [
-          "Hinweis",
-          "Säulen stehen in Richtung der Tore. Echte Stabilizer müssen auf einer Achse (N/O/S/W) zum Core stehen, im Spiel also achsparallel setzen."
+          "Achse",
+          "genau nördlich, östlich, südlich bzw. westlich vom Core"
         ]
       ]
     }

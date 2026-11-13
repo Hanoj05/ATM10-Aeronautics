@@ -5,8 +5,7 @@ Koordinaten relativ zu P0 = Welt (177, 65, -334). Die Ringmitte liegt bei Plan (
 | Teil | Ort | Welt |
 | --- | --- | --- |
 | Draconic Evolution Energy Core | über dem Teich im Park | 263, 97, -221 |
-| Energy Core Stabilizer | vier weiße Säulen auf Inseln im Teich, 14 Blöcke von der Mitte | (275, 97, -228), (270, 97, -209), (251, 97, -214), (256, 97, -233) |
+| Energy Core Stabilizer | vier weiße Säulen auf Inseln im Teich, 14 Blöcke von der Mitte, genau N/O/S/W | (277, 97, -221), (263, 97, -207), (249, 97, -221), (263, 97, -235) |
 
 - Die Kugel ist ein Platzhalter. Tier und Stabilizer-Abstand noch festlegen.
-- Im Modell sind die Säulen wie die Tore gedreht. Im Spiel müssen die Stabilizer achsparallel zum Core stehen, also genau nördlich, östlich, südlich und westlich davon.
 - Alle Maße und die Lage stehen als Konstanten oben in `tools/modell-hauptgebaeude.py`.

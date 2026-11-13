@@ -1,0 +1,1105 @@
+{
+ "hinweis": "Erzeugt von tools/bauhilfe-hauptgebaeude.py. Nicht von Hand ändern.",
+ "p0": [
+  177,
+  65,
+  -334
+ ],
+ "mitte": [
+  263,
+  65,
+  -221
+ ],
+ "mittePlan": [
+  86,
+  0,
+  113
+ ],
+ "torWinkel": -31.94,
+ "meWinkel": -85.41,
+ "grundR": 84,
+ "platzhalter": [
+  "draconicevolution:awakened_draconium_block",
+  "draconicevolution:draconium_block",
+  "draconicevolution:energy_core",
+  "minecraft:redstone_block"
+ ],
+ "radien": {
+  "glasAussen": 74.5,
+  "glasInnen": 57.5,
+  "vordach": 2,
+  "dachUeberstand": 3,
+  "teich": 13,
+  "stabilizer": 14
+ },
+ "etage": 5,
+ "etagen": 4,
+ "core": {
+  "mitte": [
+   263,
+   97,
+   -221
+  ],
+  "stabilizerAbstand": 14
+ },
+ "abschnitte": [
+  {
+   "nr": 1,
+   "id": "ring-1",
+   "name": "Ring 1/8 (Nordost)",
+   "text": "Ein Achtel vom Ring über alle Etagen mit Glas, Decken, weißen Bändern, Dach, Vorplatz und Baumreihe. Mit dem Tor zum Wabenhaus.",
+   "datei": "schematics/01-ring-1.nbt",
+   "kb": 26.8,
+   "ecke": [
+    295,
+    65,
+    -289
+   ],
+   "eckePlan": [
+    118,
+    0,
+    45
+   ],
+   "groesse": [
+    51,
+    22,
+    60
+   ],
+   "bloecke": 9590,
+   "material": [
+    {
+     "id": "minecraft:white_concrete",
+     "name": "White Concrete",
+     "farbe": "#e4e8e8",
+     "anzahl": 4662
+    },
+    {
+     "id": "minecraft:glass",
+     "name": "Glass",
+     "farbe": "#c0d8de",
+     "anzahl": 2208
+    },
+    {
+     "id": "minecraft:smooth_quartz",
+     "name": "Smooth Quartz",
+     "farbe": "#ece6df",
+     "anzahl": 945
+    },
+    {
+     "id": "minecraft:gray_concrete",
+     "name": "Gray Concrete",
+     "farbe": "#3a3d42",
+     "anzahl": 687
+    },
+    {
+     "id": "minecraft:light_gray_concrete",
+     "name": "Light Gray Concrete",
+     "farbe": "#a9a9a2",
+     "anzahl": 404
+    },
+    {
+     "id": "minecraft:sea_lantern",
+     "name": "Sea Lantern",
+     "farbe": "#c8dcd4",
+     "anzahl": 135
+    },
+    {
+     "id": "minecraft:grass_block",
+     "name": "Grass Block",
+     "farbe": "#6a9a45",
+     "anzahl": 287
+    },
+    {
+     "id": "ars_nouveau:green_archwood_log",
+     "name": "Green Archwood Log",
+     "farbe": "#5b4a35",
+     "anzahl": 16
+    },
+    {
+     "id": "minecraft:oak_leaves",
+     "name": "Oak Leaves",
+     "farbe": "#3f7a33",
+     "anzahl": 236
+    },
+    {
+     "id": "minecraft:allium",
+     "name": "Allium",
+     "farbe": "#b565e0",
+     "anzahl": 4
+    },
+    {
+     "id": "minecraft:dandelion",
+     "name": "Dandelion",
+     "farbe": "#f2d43a",
+     "anzahl": 1
+    },
+    {
+     "id": "minecraft:cornflower",
+     "name": "Cornflower",
+     "farbe": "#4a6fe0",
+     "anzahl": 4
+    },
+    {
+     "id": "minecraft:poppy",
+     "name": "Poppy",
+     "farbe": "#d8322a",
+     "anzahl": 1
+    }
+   ]
+  },
+  {
+   "nr": 2,
+   "id": "ring-2",
+   "name": "Ring 2/8 (Ost)",
+   "text": "Ein Achtel vom Ring über alle Etagen mit Glas, Decken, weißen Bändern, Dach, Vorplatz und Baumreihe.",
+   "datei": "schematics/02-ring-2.nbt",
+   "kb": 27.0,
+   "ecke": [
+    308,
+    65,
+    -234
+   ],
+   "eckePlan": [
+    131,
+    0,
+    100
+   ],
+   "groesse": [
+    40,
+    22,
+    62
+   ],
+   "bloecke": 9562,
+   "material": [
+    {
+     "id": "minecraft:white_concrete",
+     "name": "White Concrete",
+     "farbe": "#e4e8e8",
+     "anzahl": 4657
+    },
+    {
+     "id": "minecraft:glass",
+     "name": "Glass",
+     "farbe": "#c0d8de",
+     "anzahl": 2080
+    },
+    {
+     "id": "minecraft:smooth_quartz",
+     "name": "Smooth Quartz",
+     "farbe": "#ece6df",
+     "anzahl": 880
+    },
+    {
+     "id": "minecraft:gray_concrete",
+     "name": "Gray Concrete",
+     "farbe": "#3a3d42",
+     "anzahl": 690
+    },
+    {
+     "id": "minecraft:light_gray_concrete",
+     "name": "Light Gray Concrete",
+     "farbe": "#a9a9a2",
+     "anzahl": 431
+    },
+    {
+     "id": "minecraft:sea_lantern",
+     "name": "Sea Lantern",
+     "farbe": "#c8dcd4",
+     "anzahl": 132
+    },
+    {
+     "id": "minecraft:grass_block",
+     "name": "Grass Block",
+     "farbe": "#6a9a45",
+     "anzahl": 313
+    },
+    {
+     "id": "ars_nouveau:green_archwood_log",
+     "name": "Green Archwood Log",
+     "farbe": "#5b4a35",
+     "anzahl": 24
+    },
+    {
+     "id": "minecraft:oak_leaves",
+     "name": "Oak Leaves",
+     "farbe": "#3f7a33",
+     "anzahl": 354
+    },
+    {
+     "id": "minecraft:dandelion",
+     "name": "Dandelion",
+     "farbe": "#f2d43a",
+     "anzahl": 1
+    }
+   ]
+  },
+  {
+   "nr": 3,
+   "id": "ring-3",
+   "name": "Ring 3/8 (Südost)",
+   "text": "Ein Achtel vom Ring über alle Etagen mit Glas, Decken, weißen Bändern, Dach, Vorplatz und Baumreihe. Mit einem Tor.",
+   "datei": "schematics/03-ring-3.nbt",
+   "kb": 26.7,
+   "ecke": [
+    272,
+    65,
+    -189
+   ],
+   "eckePlan": [
+    95,
+    0,
+    145
+   ],
+   "groesse": [
+    60,
+    22,
+    51
+   ],
+   "bloecke": 9565,
+   "material": [
+    {
+     "id": "minecraft:white_concrete",
+     "name": "White Concrete",
+     "farbe": "#e4e8e8",
+     "anzahl": 4662
+    },
+    {
+     "id": "minecraft:glass",
+     "name": "Glass",
+     "farbe": "#c0d8de",
+     "anzahl": 2208
+    },
+    {
+     "id": "minecraft:smooth_quartz",
+     "name": "Smooth Quartz",
+     "farbe": "#ece6df",
+     "anzahl": 939
+    },
+    {
+     "id": "minecraft:gray_concrete",
+     "name": "Gray Concrete",
+     "farbe": "#3a3d42",
+     "anzahl": 687
+    },
+    {
+     "id": "minecraft:light_gray_concrete",
+     "name": "Light Gray Concrete",
+     "farbe": "#a9a9a2",
+     "anzahl": 402
+    },
+    {
+     "id": "minecraft:sea_lantern",
+     "name": "Sea Lantern",
+     "farbe": "#c8dcd4",
+     "anzahl": 130
+    },
+    {
+     "id": "minecraft:grass_block",
+     "name": "Grass Block",
+     "farbe": "#6a9a45",
+     "anzahl": 283
+    },
+    {
+     "id": "ars_nouveau:green_archwood_log",
+     "name": "Green Archwood Log",
+     "farbe": "#5b4a35",
+     "anzahl": 16
+    },
+    {
+     "id": "minecraft:oak_leaves",
+     "name": "Oak Leaves",
+     "farbe": "#3f7a33",
+     "anzahl": 236
+    },
+    {
+     "id": "minecraft:dandelion",
+     "name": "Dandelion",
+     "farbe": "#f2d43a",
+     "anzahl": 2
+    }
+   ]
+  },
+  {
+   "nr": 4,
+   "id": "ring-4",
+   "name": "Ring 4/8 (Süd)",
+   "text": "Ein Achtel vom Ring über alle Etagen mit Glas, Decken, weißen Bändern, Dach, Vorplatz und Baumreihe.",
+   "datei": "schematics/04-ring-4.nbt",
+   "kb": 26.6,
+   "ecke": [
+    215,
+    65,
+    -176
+   ],
+   "eckePlan": [
+    38,
+    0,
+    158
+   ],
+   "groesse": [
+    62,
+    22,
+    40
+   ],
+   "bloecke": 9575,
+   "material": [
+    {
+     "id": "minecraft:white_concrete",
+     "name": "White Concrete",
+     "farbe": "#e4e8e8",
+     "anzahl": 4657
+    },
+    {
+     "id": "minecraft:glass",
+     "name": "Glass",
+     "farbe": "#c0d8de",
+     "anzahl": 2080
+    },
+    {
+     "id": "minecraft:smooth_quartz",
+     "name": "Smooth Quartz",
+     "farbe": "#ece6df",
+     "anzahl": 880
+    },
+    {
+     "id": "minecraft:gray_concrete",
+     "name": "Gray Concrete",
+     "farbe": "#3a3d42",
+     "anzahl": 690
+    },
+    {
+     "id": "minecraft:light_gray_concrete",
+     "name": "Light Gray Concrete",
+     "farbe": "#a9a9a2",
+     "anzahl": 431
+    },
+    {
+     "id": "minecraft:sea_lantern",
+     "name": "Sea Lantern",
+     "farbe": "#c8dcd4",
+     "anzahl": 144
+    },
+    {
+     "id": "minecraft:grass_block",
+     "name": "Grass Block",
+     "farbe": "#6a9a45",
+     "anzahl": 313
+    },
+    {
+     "id": "ars_nouveau:green_archwood_log",
+     "name": "Green Archwood Log",
+     "farbe": "#5b4a35",
+     "anzahl": 24
+    },
+    {
+     "id": "minecraft:oak_leaves",
+     "name": "Oak Leaves",
+     "farbe": "#3f7a33",
+     "anzahl": 354
+    },
+    {
+     "id": "minecraft:allium",
+     "name": "Allium",
+     "farbe": "#b565e0",
+     "anzahl": 2
+    }
+   ]
+  },
+  {
+   "nr": 5,
+   "id": "ring-5",
+   "name": "Ring 5/8 (Südwest)",
+   "text": "Ein Achtel vom Ring über alle Etagen mit Glas, Decken, weißen Bändern, Dach, Vorplatz und Baumreihe. Mit einem Tor.",
+   "datei": "schematics/05-ring-5.nbt",
+   "kb": 26.4,
+   "ecke": [
+    181,
+    65,
+    -212
+   ],
+   "eckePlan": [
+    4,
+    0,
+    122
+   ],
+   "groesse": [
+    51,
+    22,
+    60
+   ],
+   "bloecke": 9569,
+   "material": [
+    {
+     "id": "minecraft:white_concrete",
+     "name": "White Concrete",
+     "farbe": "#e4e8e8",
+     "anzahl": 4662
+    },
+    {
+     "id": "minecraft:glass",
+     "name": "Glass",
+     "farbe": "#c0d8de",
+     "anzahl": 2208
+    },
+    {
+     "id": "minecraft:smooth_quartz",
+     "name": "Smooth Quartz",
+     "farbe": "#ece6df",
+     "anzahl": 939
+    },
+    {
+     "id": "minecraft:gray_concrete",
+     "name": "Gray Concrete",
+     "farbe": "#3a3d42",
+     "anzahl": 687
+    },
+    {
+     "id": "minecraft:light_gray_concrete",
+     "name": "Light Gray Concrete",
+     "farbe": "#a9a9a2",
+     "anzahl": 402
+    },
+    {
+     "id": "minecraft:sea_lantern",
+     "name": "Sea Lantern",
+     "farbe": "#c8dcd4",
+     "anzahl": 134
+    },
+    {
+     "id": "minecraft:grass_block",
+     "name": "Grass Block",
+     "farbe": "#6a9a45",
+     "anzahl": 283
+    },
+    {
+     "id": "ars_nouveau:green_archwood_log",
+     "name": "Green Archwood Log",
+     "farbe": "#5b4a35",
+     "anzahl": 16
+    },
+    {
+     "id": "minecraft:oak_leaves",
+     "name": "Oak Leaves",
+     "farbe": "#3f7a33",
+     "anzahl": 236
+    },
+    {
+     "id": "minecraft:allium",
+     "name": "Allium",
+     "farbe": "#b565e0",
+     "anzahl": 1
+    },
+    {
+     "id": "minecraft:dandelion",
+     "name": "Dandelion",
+     "farbe": "#f2d43a",
+     "anzahl": 1
+    }
+   ]
+  },
+  {
+   "nr": 6,
+   "id": "ring-6",
+   "name": "Ring 6/8 (West)",
+   "text": "Ein Achtel vom Ring über alle Etagen mit Glas, Decken, weißen Bändern, Dach, Vorplatz und Baumreihe.",
+   "datei": "schematics/06-ring-6.nbt",
+   "kb": 27.2,
+   "ecke": [
+    179,
+    65,
+    -269
+   ],
+   "eckePlan": [
+    2,
+    0,
+    65
+   ],
+   "groesse": [
+    40,
+    22,
+    62
+   ],
+   "bloecke": 9562,
+   "material": [
+    {
+     "id": "minecraft:white_concrete",
+     "name": "White Concrete",
+     "farbe": "#e4e8e8",
+     "anzahl": 4657
+    },
+    {
+     "id": "minecraft:glass",
+     "name": "Glass",
+     "farbe": "#c0d8de",
+     "anzahl": 2080
+    },
+    {
+     "id": "minecraft:smooth_quartz",
+     "name": "Smooth Quartz",
+     "farbe": "#ece6df",
+     "anzahl": 880
+    },
+    {
+     "id": "minecraft:gray_concrete",
+     "name": "Gray Concrete",
+     "farbe": "#3a3d42",
+     "anzahl": 690
+    },
+    {
+     "id": "minecraft:light_gray_concrete",
+     "name": "Light Gray Concrete",
+     "farbe": "#a9a9a2",
+     "anzahl": 431
+    },
+    {
+     "id": "minecraft:sea_lantern",
+     "name": "Sea Lantern",
+     "farbe": "#c8dcd4",
+     "anzahl": 132
+    },
+    {
+     "id": "minecraft:grass_block",
+     "name": "Grass Block",
+     "farbe": "#6a9a45",
+     "anzahl": 313
+    },
+    {
+     "id": "ars_nouveau:green_archwood_log",
+     "name": "Green Archwood Log",
+     "farbe": "#5b4a35",
+     "anzahl": 24
+    },
+    {
+     "id": "minecraft:oak_leaves",
+     "name": "Oak Leaves",
+     "farbe": "#3f7a33",
+     "anzahl": 354
+    },
+    {
+     "id": "minecraft:allium",
+     "name": "Allium",
+     "farbe": "#b565e0",
+     "anzahl": 1
+    }
+   ]
+  },
+  {
+   "nr": 7,
+   "id": "ring-7",
+   "name": "Ring 7/8 (Nordwest)",
+   "text": "Ein Achtel vom Ring über alle Etagen mit Glas, Decken, weißen Bändern, Dach, Vorplatz und Baumreihe. Mit einem Tor.",
+   "datei": "schematics/07-ring-7.nbt",
+   "kb": 27.2,
+   "ecke": [
+    195,
+    65,
+    -303
+   ],
+   "eckePlan": [
+    18,
+    0,
+    31
+   ],
+   "groesse": [
+    60,
+    22,
+    51
+   ],
+   "bloecke": 9573,
+   "material": [
+    {
+     "id": "minecraft:white_concrete",
+     "name": "White Concrete",
+     "farbe": "#e4e8e8",
+     "anzahl": 4662
+    },
+    {
+     "id": "minecraft:glass",
+     "name": "Glass",
+     "farbe": "#c0d8de",
+     "anzahl": 2208
+    },
+    {
+     "id": "minecraft:smooth_quartz",
+     "name": "Smooth Quartz",
+     "farbe": "#ece6df",
+     "anzahl": 939
+    },
+    {
+     "id": "minecraft:gray_concrete",
+     "name": "Gray Concrete",
+     "farbe": "#3a3d42",
+     "anzahl": 687
+    },
+    {
+     "id": "minecraft:light_gray_concrete",
+     "name": "Light Gray Concrete",
+     "farbe": "#a9a9a2",
+     "anzahl": 402
+    },
+    {
+     "id": "minecraft:sea_lantern",
+     "name": "Sea Lantern",
+     "farbe": "#c8dcd4",
+     "anzahl": 139
+    },
+    {
+     "id": "minecraft:grass_block",
+     "name": "Grass Block",
+     "farbe": "#6a9a45",
+     "anzahl": 283
+    },
+    {
+     "id": "ars_nouveau:green_archwood_log",
+     "name": "Green Archwood Log",
+     "farbe": "#5b4a35",
+     "anzahl": 16
+    },
+    {
+     "id": "minecraft:oak_leaves",
+     "name": "Oak Leaves",
+     "farbe": "#3f7a33",
+     "anzahl": 236
+    },
+    {
+     "id": "minecraft:allium",
+     "name": "Allium",
+     "farbe": "#b565e0",
+     "anzahl": 1
+    }
+   ]
+  },
+  {
+   "nr": 8,
+   "id": "ring-8",
+   "name": "Ring 8/8 (Nord)",
+   "text": "Ein Achtel vom Ring über alle Etagen mit Glas, Decken, weißen Bändern, Dach, Vorplatz und Baumreihe.",
+   "datei": "schematics/08-ring-8.nbt",
+   "kb": 26.5,
+   "ecke": [
+    250,
+    65,
+    -305
+   ],
+   "eckePlan": [
+    73,
+    0,
+    29
+   ],
+   "groesse": [
+    62,
+    22,
+    40
+   ],
+   "bloecke": 9621,
+   "material": [
+    {
+     "id": "minecraft:white_concrete",
+     "name": "White Concrete",
+     "farbe": "#e4e8e8",
+     "anzahl": 4657
+    },
+    {
+     "id": "minecraft:glass",
+     "name": "Glass",
+     "farbe": "#c0d8de",
+     "anzahl": 2080
+    },
+    {
+     "id": "minecraft:smooth_quartz",
+     "name": "Smooth Quartz",
+     "farbe": "#ece6df",
+     "anzahl": 886
+    },
+    {
+     "id": "minecraft:gray_concrete",
+     "name": "Gray Concrete",
+     "farbe": "#3a3d42",
+     "anzahl": 690
+    },
+    {
+     "id": "minecraft:light_gray_concrete",
+     "name": "Light Gray Concrete",
+     "farbe": "#a9a9a2",
+     "anzahl": 431
+    },
+    {
+     "id": "minecraft:sea_lantern",
+     "name": "Sea Lantern",
+     "farbe": "#c8dcd4",
+     "anzahl": 144
+    },
+    {
+     "id": "minecraft:grass_block",
+     "name": "Grass Block",
+     "farbe": "#6a9a45",
+     "anzahl": 318
+    },
+    {
+     "id": "minecraft:water",
+     "name": "Water",
+     "farbe": "#3d6fd6",
+     "anzahl": 1
+    },
+    {
+     "id": "ars_nouveau:green_archwood_log",
+     "name": "Green Archwood Log",
+     "farbe": "#5b4a35",
+     "anzahl": 28
+    },
+    {
+     "id": "minecraft:oak_leaves",
+     "name": "Oak Leaves",
+     "farbe": "#3f7a33",
+     "anzahl": 383
+    },
+    {
+     "id": "minecraft:allium",
+     "name": "Allium",
+     "farbe": "#b565e0",
+     "anzahl": 2
+    },
+    {
+     "id": "minecraft:dandelion",
+     "name": "Dandelion",
+     "farbe": "#f2d43a",
+     "anzahl": 1
+    }
+   ]
+  },
+  {
+   "nr": 9,
+   "id": "park",
+   "name": "Park",
+   "text": "Gelände mit Hügeln, Teich mit Inseln, Wege, Bäume und Blumen im Innenhof.",
+   "datei": "schematics/09-park.nbt",
+   "kb": 65.2,
+   "ecke": [
+    210,
+    65,
+    -274
+   ],
+   "eckePlan": [
+    33,
+    0,
+    60
+   ],
+   "groesse": [
+    107,
+    13,
+    107
+   ],
+   "bloecke": 23479,
+   "material": [
+    {
+     "id": "minecraft:smooth_quartz",
+     "name": "Smooth Quartz",
+     "farbe": "#ece6df",
+     "anzahl": 1416
+    },
+    {
+     "id": "minecraft:grass_block",
+     "name": "Grass Block",
+     "farbe": "#6a9a45",
+     "anzahl": 15354
+    },
+    {
+     "id": "minecraft:water",
+     "name": "Water",
+     "farbe": "#3d6fd6",
+     "anzahl": 517
+    },
+    {
+     "id": "ars_nouveau:green_archwood_log",
+     "name": "Green Archwood Log",
+     "farbe": "#5b4a35",
+     "anzahl": 292
+    },
+    {
+     "id": "ars_nouveau:green_archwood_leaves",
+     "name": "Green Archwood Leaves",
+     "farbe": "#4f8a3c",
+     "anzahl": 3396
+    },
+    {
+     "id": "minecraft:oak_leaves",
+     "name": "Oak Leaves",
+     "farbe": "#3f7a33",
+     "anzahl": 2196
+    },
+    {
+     "id": "minecraft:allium",
+     "name": "Allium",
+     "farbe": "#b565e0",
+     "anzahl": 146
+    },
+    {
+     "id": "minecraft:dandelion",
+     "name": "Dandelion",
+     "farbe": "#f2d43a",
+     "anzahl": 162
+    }
+   ]
+  },
+  {
+   "nr": 10,
+   "id": "core",
+   "name": "Energy-Core-Halterung",
+   "text": "Vier weiße Säulen, der weiße Ring und die vier Stabilizer. Die Kugel selbst fehlt: Core je nach Tier von Hand bauen.",
+   "datei": "schematics/10-core.nbt",
+   "kb": 0.8,
+   "ecke": [
+    249,
+    66,
+    -235
+   ],
+   "eckePlan": [
+    72,
+    1,
+    99
+   ],
+   "groesse": [
+    29,
+    32,
+    29
+   ],
+   "bloecke": 220,
+   "material": [
+    {
+     "id": "minecraft:white_concrete",
+     "name": "White Concrete",
+     "farbe": "#e4e8e8",
+     "anzahl": 216
+    },
+    {
+     "id": "draconicevolution:energy_core_stabilizer",
+     "name": "Energy Core Stabilizer",
+     "farbe": "#8a4dff",
+     "anzahl": 4
+    }
+   ]
+  },
+  {
+   "nr": 11,
+   "id": "bienenallee",
+   "name": "Bienenallee",
+   "text": "Weg vom Ring zum Foyer des Wabenhauses mit Sechseck-Blumenbeeten.",
+   "datei": "schematics/11-bienenallee.nbt",
+   "kb": 1.4,
+   "ecke": [
+    328,
+    65,
+    -283
+   ],
+   "eckePlan": [
+    151,
+    0,
+    51
+   ],
+   "groesse": [
+    22,
+    2,
+    28
+   ],
+   "bloecke": 390,
+   "material": [
+    {
+     "id": "minecraft:smooth_quartz",
+     "name": "Smooth Quartz",
+     "farbe": "#ece6df",
+     "anzahl": 129
+    },
+    {
+     "id": "minecraft:light_gray_concrete",
+     "name": "Light Gray Concrete",
+     "farbe": "#a9a9a2",
+     "anzahl": 27
+    },
+    {
+     "id": "minecraft:grass_block",
+     "name": "Grass Block",
+     "farbe": "#6a9a45",
+     "anzahl": 170
+    },
+    {
+     "id": "minecraft:allium",
+     "name": "Allium",
+     "farbe": "#b565e0",
+     "anzahl": 15
+    },
+    {
+     "id": "minecraft:dandelion",
+     "name": "Dandelion",
+     "farbe": "#f2d43a",
+     "anzahl": 19
+    },
+    {
+     "id": "minecraft:cornflower",
+     "name": "Cornflower",
+     "farbe": "#4a6fe0",
+     "anzahl": 15
+    },
+    {
+     "id": "minecraft:poppy",
+     "name": "Poppy",
+     "farbe": "#d8322a",
+     "anzahl": 15
+    }
+   ]
+  },
+  {
+   "nr": 12,
+   "id": "wasserallee",
+   "name": "Wasserallee",
+   "text": "Weg zum ME-Gebäude zwischen zwei Wasserrinnen, außen Baumreihen.",
+   "datei": "schematics/12-wasserallee.nbt",
+   "kb": 2.8,
+   "ecke": [
+    261,
+    65,
+    -333
+   ],
+   "eckePlan": [
+    84,
+    0,
+    1
+   ],
+   "groesse": [
+    21,
+    8,
+    30
+   ],
+   "bloecke": 935,
+   "material": [
+    {
+     "id": "minecraft:smooth_quartz",
+     "name": "Smooth Quartz",
+     "farbe": "#ece6df",
+     "anzahl": 194
+    },
+    {
+     "id": "minecraft:grass_block",
+     "name": "Grass Block",
+     "farbe": "#6a9a45",
+     "anzahl": 191
+    },
+    {
+     "id": "minecraft:water",
+     "name": "Water",
+     "farbe": "#3d6fd6",
+     "anzahl": 56
+    },
+    {
+     "id": "ars_nouveau:green_archwood_log",
+     "name": "Green Archwood Log",
+     "farbe": "#5b4a35",
+     "anzahl": 32
+    },
+    {
+     "id": "minecraft:oak_leaves",
+     "name": "Oak Leaves",
+     "farbe": "#3f7a33",
+     "anzahl": 462
+    }
+   ]
+  }
+ ],
+ "material": [
+  {
+   "id": "minecraft:white_concrete",
+   "name": "White Concrete",
+   "farbe": "#e4e8e8",
+   "anzahl": 37492
+  },
+  {
+   "id": "minecraft:grass_block",
+   "name": "Grass Block",
+   "farbe": "#6a9a45",
+   "anzahl": 18108
+  },
+  {
+   "id": "minecraft:glass",
+   "name": "Glass",
+   "farbe": "#c0d8de",
+   "anzahl": 17152
+  },
+  {
+   "id": "minecraft:smooth_quartz",
+   "name": "Smooth Quartz",
+   "farbe": "#ece6df",
+   "anzahl": 9027
+  },
+  {
+   "id": "minecraft:gray_concrete",
+   "name": "Gray Concrete",
+   "farbe": "#3a3d42",
+   "anzahl": 5508
+  },
+  {
+   "id": "minecraft:oak_leaves",
+   "name": "Oak Leaves",
+   "farbe": "#3f7a33",
+   "anzahl": 5047
+  },
+  {
+   "id": "ars_nouveau:green_archwood_leaves",
+   "name": "Green Archwood Leaves",
+   "farbe": "#4f8a3c",
+   "anzahl": 3396
+  },
+  {
+   "id": "minecraft:light_gray_concrete",
+   "name": "Light Gray Concrete",
+   "farbe": "#a9a9a2",
+   "anzahl": 3361
+  },
+  {
+   "id": "minecraft:sea_lantern",
+   "name": "Sea Lantern",
+   "farbe": "#c8dcd4",
+   "anzahl": 1090
+  },
+  {
+   "id": "minecraft:water",
+   "name": "Water",
+   "farbe": "#3d6fd6",
+   "anzahl": 574
+  },
+  {
+   "id": "ars_nouveau:green_archwood_log",
+   "name": "Green Archwood Log",
+   "farbe": "#5b4a35",
+   "anzahl": 488
+  },
+  {
+   "id": "minecraft:dandelion",
+   "name": "Dandelion",
+   "farbe": "#f2d43a",
+   "anzahl": 187
+  },
+  {
+   "id": "minecraft:allium",
+   "name": "Allium",
+   "farbe": "#b565e0",
+   "anzahl": 172
+  },
+  {
+   "id": "minecraft:cornflower",
+   "name": "Cornflower",
+   "farbe": "#4a6fe0",
+   "anzahl": 19
+  },
+  {
+   "id": "minecraft:poppy",
+   "name": "Poppy",
+   "farbe": "#d8322a",
+   "anzahl": 16
+  },
+  {
+   "id": "draconicevolution:energy_core_stabilizer",
+   "name": "Energy Core Stabilizer",
+   "farbe": "#8a4dff",
+   "anzahl": 4
+  }
+ ]
+}

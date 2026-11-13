@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hauptgebäude – Bauplan</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,500..800&family=IBM+Plex+Sans:wght@400;600&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<style>
+/* Bauplan als Planheft: Vorgehen, Abschnitte mit Schematic, Ebenen-Ansicht, Material */
+:root {
+  --bg: #ecebe6; --surface: #f8f7f3; --fg: #1f2124; --muted: #62645f; --line: #d2d0c8;
+  --accent: #2f6fb0; --accent-soft: #dde8f3; --ok: #3d7a35;
+  --f-display: "Archivo", "Arial Narrow", system-ui, sans-serif;
+  --f-body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, monospace;
+}
+@media (prefers-color-scheme: dark) { :root { --bg: #17181a; --surface: #202225; --fg: #e8e7e2; --muted: #a2a39d; --line: #34363a; --accent: #7fb2e6; --accent-soft: #23303d; --ok: #8cc47f; } }
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.6 var(--f-body); }
+.wrap { max-width: 1120px; margin: 0 auto; padding: 40px max(16px, env(safe-area-inset-right, 0px)) 72px max(16px, env(safe-area-inset-left, 0px)); display: grid; gap: 56px; }
+header { display: grid; gap: 14px; }
+.eyebrow { font: 600 12px var(--f-mono); letter-spacing: .14em; text-transform: uppercase; color: var(--accent); }
+h1 { font: 800 clamp(34px, 7vw, 60px)/1 var(--f-display); font-stretch: 112%; margin: 0; }
+h2 { font: 700 clamp(22px, 3.4vw, 28px)/1.15 var(--f-display); font-stretch: 105%; margin: 0; display: flex; gap: 12px; align-items: baseline; }
+h2 .no { font: 600 13px var(--f-mono); color: var(--accent); letter-spacing: .08em; }
+p { margin: 0; max-width: 72ch; }
+.lede { color: var(--muted); font-size: 17px; }
+section { display: grid; gap: 18px; min-width: 0; }
+.stats { display: flex; flex-wrap: wrap; gap: 8px 26px; font: 14px var(--f-mono); color: var(--muted); }
+.stats b { color: var(--fg); font-weight: 600; }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 4px; min-width: 0; }
+ol.schritte { margin: 0; padding: 0; list-style: none; counter-reset: s; display: grid; gap: 2px; }
+ol.schritte li { counter-increment: s; display: grid; grid-template-columns: 44px 1fr; gap: 12px; padding: 14px 16px; background: var(--surface); border: 1px solid var(--line); border-radius: 4px; }
+ol.schritte li::before { content: counter(s, decimal-leading-zero); font: 600 14px var(--f-mono); color: var(--accent); padding-top: 2px; }
+ol.schritte b { font-weight: 600; }
+code, .m { font-family: var(--f-mono); font-size: .92em; }
+.koord { font: 600 14px var(--f-mono); background: var(--accent-soft); padding: 1px 6px; border-radius: 3px; white-space: nowrap; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font: 600 11px var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+td.n { font-family: var(--f-mono); text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.scroll { overflow-x: auto; }
+.name { font-weight: 600; }
+.klein { color: var(--muted); font-size: 13px; }
+button, a.btn, select { font: 600 12px var(--f-mono); color: var(--fg); background: var(--bg); border: 1px solid var(--line); border-radius: 3px; padding: 6px 10px; cursor: pointer; text-decoration: none; white-space: nowrap; }
+button:hover, a.btn:hover { border-color: var(--accent); color: var(--accent); }
+a.btn.dl { background: var(--accent); color: #fff; border-color: var(--accent); }
+.sw { display: inline-block; width: 12px; height: 12px; border-radius: 2px; margin-right: 8px; vertical-align: -1px; border: 1px solid rgba(0,0,0,.15); }
+.mat { display: none; }
+.mat.offen { display: table-row; }
+.mat td { background: var(--bg); padding: 10px 14px; }
+.mat ul { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 4px 18px; font-size: 13px; }
+.toolbar { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; padding: 12px 14px; border-bottom: 1px solid var(--line); }
+.toolbar .lbl { font: 600 12px var(--f-mono); color: var(--muted); }
+.toolbar input[type=range] { width: 220px; accent-color: var(--accent); }
+#ebeneWert { font: 600 14px var(--f-mono); min-width: 13ch; }
+.leinwand { position: relative; height: min(70vh, 640px); touch-action: none; }
+canvas { display: block; width: 100%; height: 100%; cursor: crosshair; }
+#info { position: absolute; left: 12px; bottom: 12px; background: var(--surface); border: 1px solid var(--line); border-radius: 3px; padding: 8px 10px; font: 13px var(--f-mono); max-width: calc(100% - 24px); pointer-events: none; }
+.hinweis { border-left: 3px solid var(--accent); padding: 10px 14px; background: var(--surface); border-radius: 0 4px 4px 0; }
+.hinweis + .hinweis { margin-top: 8px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">Tech-Campus · Bauplan</div>
+  <h1>Hauptgebäude</h1>
+  <p class="lede">Der Glasring wird in zwölf Abschnitten gebaut. Zu jedem gibt es eine Create-Schematic, die du im Spiel als Hologramm an die richtige Stelle legst und dann Block für Block nachbaust. Wer will, druckt sie mit der Schematicannon.</p>
+  <div class="stats" id="stats"></div>
+</header>
+
+<section>
+  <h2><span class="no">01</span>So gehst du vor</h2>
+  <ol class="schritte">
+    <li><div><b>Fläche vorbereiten.</b> Rund um die Mitte <span class="koord" id="mitteK"></span> einen Kreis mit gut 84 Blöcken Radius freiräumen und den Boden so einebnen, dass die oberste Erde auf Höhe <span class="koord">64</span> liegt. Die Schematics setzen den Boden selbst auf Höhe 65.</div></li>
+    <li><div><b>Mitte markieren.</b> Auf die Mitte einen auffälligen Block stellen, zum Beispiel einen Gold Block. Von dort aus lässt sich jede Ecke leicht abzählen, und du merkst sofort, wenn ein Hologramm verrutscht ist.</div></li>
+    <li><div><b>Schematics ins Spiel holen.</b> Die Dateien unten herunterladen und in den Ordner <code>schematics</code> der Prism-Instanz kopieren (neben <code>mods</code> und <code>saves</code>). Am <b>Schematic Table</b> eine <b>Empty Schematic</b> einlegen und den Abschnitt auswählen.</div></li>
+    <li><div><b>Hologramm ausrichten.</b> Die fertige Schematic in die Hand nehmen und mit Rechtsklick ablegen. Mit Strg und Mausrad das Werkzeug wählen und den Rahmen verschieben, bis seine <b>untere Nordwest-Ecke</b> (kleinstes x, y und z) genau auf der Koordinate in der Tabelle sitzt. Nicht drehen und nicht spiegeln.</div></li>
+    <li><div><b>Bauen.</b> Entweder von Hand dem Hologramm nach, oder eine <b>Schematicannon</b> danebenstellen, die Schematic einlegen und mit Material füllen. Die Ebenen-Ansicht weiter unten zeigt jede Lage mit Weltkoordinaten, falls du im Hologramm etwas nicht erkennst.</div></li>
+    <li><div><b>Reihenfolge.</b> Erst die acht Ring-Achtel, dann Park, Core-Halterung und die beiden Alleen. Die Achtel schließen nahtlos aneinander an, du kannst also auch mit dem Achtel anfangen, das euch am wichtigsten ist.</div></li>
+  </ol>
+</section>
+
+<section>
+  <h2><span class="no">02</span>Bauabschnitte</h2>
+  <p class="klein">Koordinate anklicken kopiert sie. „Material“ klappt die Liste für den Abschnitt auf.</p>
+  <div class="panel scroll">
+    <table>
+      <thead><tr><th>Nr</th><th>Abschnitt</th><th>Ecke in der Welt</th><th class="n">Größe</th><th class="n">Blöcke</th><th></th></tr></thead>
+      <tbody id="abschnitte"></tbody>
+    </table>
+  </div>
+</section>
+
+<section>
+  <h2><span class="no">03</span>Ebenen-Ansicht</h2>
+  <p class="klein">Jede Lage von oben. Fahr mit der Maus über einen Block, um Name und Weltkoordinate zu sehen, Klick hält die Anzeige fest. Mausrad zoomt, Ziehen verschiebt. Die Lage darunter scheint blass durch.</p>
+  <div class="panel">
+    <div class="toolbar">
+      <span class="lbl">Höhe</span>
+      <button id="runter" aria-label="Eine Lage tiefer">−</button>
+      <input type="range" id="ebene" min="0" max="38" value="0" aria-label="Lage">
+      <button id="hoch" aria-label="Eine Lage höher">+</button>
+      <span id="ebeneWert"></span>
+      <span class="lbl">Abschnitt</span>
+      <select id="filter" aria-label="Abschnitt hervorheben"><option value="">alle</option></select>
+      <button id="zurueck">Ansicht zurücksetzen</button>
+    </div>
+    <div class="leinwand"><canvas id="plan"></canvas><div id="info">Lade Modell …</div></div>
+  </div>
+</section>
+
+<section>
+  <h2><span class="no">04</span>Material gesamt</h2>
+  <p class="klein">Ohne die Kugel vom Energy Core, die je nach Tier anders aussieht. Ein Shulker fasst 27 Stacks.</p>
+  <div class="panel scroll">
+    <table>
+      <thead><tr><th>Block</th><th class="n">Anzahl</th><th class="n">Stacks</th><th class="n">Shulker</th></tr></thead>
+      <tbody id="material"></tbody>
+    </table>
+  </div>
+</section>
+
+<section>
+  <h2><span class="no">05</span>Hinweise</h2>
+  <div>
+    <div class="hinweis"><b>Energy Core:</b> Die Halterung (Säulen, Ring, Stabilizer) steckt in Abschnitt 10. Die Stabilizer stehen genau nördlich, östlich, südlich und westlich von der Mitte des Cores auf <span class="koord" id="coreK"></span>, je 14 Blöcke entfernt. Ob 14 zum gewählten Tier passt, im Spiel prüfen und die Säulen notfalls versetzen.</div>
+    <div class="hinweis"><b>Laub:</b> Die Blätter in den Schematics sind auf <code>persistent</code> gesetzt und fallen deshalb nicht ab, auch wenn sie weit vom Stamm sind. Wer sie von Hand setzt, nimmt Blätter aus dem Inventar, die bleiben ebenfalls.</div>
+    <div class="hinweis"><b>Lage:</b> Die Koordinaten sind aus den Modellen von Wabenhaus und ME-Gebäude gerechnet, nicht im Spiel eingemessen. Bevor du die Fläche räumst, mit F3 an der Mitte prüfen, ob der Abstand zu beiden Gebäuden passt.</div>
+  </div>
+</section>
+
+</div>
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var fmt = function (n) { return n.toLocaleString("de-DE"); };
+
+  Promise.all([fetch("bauabschnitte.json").then(function (r) { return r.json(); }), fetch("modell.json").then(function (r) { return r.json(); })])
+    .then(function (d) { start(d[0], d[1]); })
+    .catch(function (e) { $("info").textContent = "Konnte die Daten nicht laden: " + e.message + ". Die Seite braucht den lokalen Webserver (python3 -m http.server)."; });
+
+  function start(B, M) {
+    var m = B.mitte;
+    $("mitteK").textContent = m[0] + ", " + m[1] + ", " + m[2];
+    $("coreK").textContent = "Höhe " + B.core.mitte[1];
+    var summe = B.abschnitte.reduce(function (s, a) { return s + a.bloecke; }, 0);
+    $("stats").innerHTML = "<span>Mitte <b>" + m[0] + ", " + m[1] + ", " + m[2] + "</b></span><span>Ring <b>Ø " + (B.radien.glasAussen * 2) + "</b></span><span>Etagen <b>" + B.etagen + "</b></span><span>Blöcke <b>" + fmt(summe) + "</b></span><span>Abschnitte <b>" + B.abschnitte.length + "</b></span>";
+
+    /* Abschnitte */
+    var tb = $("abschnitte");
+    B.abschnitte.forEach(function (a) {
+      var tr = document.createElement("tr");
+      var k = a.ecke.join(", ");
+      tr.innerHTML = "<td class='n'>" + String(a.nr).padStart(2, "0") + "</td><td><div class='name'>" + a.name + "</div><div class='klein'>" + a.text + "</div></td>" +
+        "<td><button class='koord kopier' data-k='" + a.ecke.join(" ") + "' title='Kopieren'>" + k + "</button></td>" +
+        "<td class='n'>" + a.groesse.join(" × ") + "</td><td class='n'>" + fmt(a.bloecke) + "</td>" +
+        "<td><a class='btn dl' href='" + a.datei + "' download>Schematic</a> <button class='mt'>Material</button></td>";
+      var mt = document.createElement("tr"); mt.className = "mat";
+      mt.innerHTML = "<td colspan='6'><ul>" + a.material.map(function (x) { return "<li><span class='sw' style='background:" + x.farbe + "'></span>" + x.name + " <span class='m'>× " + fmt(x.anzahl) + "</span></li>"; }).join("") + "</ul></td>";
+      tr.querySelector(".mt").onclick = function () { mt.classList.toggle("offen"); };
+      tb.appendChild(tr); tb.appendChild(mt);
+      var o = document.createElement("option"); o.value = a.id; o.textContent = String(a.nr).padStart(2, "0") + " " + a.name; $("filter").appendChild(o);
+    });
+    tb.addEventListener("click", function (e) {
+      var b = e.target.closest(".kopier"); if (!b) return;
+      var alt = b.textContent;
+      try { navigator.clipboard.writeText(b.dataset.k).then(function () { b.textContent = "kopiert"; setTimeout(function () { b.textContent = alt; }, 900); }); } catch (x) {}
+    });
+
+    /* Material gesamt */
+    var mb = $("material");
+    B.material.forEach(function (x) {
+      var tr = document.createElement("tr");
+      tr.innerHTML = "<td><span class='sw' style='background:" + x.farbe + "'></span>" + x.name + " <span class='klein m'>" + x.id + "</span></td><td class='n'>" + fmt(x.anzahl) + "</td><td class='n'>" + (x.anzahl / 64).toFixed(1).replace(".", ",") + "</td><td class='n'>" + (x.anzahl / 1728).toFixed(1).replace(".", ",") + "</td>";
+      mb.appendChild(tr);
+    });
+
+    ebenen(B, M);
+  }
+
+  /* Abschnitt eines Blocks, wie in tools/bauhilfe-hauptgebaeude.py */
+  function abschnitt(B, x, y, z, name) {
+    if (B.platzhalter.indexOf(name) >= 0) return "platzhalter";
+    var dx = x - B.mittePlan[0], dz = z - B.mittePlan[2], d = Math.hypot(dx, dz);
+    var w = ((Math.atan2(dz, dx) * 180 / Math.PI - B.torWinkel) % 360 + 360) % 360;
+    if (d <= B.radien.stabilizer + 1.5 && y >= 1 && (name === "minecraft:white_concrete" || name === "draconicevolution:energy_core_stabilizer")) return "core";
+    if (d > B.grundR + 0.5) {
+      var me = ((B.meWinkel - B.torWinkel) % 360 + 360) % 360;
+      var af = Math.min(w, 360 - w), am = Math.min(Math.abs(w - me), 360 - Math.abs(w - me));
+      return af < am ? "bienenallee" : "wasserallee";
+    }
+    if (d < B.radien.glasInnen - B.radien.dachUeberstand - 0.5) return "park";
+    return "ring-" + (Math.floor(((w + 22.5) % 360) / 45) + 1);
+  }
+
+  function ebenen(B, M) {
+    var NX = M.groesse[0], NY = M.groesse[1], NZ = M.groesse[2];
+    var lagen = []; for (var i = 0; i < NY; i++) lagen.push([]);
+    var namen = {}; B.abschnitte.forEach(function (a) { namen[a.id] = String(a.nr).padStart(2, "0") + " " + a.name; }); namen.platzhalter = "Platzhalter Energy Core (nicht in den Schematics)";
+    M.bloecke.forEach(function (b) {
+      var p = M.palette[b[3]];
+      lagen[b[1]].push([b[0], b[2], b[3], abschnitt(B, b[0], b[1], b[2], p.id)]);
+    });
+    var cv = $("plan"), ctx = cv.getContext("2d"), box = cv.parentNode;
+    var y = 0, filter = "", fest = null, maus = null;
+    var sicht = { s: 1, ox: 0, oz: 0 };
+    var slider = $("ebene"); slider.max = NY - 1;
+
+    function passend() {
+      var r = box.getBoundingClientRect();
+      sicht.s = Math.min(r.width / NX, r.height / NZ) * 0.96;
+      sicht.ox = (r.width - NX * sicht.s) / 2; sicht.oz = (r.height - NZ * sicht.s) / 2;
+    }
+    function groesse() {
+      var r = box.getBoundingClientRect(), dpr = window.devicePixelRatio || 1;
+      cv.width = Math.round(r.width * dpr); cv.height = Math.round(r.height * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0); zeichne();
+    }
+    function farbe(i) { return M.palette[i].farbe; }
+    function zeichne() {
+      var r = box.getBoundingClientRect(), s = sicht.s;
+      ctx.clearRect(0, 0, r.width, r.height);
+      var dunkel = matchMedia("(prefers-color-scheme: dark)").matches;
+      ctx.fillStyle = dunkel ? "#121315" : "#d9d7cf"; ctx.fillRect(sicht.ox, sicht.oz, NX * s, NZ * s);
+      if (y > 0) {
+        ctx.globalAlpha = 0.22;
+        lagen[y - 1].forEach(function (b) { ctx.fillStyle = farbe(b[2]); ctx.fillRect(sicht.ox + b[0] * s, sicht.oz + b[1] * s, s, s); });
+      }
+      lagen[y].forEach(function (b) {
+        ctx.globalAlpha = filter && b[3] !== filter ? 0.15 : 1;
+        ctx.fillStyle = farbe(b[2]);
+        ctx.fillRect(sicht.ox + b[0] * s, sicht.oz + b[1] * s, Math.max(s - (s > 6 ? 0.5 : 0), 0.6), Math.max(s - (s > 6 ? 0.5 : 0), 0.6));
+      });
+      if (filter) {
+        ctx.globalAlpha = 0.28; ctx.fillStyle = "#2f6fb0";
+        lagen[y].forEach(function (b) { if (b[3] === filter) ctx.fillRect(sicht.ox + b[0] * s, sicht.oz + b[1] * s, s, s); });
+      }
+      ctx.globalAlpha = 1;
+      if (s > 5) {
+        ctx.strokeStyle = dunkel ? "rgba(255,255,255,.12)" : "rgba(0,0,0,.12)"; ctx.lineWidth = 1; ctx.beginPath();
+        for (var gx = 0; gx <= NX; gx += 10) { ctx.moveTo(sicht.ox + gx * s, sicht.oz); ctx.lineTo(sicht.ox + gx * s, sicht.oz + NZ * s); }
+        for (var gz = 0; gz <= NZ; gz += 10) { ctx.moveTo(sicht.ox, sicht.oz + gz * s); ctx.lineTo(sicht.ox + NX * s, sicht.oz + gz * s); }
+        ctx.stroke();
+      }
+      /* Mitte */
+      var mx = sicht.ox + (B.mittePlan[0] + 0.5) * s, mz = sicht.oz + (B.mittePlan[2] + 0.5) * s;
+      ctx.strokeStyle = "#d1361f"; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(mx - 8, mz); ctx.lineTo(mx + 8, mz); ctx.moveTo(mx, mz - 8); ctx.lineTo(mx, mz + 8); ctx.stroke();
+      /* Nordpfeil */
+      ctx.fillStyle = dunkel ? "#e8e7e2" : "#1f2124"; ctx.font = "600 12px IBM Plex Mono, monospace"; ctx.fillText("N ↑", r.width - 40, 22);
+      var z = fest || maus;
+      if (z) { ctx.strokeStyle = "#d1361f"; ctx.lineWidth = 2; ctx.strokeRect(sicht.ox + z[0] * s, sicht.oz + z[1] * s, s, s); }
+      info(z);
+      $("ebeneWert").textContent = "y " + y + " · Welt " + (B.p0[1] + y);
+      slider.value = y;
+    }
+    var index = function () {
+      var t = {}; lagen[y].forEach(function (b) { t[b[0] + "," + b[1]] = b; }); return t;
+    };
+    var lagenIndex = null, lagenIndexY = -1;
+    function info(z) {
+      if (!z) { $("info").textContent = "Lage " + y + ": " + fmt(lagen[y].length) + " Blöcke"; return; }
+      if (lagenIndexY !== y) { lagenIndex = index(); lagenIndexY = y; }
+      var b = lagenIndex[z[0] + "," + z[1]];
+      var wx = B.p0[0] + z[0], wy = B.p0[1] + y, wz = B.p0[2] + z[1];
+      $("info").innerHTML = (b ? "<b>" + M.palette[b[2]].name + "</b> · " + (namen[b[3]] || "") : "leer") + "<br>Welt " + wx + ", " + wy + ", " + wz + (fest ? " · festgehalten" : "");
+    }
+    function zelle(e) {
+      var r = cv.getBoundingClientRect();
+      var x = Math.floor((e.clientX - r.left - sicht.ox) / sicht.s), z = Math.floor((e.clientY - r.top - sicht.oz) / sicht.s);
+      return x >= 0 && z >= 0 && x < NX && z < NZ ? [x, z] : null;
+    }
+    var zieh = null, bewegt = false;
+    cv.addEventListener("pointerdown", function (e) { zieh = [e.clientX, e.clientY, sicht.ox, sicht.oz]; bewegt = false; cv.setPointerCapture(e.pointerId); });
+    cv.addEventListener("pointermove", function (e) {
+      if (zieh) {
+        var ddx = e.clientX - zieh[0], ddz = e.clientY - zieh[1];
+        if (Math.abs(ddx) + Math.abs(ddz) > 3) bewegt = true;
+        if (bewegt) { sicht.ox = zieh[2] + ddx; sicht.oz = zieh[3] + ddz; }
+      }
+      maus = zelle(e); zeichne();
+    });
+    cv.addEventListener("pointerup", function (e) { if (!bewegt) { var c = zelle(e); fest = fest && c && fest[0] === c[0] && fest[1] === c[1] ? null : c; } zieh = null; zeichne(); });
+    cv.addEventListener("pointerleave", function () { maus = null; zeichne(); });
+    cv.addEventListener("wheel", function (e) {
+      e.preventDefault();
+      var r = cv.getBoundingClientRect(), px = e.clientX - r.left, pz = e.clientY - r.top;
+      var f = e.deltaY < 0 ? 1.2 : 1 / 1.2, ns = Math.min(40, Math.max(1, sicht.s * f)); f = ns / sicht.s;
+      sicht.ox = px - (px - sicht.ox) * f; sicht.oz = pz - (pz - sicht.oz) * f; sicht.s = ns; zeichne();
+    }, { passive: false });
+    slider.addEventListener("input", function () { y = +slider.value; zeichne(); });
+    $("runter").onclick = function () { y = Math.max(0, y - 1); zeichne(); };
+    $("hoch").onclick = function () { y = Math.min(NY - 1, y + 1); zeichne(); };
+    $("filter").onchange = function () { filter = this.value; zeichne(); };
+    $("zurueck").onclick = function () { passend(); zeichne(); };
+    document.addEventListener("keydown", function (e) {
+      if (e.target.tagName === "INPUT" || e.target.tagName === "SELECT") return;
+      if (e.key === "PageUp" || e.key === "+") { y = Math.min(NY - 1, y + 1); zeichne(); }
+      if (e.key === "PageDown" || e.key === "-") { y = Math.max(0, y - 1); zeichne(); }
+    });
+    new ResizeObserver(groesse).observe(box);
+    passend(); groesse();
+  }
+})();
+</script>
+</body>
+</html>

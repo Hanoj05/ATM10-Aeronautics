@@ -48,7 +48,7 @@ BLOECKE = [
     ("quartz", "minecraft:smooth_quartz", "Smooth Quartz", "#ece6df", False, False),
     ("solar", "minecraft:gray_concrete", "Gray Concrete", "#3a3d42", False, False),
     ("platz", "minecraft:light_gray_concrete", "Light Gray Concrete", "#a9a9a2", False, False),
-    ("light", "oritech:ceiling_light", "Ceiling Light", "#f4f1e3", False, False),
+    ("lantern", "minecraft:sea_lantern", "Sea Lantern", "#c8dcd4", False, False),
     ("grass", "minecraft:grass_block", "Grass Block", "#6a9a45", False, False),
     ("water", "minecraft:water", "Water", "#3d6fd6", True, False),
     ("log", "ars_nouveau:green_archwood_log", "Green Archwood Log", "#5b4a35", False, False),
@@ -136,7 +136,7 @@ STABILIZER = []
 def baue():
     dach = ETAGEN * ETAGE
     for ang in (0, 90, 180, 270):
-        a = math.radians(ang) + _A
+        a = math.radians(ang)          # Stabilizer müssen genau N, O, S, W vom Core stehen
         STABILIZER.append((round(STAB_ABSTAND * math.cos(a)), round(STAB_ABSTAND * math.sin(a))))
 
     # --- Gelände: sanfte Hügel im Park
@@ -207,7 +207,7 @@ def baue():
         y = (e + 1) * ETAGE - 1
         for x, z, dx, dz, d, w in FELD:
             if R_INNEN + 3 < d < R_AUSSEN - 3 and x % 4 == 2 and z % 4 == 2 and (x, y, z) not in V:
-                setze(x, y, z, "light")
+                setze(x, y, z, "lantern")
 
     # --- Durchgänge durchs Erdgeschoss, seitlich verglast
     for x, z, dx, dz, d, w in FELD:
