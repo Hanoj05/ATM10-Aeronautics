@@ -13,7 +13,7 @@ Environment=CAMPUS_REPO=/srv/campus/repo
 Environment=CAMPUS_DATEN=/var/lib/campus
 Environment=CAMPUS_PORT=8090
 Environment=PYTHONDONTWRITEBYTECODE=1
-Environment=CAMPUS_ADMIN_GRUPPE=campus-admins
+# Admin-Gruppe: Standard tofg-users. Ändern per Drop-in, siehe README unter Betrieb.
 # Enthält CAMPUS_PROXY_GEHEIMNIS=..., gehört root und ist nur für root lesbar
 EnvironmentFile=/etc/campus/dienst.env
 ExecStart=/usr/bin/python3 /srv/campus/repo/server/dienst.py

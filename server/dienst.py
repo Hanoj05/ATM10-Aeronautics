@@ -20,7 +20,7 @@ Einstellungen kommen aus Umgebungsvariablen (siehe server/campus-dienst.service)
   CAMPUS_BRANCH   Branch, auf den geschrieben wird  (Standard: main)
   CAMPUS_REMOTE   Remote für fetch und push         (Standard: origin, leer = ohne GitHub)
   CAMPUS_PROXY_GEHEIMNIS  muss im Header X-Campus-Proxy mitkommen (Pflicht, sonst kommt niemand rein)
-  CAMPUS_ADMIN_GRUPPE     Authentik-Gruppe der Admins   (Standard: campus-admins)
+  CAMPUS_ADMIN_GRUPPE     Authentik-Gruppe der Admins   (Standard: tofg-users)
 
 Die Konten (Zuordnung Authentik-Name zu Campus-Konto) liegen in CAMPUS_DATEN, nie im Repo.
 Ins Repo kommen nur die öffentlichen Profilfelder unter team/.
@@ -56,7 +56,7 @@ PORT = int(os.environ.get("CAMPUS_PORT") or 8090)
 BRANCH = os.environ.get("CAMPUS_BRANCH") or "main"
 REMOTE = os.environ.get("CAMPUS_REMOTE", "origin")
 PROXY_GEHEIMNIS = os.environ.get("CAMPUS_PROXY_GEHEIMNIS") or ""
-ADMIN_GRUPPE = os.environ.get("CAMPUS_ADMIN_GRUPPE") or "campus-admins"
+ADMIN_GRUPPE = os.environ.get("CAMPUS_ADMIN_GRUPPE") or "tofg-users"
 
 MAX_ANFRAGE = 64 * 1024             # größte erlaubte Anfrage an die API in Byte
 

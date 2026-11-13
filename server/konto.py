@@ -2,7 +2,7 @@
 
 Ein Konto verbindet einen Authentik-Benutzer mit einem Campus-Profil unter team/.
 Passwörter gibt es hier nicht, den Login macht Authentik. Admin ist, wer in Authentik
-in der Admin-Gruppe ist (Standard: campus-admins).
+in der Admin-Gruppe ist (Standard: tofg-users, ändern per Drop-in am Dienst).
 
 Nutzung (als Nutzer campus, damit die Dateien ihm gehören):
   sudo -u campus python3 server/konto.py liste
@@ -15,9 +15,29 @@ Liest dieselben Umgebungsvariablen wie der Dienst (CAMPUS_DATEN, CAMPUS_REPO),
 die Standardwerte passen für den Server.
 """
 import argparse
+import os
+import subprocess
 import sys
 
 sys.dont_write_bytecode = True      # kein __pycache__ im Repo
+
+
+def admin_gruppe_vom_dienst():
+    """Die Admin-Gruppe so, wie sie der laufende Dienst hat (Drop-in), damit liste stimmt."""
+    if os.environ.get("CAMPUS_ADMIN_GRUPPE"):
+        return
+    try:
+        r = subprocess.run(["systemctl", "show", "campus-dienst", "-p", "Environment", "--value"],
+                           capture_output=True, text=True, timeout=10)
+    except (OSError, subprocess.SubprocessError):
+        return
+    for teil in r.stdout.split():
+        name, _, wert = teil.partition("=")
+        if name == "CAMPUS_ADMIN_GRUPPE" and wert:
+            os.environ["CAMPUS_ADMIN_GRUPPE"] = wert
+
+
+admin_gruppe_vom_dienst()
 import dienst                       # noqa: E402
 from fehler import Fehler      # noqa: E402
 

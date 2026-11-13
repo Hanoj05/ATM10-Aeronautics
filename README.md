@@ -112,7 +112,7 @@ Browser ──https──> Nginx Proxy Manager (Docker) ──http──> Campus
 - **Authentik** macht den Login (Single Sign-on). Passwörter gibt es auf der Website keine.
 - **Nginx Proxy Manager (NPM)** steht davor, macht HTTPS und fragt bei Authentik nach, ob jemand angemeldet ist. Danach schickt er den Authentik-Benutzernamen, die Gruppen und ein geheimes Proxy-Passwort an den Campus-Server.
 - **Campus-Server:** nginx liefert die Dateien direkt aus dem Repo aus, fragt aber bei jedem Aufruf den Campus-Dienst (`server/dienst.py`), ob die Person rein darf. Der Dienst glaubt dem Benutzernamen nur, wenn das Proxy-Geheimnis stimmt, und schaut nach, welches Campus-Konto dazugehört.
-- **Admin** ist, wer in Authentik in der Gruppe `campus-admins` ist.
+- **Admin** ist, wer in Authentik in der Admin-Gruppe ist. Im Moment ist das `tofg-users`, also ist jeder mit Campus-Konto Admin (siehe Betrieb, wie man das später trennt).
 - Änderungen über die Website (Profil, Kanban, Import) schreibt der Dienst als Commit mit der Person als Autor ins Repo und pusht sie nach GitHub. Ein Timer holt alle 2 Minuten den Stand von GitHub, damit auch Pushes vom eigenen PC online ankommen.
 
 | Was | Wo |
@@ -121,7 +121,7 @@ Browser ──https──> Nginx Proxy Manager (Docker) ──http──> Campus
 | Konten (welcher Authentik-Name welches Konto ist) | Campus-Server: `/var/lib/campus/konten.json` (nie im Repo) |
 | Deploy-Key und `known_hosts` für GitHub | Campus-Server: `/etc/campus/` |
 | Proxy-Geheimnis | Campus-Server: `/etc/campus/dienst.env`, dazu dieselbe Zeichenkette im NPM |
-| nginx-Konfiguration | Campus-Server: `/etc/nginx/conf.d/campus.conf`, Vorlage `server/nginx-campus.conf` |
+| nginx-Konfiguration | Campus-Server: `/etc/nginx/conf.d/DEINE-DOMAIN.conf`, Vorlage `server/nginx-campus.conf` |
 | Dienst und Timer | Campus-Server: `/etc/systemd/system/`, Vorlagen `server/campus-dienst.service`, `server/campus-pull.service`, `server/campus-pull.timer` |
 | HTTPS-Zertifikat | NPM |
 | Benutzer, Gruppen, Passwörter | Authentik |
@@ -131,7 +131,7 @@ Die Anleitung ist für CentOS Stream 9 oder 10 auf dem Campus-Server. Alle Befeh
 - `DEINE-DOMAIN`: die Adresse der Website, zum Beispiel `campus.example.org`
 - `NPM-IP`: die IP-Adresse, mit der NPM beim Campus-Server ankommt (bei Docker die des Docker-Hosts)
 - `CAMPUS-IP`: die IP-Adresse des Campus-Servers
-- `AUTHENTIK-OUTPOST`: Adresse des Authentik-Outposts aus Sicht von NPM, beim eingebauten Outpost zum Beispiel `http://192.168.1.20:9000`
+- `AUTHENTIK-OUTPOST`: Adresse des Authentik-Outposts aus Sicht von NPM, direkt mit IP und Port, zum Beispiel `http://192.168.1.20:9000`
 
 ### 1. Voraussetzungen prüfen
 
@@ -171,7 +171,7 @@ ssh-keyscan -t ed25519 github.com | sudo tee /etc/campus/known_hosts
 sudo chown -R campus:campus /etc/campus
 sudo chmod 700 /etc/campus
 sudo chmod 600 /etc/campus/deploy-key
-ssh-keygen -lf /etc/campus/known_hosts
+sudo ssh-keygen -lf /etc/campus/known_hosts
 ```
 
 Der letzte Befehl muss `SHA256:+DiY3wvvV6TuJJhbpZisF/zLDA0zPMSvHdkr4UvCOqU` zeigen, so steht es bei GitHub unter „GitHub's SSH key fingerprints“. Wenn nicht: abbrechen, dann redet der Server nicht mit dem echten GitHub.
@@ -187,13 +187,16 @@ Die Zeile beginnt mit `ssh-ed25519` und endet mit `campus-server`. Auf GitHub im
 ### 5. Repo klonen
 
 ```
-SSH_BEFEHL="ssh -i /etc/campus/deploy-key -o UserKnownHostsFile=/etc/campus/known_hosts -o IdentitiesOnly=yes"
+cd /srv/campus
+SSH_BEFEHL="ssh -F /dev/null -i /etc/campus/deploy-key -o UserKnownHostsFile=/etc/campus/known_hosts -o IdentitiesOnly=yes"
 sudo -u campus env GIT_SSH_COMMAND="$SSH_BEFEHL" git clone git@github.com:Hanoj05/ATM10-Aeronautics.git /srv/campus/repo
 sudo -u campus git -C /srv/campus/repo config core.sshCommand "$SSH_BEFEHL"
 sudo -u campus git -C /srv/campus/repo config pull.ff only
 ```
 
-Ab jetzt nimmt Git in diesem Repo immer den Deploy-Key, auch für den Timer und den Dienst.
+Ab jetzt nimmt Git in diesem Repo immer den Deploy-Key, auch für den Timer und den Dienst. `-F /dev/null` sorgt dafür, dass ssh keine eigene Konfiguration sucht und keinen versteckten Ordner `/srv/campus/.ssh` anlegt. Das `cd` vorher ist nötig, weil `sudo -u campus` sonst in einem Ordner startet, den `campus` nicht lesen darf.
+
+Git im Repo immer als `campus` aufrufen, also `sudo -u campus git -C /srv/campus/repo …`, sonst beschwert sich Git über fremde Dateien.
 
 ### 6. Proxy-Geheimnis
 
@@ -204,14 +207,14 @@ GEHEIMNIS=$(openssl rand -hex 32)
 echo "CAMPUS_PROXY_GEHEIMNIS=$GEHEIMNIS" | sudo tee /etc/campus/dienst.env > /dev/null
 sudo chown root:root /etc/campus/dienst.env
 sudo chmod 600 /etc/campus/dienst.env
-echo "$GEHEIMNIS"
+unset GEHEIMNIS
 ```
 
-Die angezeigte Zeichenkette brauchst du in Schritt 11 im NPM. Nicht ins Repo, nicht in den Chat.
+Das Geheimnis wird hier absichtlich nicht angezeigt. Erst in Schritt 11 liest du es mit `sudo cut -d= -f2 /etc/campus/dienst.env` aus und fügst es im NPM ein. Nicht ins Repo, nicht in einen Chat.
 
 ### 7. SELinux
 
-CentOS lässt nginx sonst weder ins Repo schauen noch mit dem Dienst reden.
+Nur nötig, wenn `getenforce` `Enforcing` oder `Permissive` zeigt. Bei `Disabled` überspringen, aber nachholen, falls SELinux später eingeschaltet wird. Sonst lässt CentOS nginx weder ins Repo schauen noch mit dem Dienst reden.
 
 ```
 sudo semanage fcontext -a -t httpd_sys_content_t "/srv/campus/repo(/.*)?"
@@ -234,32 +237,33 @@ Der Status muss `active (running)` zeigen, und im Log (`journalctl -u campus-die
 ### 9. nginx auf dem Campus-Server
 
 ```
-sudo cp /srv/campus/repo/server/nginx-campus.conf /etc/nginx/conf.d/campus.conf
-sudo sed -i 's/NPM-IP-ADRESSE/NPM-IP/g' /etc/nginx/conf.d/campus.conf
+sudo cp /srv/campus/repo/server/nginx-campus.conf /etc/nginx/conf.d/DEINE-DOMAIN.conf
+sudo sed -i -e 's/NPM-IP-ADRESSE/NPM-IP/g' -e 's/DOMAIN-EINTRAGEN/DEINE-DOMAIN/' /etc/nginx/conf.d/DEINE-DOMAIN.conf
 sudo nginx -t
-sudo systemctl enable --now nginx
+sudo systemctl enable nginx
+sudo systemctl reload-or-restart nginx
 sudo firewall-cmd --permanent --add-rich-rule='rule family="ipv4" source address="NPM-IP" port port="80" protocol="tcp" accept'
 sudo firewall-cmd --reload
 ```
 
-`nginx -t` muss `syntax is ok` und `test is successful` melden. Port 80 ist damit nur für NPM offen, nginx selbst lässt auch nur NPM rein (doppelt hält besser).
+`nginx -t` muss `syntax is ok` und `test is successful` melden. `reload-or-restart` lädt nginx neu, falls es schon läuft, sonst startet es. Port 80 ist damit nur für NPM offen, nginx selbst lässt auch nur NPM rein (doppelt hält besser).
 
 ### 10. Authentik
 
 In der Authentik-Admin-Oberfläche:
 
-1. **Gruppen** unter Directory → Groups: Zugang hat die bestehende Gruppe `tofg-users`. Neu anlegen: `campus-admins` (Admins der Website). Beide Benutzer müssen in `tofg-users` sein und kommen auch in `campus-admins`.
+1. **Gruppe:** Zugang und Admin-Recht hat die bestehende Gruppe `tofg-users` (Standard im Dienst). Beide Benutzer müssen darin sein.
 2. **Provider** unter Applications → Providers → Create: Typ **Proxy Provider**, Modus **Forward auth (single application)**, External host `https://DEINE-DOMAIN`.
-3. **Application** unter Applications → Applications → Create: Name `Campus`, Slug `campus`, Provider aus Schritt 2.
+3. **Application** unter Applications → Applications → Create: Name `ATM10 Aeronautics`, Slug `atm10a`, Provider aus Schritt 2 (Provider gleich benennen).
 4. In der Application unter **Policy / Group / User Bindings** die Gruppe `tofg-users` binden. Wer nicht in der Gruppe ist, kommt dann gar nicht erst durch.
-5. Unter Applications → Outposts den Outpost (meist **authentik Embedded Outpost**) bearbeiten und die Application `Campus` hinzufügen.
+5. Unter Applications → Outposts den Proxy-Outpost bearbeiten, den NPM erreicht (bei uns ein eigener Proxy-Outpost, nicht der Embedded Outpost), und die Application `ATM10 Aeronautics` hinzufügen.
 
 ### 11. Nginx Proxy Manager
 
 Neuen **Proxy Host** anlegen:
 
-- **Details:** Domain `DEINE-DOMAIN`, Scheme `http`, Forward Hostname/IP `CAMPUS-IP`, Port `80`. **Block Common Exploits** an.
-- **SSL:** Zertifikat per Let's Encrypt anfordern, **Force SSL** und **HTTP/2** an.
+- **Details:** Domain `DEINE-DOMAIN`, Scheme `http`, Forward Hostname/IP `CAMPUS-IP`, Port `80`. **Block Common Exploits** an, **Cache Assets** muss aus bleiben (sonst liefert NPM Dateien aus seinem Cache, auch ohne Anmeldung).
+- **SSL:** Zertifikat per Let's Encrypt anfordern. **Force SSL** und **HTTP/2** aus lassen, die Umleitung auf https steht im Block unten.
 - **Advanced:** folgendes einfügen, `AUTHENTIK-OUTPOST` und `PROXY-GEHEIMNIS` ersetzen:
 
 ```nginx
@@ -273,6 +277,9 @@ proxy_read_timeout 300s;
 proxy_send_timeout 300s;
 
 location / {
+    # http auf https umleiten (ersetzt Force SSL)
+    if ($scheme = "http") { return 301 https://$host$request_uri; }
+
     proxy_pass          $forward_scheme://$server:$port;
     proxy_set_header    Host $host;
     proxy_set_header    X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -331,7 +338,10 @@ cd /srv/campus/repo
 sudo -u campus python3 server/konto.py anlegen jonah --authentik JOberascher --anzeigename Jonah --minecraft Informiert
 sudo -u campus python3 server/konto.py anlegen felix --authentik FFoerster --anzeigename Felix --minecraft MultiBilliardaer
 sudo -u campus python3 server/konto.py liste
+sudo -u campus git -C /srv/campus/repo status
 ```
+
+`git status` muss `nothing to commit, working tree clean` zeigen, die Profile sind dann schon nach GitHub gepusht.
 
 Weitere Konten legt ein Admin danach auf der Website unter **Admin** an. Die Person braucht vorher einen Benutzer in Authentik in der Gruppe `tofg-users`.
 
@@ -351,12 +361,20 @@ Weitere Konten legt ein Admin danach auf der Website unter **Admin** an. Die Per
 | Log des Dienstes | `journalctl -u campus-dienst -f` |
 | Log vom Abgleich mit GitHub | `journalctl -u campus-pull` |
 | Passwort zurücksetzen | in Authentik |
-| Admin-Recht geben oder nehmen | in Authentik, Gruppe `campus-admins` |
+| Admin-Recht geben oder nehmen | in Authentik über die Admin-Gruppe, siehe unten |
 | Authentik-Namen eines Kontos ändern | `sudo -u campus python3 server/konto.py authentik felix NEUER-NAME` (oder auf der Website unter Admin) |
 | Konto sperren | `sudo -u campus python3 server/konto.py sperren felix`, aber nicht aus `tofg-users` nehmen, die Gruppe gilt auch für andere Dienste |
 | Konten sichern | `/var/lib/campus/konten.json` wegkopieren |
 | Liegen gebliebenen Import entfernen | auf der Website unter Import **Verwerfen** (geht auch für Admins), oder er verfällt nach 30 Minuten von selbst |
 
 - **Neuer Code kommt von selbst:** Der Timer holt ihn. Ändert sich etwas unter `server/*.py`, startet sich der Dienst innerhalb von 20 Sekunden selbst neu.
-- **Von Hand nachziehen** muss man nur geänderte Vorlagen: nach einer Änderung an `server/nginx-campus.conf` die Datei wieder nach `/etc/nginx/conf.d/` kopieren (NPM-IP wieder eintragen) und `sudo systemctl reload nginx`, nach einer Änderung an den Units wieder kopieren und `sudo systemctl daemon-reload`.
+- **Von Hand nachziehen** muss man nur geänderte Vorlagen: nach einer Änderung an `server/nginx-campus.conf` den `cp`- und `sed`-Befehl aus Schritt 9 wiederholen (NPM-IP und Domain) und `sudo systemctl reload nginx`, nach einer Änderung an den Units wieder kopieren und `sudo systemctl daemon-reload`.
+- **Eigene Admin-Gruppe:** Im Moment ist jeder in `tofg-users` mit Campus-Konto Admin. Sobald es normale Mitspieler geben soll, in Authentik eine Gruppe anlegen (zum Beispiel `atm10a-admins`) und sie per Drop-in eintragen, das übersteht auch neu kopierte Units:
+  ```
+  sudo mkdir -p /etc/systemd/system/campus-dienst.service.d
+  printf '[Service]\nEnvironment=CAMPUS_ADMIN_GRUPPE=atm10a-admins\n' | sudo tee /etc/systemd/system/campus-dienst.service.d/admin-gruppe.conf
+  sudo systemctl daemon-reload
+  sudo systemctl restart campus-dienst
+  ```
+  `konto.py liste` liest die Gruppe dann selbst aus dem Dienst.
 - **Wenn der Abgleich hängt:** `journalctl -u campus-pull` zeigt den Grund. Meist wurde auf GitHub die Geschichte umgeschrieben (Force-Push). Dann auf dem Server `sudo -u campus git -C /srv/campus/repo fetch` und `sudo -u campus git -C /srv/campus/repo reset --hard origin/main`.
