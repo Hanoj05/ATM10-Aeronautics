@@ -248,10 +248,10 @@ sudo firewall-cmd --reload
 
 In der Authentik-Admin-Oberfläche:
 
-1. **Gruppen** unter Directory → Groups: `campus` (darf die Website öffnen) und `campus-admins` (Admins). Beide Benutzer in `campus`, Jonah zusätzlich in `campus-admins`.
+1. **Gruppen** unter Directory → Groups: Zugang hat die bestehende Gruppe `tofg-users`. Neu anlegen: `campus-admins` (Admins der Website). Beide Benutzer müssen in `tofg-users` sein, Jonah zusätzlich in `campus-admins`.
 2. **Provider** unter Applications → Providers → Create: Typ **Proxy Provider**, Modus **Forward auth (single application)**, External host `https://DEINE-DOMAIN`.
 3. **Application** unter Applications → Applications → Create: Name `Campus`, Slug `campus`, Provider aus Schritt 2.
-4. In der Application unter **Policy / Group / User Bindings** die Gruppe `campus` binden. Wer nicht in der Gruppe ist, kommt dann gar nicht erst durch.
+4. In der Application unter **Policy / Group / User Bindings** die Gruppe `tofg-users` binden. Wer nicht in der Gruppe ist, kommt dann gar nicht erst durch.
 5. Unter Applications → Outposts den Outpost (meist **authentik Embedded Outpost**) bearbeiten und die Application `Campus` hinzufügen.
 
 ### 11. Nginx Proxy Manager
@@ -333,7 +333,7 @@ sudo -u campus python3 server/konto.py anlegen felix --authentik FFoerster --anz
 sudo -u campus python3 server/konto.py liste
 ```
 
-Weitere Konten legt ein Admin danach auf der Website unter **Admin** an. Die Person braucht vorher einen Benutzer in Authentik in der Gruppe `campus`.
+Weitere Konten legt ein Admin danach auf der Website unter **Admin** an. Die Person braucht vorher einen Benutzer in Authentik in der Gruppe `tofg-users`.
 
 ### 13. Prüfen
 
@@ -353,7 +353,7 @@ Weitere Konten legt ein Admin danach auf der Website unter **Admin** an. Die Per
 | Passwort zurücksetzen | in Authentik |
 | Admin-Recht geben oder nehmen | in Authentik, Gruppe `campus-admins` |
 | Authentik-Namen eines Kontos ändern | `sudo -u campus python3 server/konto.py authentik felix NEUER-NAME` (oder auf der Website unter Admin) |
-| Konto sperren | `sudo -u campus python3 server/konto.py sperren felix`, oder in Authentik aus der Gruppe `campus` nehmen |
+| Konto sperren | `sudo -u campus python3 server/konto.py sperren felix`, aber nicht aus `tofg-users` nehmen, die Gruppe gilt auch für andere Dienste |
 | Konten sichern | `/var/lib/campus/konten.json` wegkopieren |
 | Liegen gebliebenen Import entfernen | auf der Website unter Import **Verwerfen** (geht auch für Admins), oder er verfällt nach 30 Minuten von selbst |
 
