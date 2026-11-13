@@ -31,41 +31,15 @@
       "drehung": 0
     },
     {
-      "id": "haus-west",
-      "name": "Haus West",
-      "ordner": "gebaeude/haus-west",
-      "zweck": "noch offen",
-      "status": "leer",
-      "position": [
-        253,
-        65,
-        -308
-      ],
-      "drehung": 0
-    },
-    {
-      "id": "haus-ost",
-      "name": "Haus Ost",
-      "ordner": "gebaeude/haus-ost",
-      "zweck": "noch offen",
-      "status": "leer",
-      "position": [
-        289,
-        65,
-        -307
-      ],
-      "drehung": 0
-    },
-    {
       "id": "hauptgebaeude",
       "name": "Hauptgebäude",
       "ordner": "gebaeude/hauptgebaeude",
       "zweck": "Ring mit Garten, Energy Core",
       "status": "geplant",
       "position": [
-        198,
+        154,
         65,
-        -372
+        -329
       ],
       "drehung": 0
     }

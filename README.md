@@ -17,7 +17,7 @@ gebaeude/
     konfig.json        Teile mit Position, Nodes und Kanälen (für die Website)
     konfig.md          Technik und Konfiguration zum Lesen
   me-zentrale/         ME-Gebäude
-  haus-west/, haus-ost/  zwei Gebäude, Zweck noch offen
+  hauptgebaeude/       Glasring mit Park und Energy Core
 schematics/
   campus.nbt           die ganze Campus-Fläche, daraus werden alle Modelle ausgeschnitten
 tools/                 Hilfsskripte: modell.json aus Bauplan oder Schematic, Zip bauen
@@ -48,8 +48,7 @@ Ohne Server und ohne Technik: [download/campus-ansicht.zip](download/campus-ansi
 | --- | --- | --- |
 | [Wabenhaus](gebaeude/wabenhaus/) | Bienen: Modular Beehive, Modular Centrifuge | gebaut |
 | [ME-Gebäude](gebaeude/me-zentrale/) | AE2-Hauptsystem: ME Controller, 64 Extended Drives | im Bau |
-| [Haus West](gebaeude/haus-west/) | noch offen | leer |
-| [Haus Ost](gebaeude/haus-ost/) | noch offen | leer |
+| [Hauptgebäude](gebaeude/hauptgebaeude/) | Glasring mit Park und Energy Core | geplant |
 
 ## Konventionen
 

@@ -1,6 +1,6 @@
 # Hauptgebäude
 
-Flacher Glasring nach dem Vorbild des Apple Park: 149 Blöcke Durchmesser, vier Etagen, an jeder Decke ein weißes Band, oben ein dünnes weißes Dach mit Solarfläche. Innen ein Park mit Hügeln, Obstbäumen, geschwungenen Wegen und Teich; darüber schwebt der Draconic Evolution Energy Core in einem weißen Ring auf vier Säulen. Ersetzt Haus West und Haus Ost.
+Flacher Glasring nach dem Vorbild des Apple Park: 149 Blöcke Durchmesser, vier Etagen, an jeder Decke ein weißes Band, oben ein dünnes weißes Dach mit Solarfläche. Innen ein Park mit Hügeln, Obstbäumen, geschwungenen Wegen und Teich; darüber schwebt der Draconic Evolution Energy Core in einem weißen Ring auf vier Säulen. Steht dort, wo vorher Haus West und Haus Ost standen, in der Ecke zwischen ME-Gebäude und Wabenhaus.
 
 | Datei | Inhalt |
 | --- | --- |

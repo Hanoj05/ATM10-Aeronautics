@@ -5,12 +5,12 @@
   "status": "geplant",
   "welt": {
     "p0": [
-      198,
+      154,
       65,
-      -372
+      -329
     ],
     "drehung": 0,
-    "hinweis": "P0 = Nordwest-Ecke unten. Mittelpunkt bei Plan (85, 0, 85), also etwa Welt (283, 65, -287). Lage nur geschätzt, nicht eingemessen: vor dem Bauen mit F3 prüfen. Ersetzt Haus West und Haus Ost; das Wabenhaus liegt innerhalb des Fußabdrucks und müsste umziehen oder der Mittelpunkt wandern."
+    "hinweis": "P0 = Nordwest-Ecke unten. Mittelpunkt bei Plan (85, 0, 85), also Welt (239, 65, -244). Der Ring liegt in der Ecke zwischen ME-Gebäude (nördlich) und Wabenhaus (östlich) und hält zu beiden mindestens 86 Blöcke Abstand von der Mitte, also gut 2 Blöcke Luft hinter der äußeren Baumreihe. Steht dort, wo vorher Haus West und Haus Ost standen. Lage nur gerechnet, nicht eingemessen: vor dem Bauen mit F3 prüfen."
   },
   "masse": {
     "breite": 171,

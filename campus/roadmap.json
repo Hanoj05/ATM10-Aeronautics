@@ -108,11 +108,12 @@
           "text": "Steckt in der Campus-Schematic vom 10.11.2026."
         },
         {
-          "titel": "Haus West und Haus Ost: Zweck festlegen",
+          "titel": "Hauptgebäude bauen (ersetzt Haus West und Haus Ost)",
           "wo": "Minecraft",
           "bereich": "Gebäude",
           "status": "offen",
-          "text": "Beide stehen leer. Wenn klar ist, wofür, Namen und Zweck in campus.json eintragen."
+          "gebaeude": "hauptgebaeude",
+          "text": "Haus West und Haus Ost abreißen, Mitte des Rings bei etwa 239, 65, -244 einmessen. Tier für den Energy Core festlegen."
         },
         {
           "titel": "P2P Tunnels und andere Parts an Kabeln zeichnen",
