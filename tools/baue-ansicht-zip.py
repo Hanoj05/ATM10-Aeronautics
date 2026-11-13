@@ -7,6 +7,7 @@ Die Zip enthält alles, auch three.js und die Blockmodelle. Entpacken und index.
 per Doppelklick öffnen, kein Webserver und kein Internet nötig. Nach Änderungen an
 Gebäuden oder Modellen einfach neu bauen und die Zip mit committen.
 """
+import base64
 import json
 import zipfile
 from pathlib import Path
@@ -51,6 +52,17 @@ def daten():
     return {"welt": campus.get("welt"), "gebaeude": liste}
 
 
+def texturen_js():
+    """Blocktexturen für die Offline-Ansicht. Der Atlas kommt als data-URL mit, weil
+    WebGL Bilder von file:// nicht benutzen darf. Ohne texturen/ bleibt es bei Farben."""
+    ordner = REPO / "texturen"
+    if not (ordner / "texturen.json").exists():
+        return "/* keine Texturen, siehe tools/hole-texturen.py */\n"
+    t = lies_json(ordner / "texturen.json")
+    t["atlasDaten"] = "data:image/png;base64," + base64.b64encode((ordner / t["atlas"]).read_bytes()).decode("ascii")
+    return "window.CAMPUS_TEXTUREN = " + json.dumps(t, ensure_ascii=False, separators=(",", ":")) + ";\n"
+
+
 def main():
     d = daten()
     js = "window.CAMPUS_DATEN = " + json.dumps(d, ensure_ascii=False, separators=(",", ":")) + ";\n"
@@ -61,6 +73,7 @@ def main():
                 z.write(datei, ORDNER + datei.relative_to(VORLAGE).as_posix())
         z.write(REPO / "website" / "js" / "voxel.js", ORDNER + "voxel.js")
         z.writestr(ORDNER + "daten.js", js)
+        z.writestr(ORDNER + "texturen.js", texturen_js())
         z.writestr(ORDNER + "LIES-MICH.txt", LIES_MICH)
     mit = [g["name"] for g in d["gebaeude"] if g["modell"]]
     print(f"{ZIEL.relative_to(REPO)}: {ZIEL.stat().st_size // 1024} KB, Gebäude mit Modell: {', '.join(mit)}")

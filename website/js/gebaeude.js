@@ -10,8 +10,9 @@
   var kanaele = {};
   var VIEWS = ["ansicht", "konfig", "bauplan"];
 
-  C.ladeGebaeude(id).then(function (d) {
-    D = d;
+  /* Texturen abwarten, damit das Modell gleich richtig gebaut wird */
+  Promise.all([C.ladeGebaeude(id), C.bereit]).then(function (r) {
+    D = r[0];
     D.konfig.netzwerke.forEach(function (n) { n.kanaele.forEach(function (k) { kanaele[k.nr] = k; }); });
     kopf();
     zeigeKonfig();

@@ -1,0 +1,1047 @@
+{
+ "quelle": "tools/hole-texturen.py aus der Instanz All the Mods 10 Aeronautics (Minecraft 1.21.1)",
+ "atlas": "atlas.png",
+ "groesse": [
+  512,
+  256
+ ],
+ "kachel": 16,
+ "rand": 8,
+ "spalten": 16,
+ "texturen": {
+  "ae2:block/controller": {
+   "nr": 0,
+   "alpha": "voll"
+  },
+  "ae2:block/wireless_access_point": {
+   "nr": 1,
+   "alpha": "loch"
+  },
+  "ae2:part/cable/dense_smart/black": {
+   "nr": 2,
+   "alpha": "loch"
+  },
+  "ae2:part/cable/dense_smart/blue": {
+   "nr": 3,
+   "alpha": "loch"
+  },
+  "ae2:part/cable/dense_smart/white": {
+   "nr": 4,
+   "alpha": "loch"
+  },
+  "ae2:part/cable/smart/black": {
+   "nr": 5,
+   "alpha": "loch"
+  },
+  "ae2:part/cable/smart/blue": {
+   "nr": 6,
+   "alpha": "loch"
+  },
+  "ae2:part/cable/smart/white": {
+   "nr": 7,
+   "alpha": "loch"
+  },
+  "alltheores:block/cinnabar_ore": {
+   "nr": 8,
+   "alpha": "voll"
+  },
+  "ars_nouveau:block/archwood_log_top": {
+   "nr": 9,
+   "alpha": "voll"
+  },
+  "ars_nouveau:block/blue_archwood_leaves": {
+   "nr": 10,
+   "alpha": "loch"
+  },
+  "ars_nouveau:block/green_archwood_leaves": {
+   "nr": 11,
+   "alpha": "loch"
+  },
+  "ars_nouveau:block/green_archwood_log": {
+   "nr": 12,
+   "alpha": "voll"
+  },
+  "ars_nouveau:block/purple_archwood_leaves": {
+   "nr": 13,
+   "alpha": "loch"
+  },
+  "ars_nouveau:block/purple_archwood_log": {
+   "nr": 14,
+   "alpha": "voll"
+  },
+  "ars_nouveau:block/red_archwood_leaves": {
+   "nr": 15,
+   "alpha": "loch"
+  },
+  "chipped:block/blue_concrete/blue_concrete_tiles": {
+   "nr": 16,
+   "alpha": "voll"
+  },
+  "chipped:block/calcite/cut_calcite_column": {
+   "nr": 17,
+   "alpha": "voll"
+  },
+  "chipped:block/light_gray_concrete/light_gray_concrete_tiles": {
+   "nr": 18,
+   "alpha": "voll"
+  },
+  "draconicevolution:block/awakened_draconium_block": {
+   "nr": 19,
+   "alpha": "halb"
+  },
+  "draconicevolution:block/awakened_draconium_block_side": {
+   "nr": 20,
+   "alpha": "halb"
+  },
+  "draconicevolution:block/draconium_block": {
+   "nr": 21,
+   "alpha": "halb"
+  },
+  "draconicevolution:block/energy_core": {
+   "nr": 22,
+   "alpha": "voll"
+  },
+  "draconicevolution:block/energy_core_stabilizer": {
+   "nr": 23,
+   "alpha": "voll"
+  },
+  "elevatorid:block/elevator_purple": {
+   "nr": 24,
+   "alpha": "voll"
+  },
+  "extendedae:block/extended_drive/ex_drive_bottom": {
+   "nr": 25,
+   "alpha": "voll"
+  },
+  "extendedae:block/extended_drive/ex_drive_side": {
+   "nr": 26,
+   "alpha": "voll"
+  },
+  "extendedae:block/extended_drive/ex_drive_top": {
+   "nr": 27,
+   "alpha": "voll"
+  },
+  "extendedae:block/wireless_connector/wireless_connect_off": {
+   "nr": 28,
+   "alpha": "voll"
+  },
+  "extendedae:block/wireless_hub/wireless_hub_off": {
+   "nr": 29,
+   "alpha": "voll"
+  },
+  "handcrafted:block/bench/birch_bench": {
+   "nr": 30,
+   "alpha": "loch"
+  },
+  "handcrafted:block/chair/birch_chair": {
+   "nr": 31,
+   "alpha": "loch"
+  },
+  "handcrafted:block/couch/cushion/black_cushion": {
+   "nr": 32,
+   "alpha": "loch"
+  },
+  "handcrafted:block/table/sheet/black_sheet": {
+   "nr": 33,
+   "alpha": "loch"
+  },
+  "handcrafted:block/table/table/birch_table": {
+   "nr": 34,
+   "alpha": "loch"
+  },
+  "minecraft:block/allium": {
+   "nr": 35,
+   "alpha": "loch"
+  },
+  "minecraft:block/amethyst_block": {
+   "nr": 36,
+   "alpha": "voll"
+  },
+  "minecraft:block/black_concrete": {
+   "nr": 37,
+   "alpha": "voll"
+  },
+  "minecraft:block/black_stained_glass": {
+   "nr": 38,
+   "alpha": "halb"
+  },
+  "minecraft:block/bookshelf": {
+   "nr": 39,
+   "alpha": "voll"
+  },
+  "minecraft:block/chain": {
+   "nr": 40,
+   "alpha": "loch"
+  },
+  "minecraft:block/coal_ore": {
+   "nr": 41,
+   "alpha": "voll"
+  },
+  "minecraft:block/copper_door_bottom": {
+   "nr": 42,
+   "alpha": "voll"
+  },
+  "minecraft:block/copper_grate": {
+   "nr": 43,
+   "alpha": "loch"
+  },
+  "minecraft:block/cornflower": {
+   "nr": 44,
+   "alpha": "loch"
+  },
+  "minecraft:block/cut_copper": {
+   "nr": 45,
+   "alpha": "voll"
+  },
+  "minecraft:block/dandelion": {
+   "nr": 46,
+   "alpha": "loch"
+  },
+  "minecraft:block/deepslate_tiles": {
+   "nr": 47,
+   "alpha": "voll"
+  },
+  "minecraft:block/dirt": {
+   "nr": 48,
+   "alpha": "voll"
+  },
+  "minecraft:block/enchanting_table_bottom": {
+   "nr": 49,
+   "alpha": "voll"
+  },
+  "minecraft:block/enchanting_table_side": {
+   "nr": 50,
+   "alpha": "loch"
+  },
+  "minecraft:block/enchanting_table_top": {
+   "nr": 51,
+   "alpha": "voll"
+  },
+  "minecraft:block/glass": {
+   "nr": 52,
+   "alpha": "loch"
+  },
+  "minecraft:block/grass_block_side": {
+   "nr": 53,
+   "alpha": "voll"
+  },
+  "minecraft:block/grass_block_top#getoent": {
+   "nr": 54,
+   "alpha": "voll"
+  },
+  "minecraft:block/gray_concrete": {
+   "nr": 55,
+   "alpha": "voll"
+  },
+  "minecraft:block/honeycomb_block": {
+   "nr": 56,
+   "alpha": "voll"
+  },
+  "minecraft:block/light_blue_concrete": {
+   "nr": 57,
+   "alpha": "voll"
+  },
+  "minecraft:block/light_gray_concrete": {
+   "nr": 58,
+   "alpha": "voll"
+  },
+  "minecraft:block/oak_leaves#getoent": {
+   "nr": 59,
+   "alpha": "loch"
+  },
+  "minecraft:block/oak_planks": {
+   "nr": 60,
+   "alpha": "voll"
+  },
+  "minecraft:block/orange_wool": {
+   "nr": 61,
+   "alpha": "voll"
+  },
+  "minecraft:block/polished_deepslate": {
+   "nr": 62,
+   "alpha": "voll"
+  },
+  "minecraft:block/poppy": {
+   "nr": 63,
+   "alpha": "loch"
+  },
+  "minecraft:block/purple_concrete": {
+   "nr": 64,
+   "alpha": "voll"
+  },
+  "minecraft:block/purple_stained_glass": {
+   "nr": 65,
+   "alpha": "halb"
+  },
+  "minecraft:block/quartz_block_bottom": {
+   "nr": 66,
+   "alpha": "voll"
+  },
+  "minecraft:block/quartz_pillar": {
+   "nr": 67,
+   "alpha": "voll"
+  },
+  "minecraft:block/quartz_pillar_top": {
+   "nr": 68,
+   "alpha": "voll"
+  },
+  "minecraft:block/redstone_block": {
+   "nr": 69,
+   "alpha": "voll"
+  },
+  "minecraft:block/sea_lantern": {
+   "nr": 70,
+   "alpha": "voll"
+  },
+  "minecraft:block/stone": {
+   "nr": 71,
+   "alpha": "voll"
+  },
+  "minecraft:block/water_still": {
+   "nr": 72,
+   "alpha": "halb"
+  },
+  "minecraft:block/white_concrete": {
+   "nr": 73,
+   "alpha": "voll"
+  },
+  "minecraft:block/white_wool": {
+   "nr": 74,
+   "alpha": "voll"
+  },
+  "modularbees:block/beehive_alveary": {
+   "nr": 75,
+   "alpha": "voll"
+  },
+  "modularbees:block/beehive_core_face": {
+   "nr": 76,
+   "alpha": "voll"
+  },
+  "modularbees:block/beehive_end": {
+   "nr": 77,
+   "alpha": "voll"
+  },
+  "modularbees:block/beehive_overclocker": {
+   "nr": 78,
+   "alpha": "voll"
+  },
+  "modularbees:block/beehive_side": {
+   "nr": 79,
+   "alpha": "voll"
+  },
+  "modularbees:block/beehive_treater": {
+   "nr": 80,
+   "alpha": "voll"
+  },
+  "powah:block/ender_gate": {
+   "nr": 81,
+   "alpha": "loch"
+  },
+  "productivebees:block/advanced_beehive/tinted/birch/end_back#getoent": {
+   "nr": 82,
+   "alpha": "voll"
+  },
+  "productivebees:block/advanced_beehive/tinted/birch/end_front#getoent": {
+   "nr": 83,
+   "alpha": "voll"
+  },
+  "productivebees:block/advanced_beehive/tinted/birch/front#getoent": {
+   "nr": 84,
+   "alpha": "voll"
+  },
+  "productivebees:block/advanced_beehive/tinted/birch/side#getoent": {
+   "nr": 85,
+   "alpha": "voll"
+  },
+  "productivebees:block/advanced_beehive/tinted/birch/side_left#getoent": {
+   "nr": 86,
+   "alpha": "voll"
+  },
+  "productivebees:block/advanced_beehive/tinted/birch/side_right#getoent": {
+   "nr": 87,
+   "alpha": "voll"
+  },
+  "rftoolsbase:block/base/machinebottom": {
+   "nr": 88,
+   "alpha": "voll"
+  },
+  "rftoolsbase:block/base/machinetop": {
+   "nr": 89,
+   "alpha": "voll"
+  },
+  "rftoolsutility:block/machineenvironmentalcontroller": {
+   "nr": 90,
+   "alpha": "halb"
+  },
+  "supplementaries:block/pedestal_bottom": {
+   "nr": 91,
+   "alpha": "loch"
+  },
+  "supplementaries:block/pedestal_side": {
+   "nr": 92,
+   "alpha": "loch"
+  },
+  "supplementaries:block/pedestal_top": {
+   "nr": 93,
+   "alpha": "loch"
+  }
+ },
+ "bloecke": {
+  "ae2:black_smart_cable": {
+   "up": "ae2:part/cable/smart/black",
+   "down": "ae2:part/cable/smart/black",
+   "north": "ae2:part/cable/smart/black",
+   "south": "ae2:part/cable/smart/black",
+   "west": "ae2:part/cable/smart/black",
+   "east": "ae2:part/cable/smart/black"
+  },
+  "ae2:black_smart_dense_cable": {
+   "up": "ae2:part/cable/dense_smart/black",
+   "down": "ae2:part/cable/dense_smart/black",
+   "north": "ae2:part/cable/dense_smart/black",
+   "south": "ae2:part/cable/dense_smart/black",
+   "west": "ae2:part/cable/dense_smart/black",
+   "east": "ae2:part/cable/dense_smart/black"
+  },
+  "ae2:blue_smart_cable": {
+   "up": "ae2:part/cable/smart/blue",
+   "down": "ae2:part/cable/smart/blue",
+   "north": "ae2:part/cable/smart/blue",
+   "south": "ae2:part/cable/smart/blue",
+   "west": "ae2:part/cable/smart/blue",
+   "east": "ae2:part/cable/smart/blue"
+  },
+  "ae2:blue_smart_dense_cable": {
+   "up": "ae2:part/cable/dense_smart/blue",
+   "down": "ae2:part/cable/dense_smart/blue",
+   "north": "ae2:part/cable/dense_smart/blue",
+   "south": "ae2:part/cable/dense_smart/blue",
+   "west": "ae2:part/cable/dense_smart/blue",
+   "east": "ae2:part/cable/dense_smart/blue"
+  },
+  "ae2:controller": {
+   "up": "ae2:block/controller",
+   "down": "ae2:block/controller",
+   "north": "ae2:block/controller",
+   "south": "ae2:block/controller",
+   "west": "ae2:block/controller",
+   "east": "ae2:block/controller"
+  },
+  "ae2:white_smart_cable": {
+   "up": "ae2:part/cable/smart/white",
+   "down": "ae2:part/cable/smart/white",
+   "north": "ae2:part/cable/smart/white",
+   "south": "ae2:part/cable/smart/white",
+   "west": "ae2:part/cable/smart/white",
+   "east": "ae2:part/cable/smart/white"
+  },
+  "ae2:white_smart_dense_cable": {
+   "up": "ae2:part/cable/dense_smart/white",
+   "down": "ae2:part/cable/dense_smart/white",
+   "north": "ae2:part/cable/dense_smart/white",
+   "south": "ae2:part/cable/dense_smart/white",
+   "west": "ae2:part/cable/dense_smart/white",
+   "east": "ae2:part/cable/dense_smart/white"
+  },
+  "ae2:wireless_access_point": {
+   "up": "ae2:block/wireless_access_point",
+   "down": "ae2:block/wireless_access_point",
+   "north": "ae2:block/wireless_access_point",
+   "south": "ae2:block/wireless_access_point",
+   "west": "ae2:block/wireless_access_point",
+   "east": "ae2:block/wireless_access_point"
+  },
+  "alltheores:cinnabar_ore": {
+   "up": "alltheores:block/cinnabar_ore",
+   "down": "alltheores:block/cinnabar_ore",
+   "north": "alltheores:block/cinnabar_ore",
+   "south": "alltheores:block/cinnabar_ore",
+   "west": "alltheores:block/cinnabar_ore",
+   "east": "alltheores:block/cinnabar_ore"
+  },
+  "ars_nouveau:blue_archwood_leaves": {
+   "up": "ars_nouveau:block/blue_archwood_leaves",
+   "down": "ars_nouveau:block/blue_archwood_leaves",
+   "north": "ars_nouveau:block/blue_archwood_leaves",
+   "south": "ars_nouveau:block/blue_archwood_leaves",
+   "west": "ars_nouveau:block/blue_archwood_leaves",
+   "east": "ars_nouveau:block/blue_archwood_leaves"
+  },
+  "ars_nouveau:green_archwood_leaves": {
+   "up": "ars_nouveau:block/green_archwood_leaves",
+   "down": "ars_nouveau:block/green_archwood_leaves",
+   "north": "ars_nouveau:block/green_archwood_leaves",
+   "south": "ars_nouveau:block/green_archwood_leaves",
+   "west": "ars_nouveau:block/green_archwood_leaves",
+   "east": "ars_nouveau:block/green_archwood_leaves"
+  },
+  "ars_nouveau:green_archwood_log": {
+   "up": "ars_nouveau:block/archwood_log_top",
+   "down": "ars_nouveau:block/archwood_log_top",
+   "north": "ars_nouveau:block/green_archwood_log",
+   "south": "ars_nouveau:block/green_archwood_log",
+   "west": "ars_nouveau:block/green_archwood_log",
+   "east": "ars_nouveau:block/green_archwood_log"
+  },
+  "ars_nouveau:purple_archwood_leaves": {
+   "up": "ars_nouveau:block/purple_archwood_leaves",
+   "down": "ars_nouveau:block/purple_archwood_leaves",
+   "north": "ars_nouveau:block/purple_archwood_leaves",
+   "south": "ars_nouveau:block/purple_archwood_leaves",
+   "west": "ars_nouveau:block/purple_archwood_leaves",
+   "east": "ars_nouveau:block/purple_archwood_leaves"
+  },
+  "ars_nouveau:purple_archwood_log": {
+   "up": "ars_nouveau:block/archwood_log_top",
+   "down": "ars_nouveau:block/archwood_log_top",
+   "north": "ars_nouveau:block/purple_archwood_log",
+   "south": "ars_nouveau:block/purple_archwood_log",
+   "west": "ars_nouveau:block/purple_archwood_log",
+   "east": "ars_nouveau:block/purple_archwood_log"
+  },
+  "ars_nouveau:red_archwood_leaves": {
+   "up": "ars_nouveau:block/red_archwood_leaves",
+   "down": "ars_nouveau:block/red_archwood_leaves",
+   "north": "ars_nouveau:block/red_archwood_leaves",
+   "south": "ars_nouveau:block/red_archwood_leaves",
+   "west": "ars_nouveau:block/red_archwood_leaves",
+   "east": "ars_nouveau:block/red_archwood_leaves"
+  },
+  "chipped:blue_concrete_tiles": {
+   "up": "chipped:block/blue_concrete/blue_concrete_tiles",
+   "down": "chipped:block/blue_concrete/blue_concrete_tiles",
+   "north": "chipped:block/blue_concrete/blue_concrete_tiles",
+   "south": "chipped:block/blue_concrete/blue_concrete_tiles",
+   "west": "chipped:block/blue_concrete/blue_concrete_tiles",
+   "east": "chipped:block/blue_concrete/blue_concrete_tiles"
+  },
+  "chipped:cut_calcite_column": {
+   "up": "chipped:block/calcite/cut_calcite_column",
+   "down": "chipped:block/calcite/cut_calcite_column",
+   "north": "chipped:block/calcite/cut_calcite_column",
+   "south": "chipped:block/calcite/cut_calcite_column",
+   "west": "chipped:block/calcite/cut_calcite_column",
+   "east": "chipped:block/calcite/cut_calcite_column"
+  },
+  "draconicevolution:awakened_draconium_block": {
+   "up": "draconicevolution:block/awakened_draconium_block",
+   "down": "draconicevolution:block/awakened_draconium_block",
+   "north": "draconicevolution:block/awakened_draconium_block_side",
+   "south": "draconicevolution:block/awakened_draconium_block_side",
+   "west": "draconicevolution:block/awakened_draconium_block_side",
+   "east": "draconicevolution:block/awakened_draconium_block_side"
+  },
+  "draconicevolution:draconium_block": {
+   "up": "draconicevolution:block/draconium_block",
+   "down": "draconicevolution:block/draconium_block",
+   "north": "draconicevolution:block/draconium_block",
+   "south": "draconicevolution:block/draconium_block",
+   "west": "draconicevolution:block/draconium_block",
+   "east": "draconicevolution:block/draconium_block"
+  },
+  "draconicevolution:energy_core": {
+   "up": "draconicevolution:block/energy_core",
+   "down": "draconicevolution:block/energy_core",
+   "north": "draconicevolution:block/energy_core",
+   "south": "draconicevolution:block/energy_core",
+   "west": "draconicevolution:block/energy_core",
+   "east": "draconicevolution:block/energy_core"
+  },
+  "draconicevolution:energy_core_stabilizer": {
+   "up": "draconicevolution:block/energy_core_stabilizer",
+   "down": "draconicevolution:block/energy_core_stabilizer",
+   "north": "draconicevolution:block/energy_core_stabilizer",
+   "south": "draconicevolution:block/energy_core_stabilizer",
+   "west": "draconicevolution:block/energy_core_stabilizer",
+   "east": "draconicevolution:block/energy_core_stabilizer"
+  },
+  "elevatorid:elevator_purple": {
+   "up": "elevatorid:block/elevator_purple",
+   "down": "elevatorid:block/elevator_purple",
+   "north": "elevatorid:block/elevator_purple",
+   "south": "elevatorid:block/elevator_purple",
+   "west": "elevatorid:block/elevator_purple",
+   "east": "elevatorid:block/elevator_purple"
+  },
+  "extendedae:ex_drive": {
+   "up": "extendedae:block/extended_drive/ex_drive_top",
+   "down": "extendedae:block/extended_drive/ex_drive_bottom",
+   "north": "extendedae:block/extended_drive/ex_drive_side",
+   "south": "extendedae:block/extended_drive/ex_drive_side",
+   "west": "extendedae:block/extended_drive/ex_drive_side",
+   "east": "extendedae:block/extended_drive/ex_drive_side"
+  },
+  "extendedae:wireless_connect": {
+   "up": "extendedae:block/wireless_connector/wireless_connect_off",
+   "down": "extendedae:block/wireless_connector/wireless_connect_off",
+   "north": "extendedae:block/wireless_connector/wireless_connect_off",
+   "south": "extendedae:block/wireless_connector/wireless_connect_off",
+   "west": "extendedae:block/wireless_connector/wireless_connect_off",
+   "east": "extendedae:block/wireless_connector/wireless_connect_off"
+  },
+  "extendedae:wireless_hub": {
+   "up": "extendedae:block/wireless_hub/wireless_hub_off",
+   "down": "extendedae:block/wireless_hub/wireless_hub_off",
+   "north": "extendedae:block/wireless_hub/wireless_hub_off",
+   "south": "extendedae:block/wireless_hub/wireless_hub_off",
+   "west": "extendedae:block/wireless_hub/wireless_hub_off",
+   "east": "extendedae:block/wireless_hub/wireless_hub_off"
+  },
+  "framedblocks:framed_checkered_cube|minecraft:light_blue_concrete": {
+   "up": "minecraft:block/light_blue_concrete",
+   "down": "minecraft:block/light_blue_concrete",
+   "north": "minecraft:block/light_blue_concrete",
+   "south": "minecraft:block/light_blue_concrete",
+   "west": "minecraft:block/light_blue_concrete",
+   "east": "minecraft:block/light_blue_concrete"
+  },
+  "framedblocks:framed_checkered_cube|minecraft:white_concrete": {
+   "up": "minecraft:block/white_concrete",
+   "down": "minecraft:block/white_concrete",
+   "north": "minecraft:block/white_concrete",
+   "south": "minecraft:block/white_concrete",
+   "west": "minecraft:block/white_concrete",
+   "east": "minecraft:block/white_concrete"
+  },
+  "framedblocks:framed_double_panel|minecraft:light_blue_concrete": {
+   "up": "minecraft:block/light_blue_concrete",
+   "down": "minecraft:block/light_blue_concrete",
+   "north": "minecraft:block/light_blue_concrete",
+   "south": "minecraft:block/light_blue_concrete",
+   "west": "minecraft:block/light_blue_concrete",
+   "east": "minecraft:block/light_blue_concrete"
+  },
+  "framedblocks:framed_double_panel|minecraft:white_concrete": {
+   "up": "minecraft:block/white_concrete",
+   "down": "minecraft:block/white_concrete",
+   "north": "minecraft:block/white_concrete",
+   "south": "minecraft:block/white_concrete",
+   "west": "minecraft:block/white_concrete",
+   "east": "minecraft:block/white_concrete"
+  },
+  "framedblocks:framed_double_slab|minecraft:light_blue_concrete": {
+   "up": "minecraft:block/light_blue_concrete",
+   "down": "minecraft:block/light_blue_concrete",
+   "north": "minecraft:block/light_blue_concrete",
+   "south": "minecraft:block/light_blue_concrete",
+   "west": "minecraft:block/light_blue_concrete",
+   "east": "minecraft:block/light_blue_concrete"
+  },
+  "framedblocks:framed_double_slab|minecraft:white_concrete": {
+   "up": "minecraft:block/white_concrete",
+   "down": "minecraft:block/white_concrete",
+   "north": "minecraft:block/white_concrete",
+   "south": "minecraft:block/white_concrete",
+   "west": "minecraft:block/white_concrete",
+   "east": "minecraft:block/white_concrete"
+  },
+  "framedblocks:framed_panel|chipped:light_gray_concrete_tiles": {
+   "up": "chipped:block/light_gray_concrete/light_gray_concrete_tiles",
+   "down": "chipped:block/light_gray_concrete/light_gray_concrete_tiles",
+   "north": "chipped:block/light_gray_concrete/light_gray_concrete_tiles",
+   "south": "chipped:block/light_gray_concrete/light_gray_concrete_tiles",
+   "west": "chipped:block/light_gray_concrete/light_gray_concrete_tiles",
+   "east": "chipped:block/light_gray_concrete/light_gray_concrete_tiles"
+  },
+  "handcrafted:birch_bench": {
+   "up": "handcrafted:block/bench/birch_bench",
+   "down": "handcrafted:block/bench/birch_bench",
+   "north": "handcrafted:block/bench/birch_bench",
+   "south": "handcrafted:block/bench/birch_bench",
+   "west": "handcrafted:block/bench/birch_bench",
+   "east": "handcrafted:block/bench/birch_bench"
+  },
+  "handcrafted:birch_chair": {
+   "up": "handcrafted:block/chair/birch_chair",
+   "down": "handcrafted:block/chair/birch_chair",
+   "north": "handcrafted:block/chair/birch_chair",
+   "south": "handcrafted:block/chair/birch_chair",
+   "west": "handcrafted:block/chair/birch_chair",
+   "east": "handcrafted:block/chair/birch_chair"
+  },
+  "handcrafted:birch_couch": {
+   "up": "handcrafted:block/couch/cushion/black_cushion",
+   "down": "handcrafted:block/couch/cushion/black_cushion",
+   "north": "handcrafted:block/couch/cushion/black_cushion",
+   "south": "handcrafted:block/couch/cushion/black_cushion",
+   "west": "handcrafted:block/couch/cushion/black_cushion",
+   "east": "handcrafted:block/couch/cushion/black_cushion"
+  },
+  "handcrafted:birch_side_table": {
+   "up": "handcrafted:block/table/sheet/black_sheet",
+   "down": "handcrafted:block/table/sheet/black_sheet",
+   "north": "handcrafted:block/table/sheet/black_sheet",
+   "south": "handcrafted:block/table/sheet/black_sheet",
+   "west": "handcrafted:block/table/sheet/black_sheet",
+   "east": "handcrafted:block/table/sheet/black_sheet"
+  },
+  "handcrafted:birch_table": {
+   "up": "handcrafted:block/table/table/birch_table",
+   "down": "handcrafted:block/table/table/birch_table",
+   "north": "handcrafted:block/table/table/birch_table",
+   "south": "handcrafted:block/table/table/birch_table",
+   "west": "handcrafted:block/table/table/birch_table",
+   "east": "handcrafted:block/table/table/birch_table"
+  },
+  "minecraft:allium": {
+   "up": "minecraft:block/allium",
+   "down": "minecraft:block/allium",
+   "north": "minecraft:block/allium",
+   "south": "minecraft:block/allium",
+   "west": "minecraft:block/allium",
+   "east": "minecraft:block/allium"
+  },
+  "minecraft:amethyst_block": {
+   "up": "minecraft:block/amethyst_block",
+   "down": "minecraft:block/amethyst_block",
+   "north": "minecraft:block/amethyst_block",
+   "south": "minecraft:block/amethyst_block",
+   "west": "minecraft:block/amethyst_block",
+   "east": "minecraft:block/amethyst_block"
+  },
+  "minecraft:black_concrete": {
+   "up": "minecraft:block/black_concrete",
+   "down": "minecraft:block/black_concrete",
+   "north": "minecraft:block/black_concrete",
+   "south": "minecraft:block/black_concrete",
+   "west": "minecraft:block/black_concrete",
+   "east": "minecraft:block/black_concrete"
+  },
+  "minecraft:black_stained_glass": {
+   "up": "minecraft:block/black_stained_glass",
+   "down": "minecraft:block/black_stained_glass",
+   "north": "minecraft:block/black_stained_glass",
+   "south": "minecraft:block/black_stained_glass",
+   "west": "minecraft:block/black_stained_glass",
+   "east": "minecraft:block/black_stained_glass"
+  },
+  "minecraft:bookshelf": {
+   "up": "minecraft:block/oak_planks",
+   "down": "minecraft:block/oak_planks",
+   "north": "minecraft:block/bookshelf",
+   "south": "minecraft:block/bookshelf",
+   "west": "minecraft:block/bookshelf",
+   "east": "minecraft:block/bookshelf"
+  },
+  "minecraft:chain": {
+   "up": "minecraft:block/chain",
+   "down": "minecraft:block/chain",
+   "north": "minecraft:block/chain",
+   "south": "minecraft:block/chain",
+   "west": "minecraft:block/chain",
+   "east": "minecraft:block/chain"
+  },
+  "minecraft:coal_ore": {
+   "up": "minecraft:block/coal_ore",
+   "down": "minecraft:block/coal_ore",
+   "north": "minecraft:block/coal_ore",
+   "south": "minecraft:block/coal_ore",
+   "west": "minecraft:block/coal_ore",
+   "east": "minecraft:block/coal_ore"
+  },
+  "minecraft:cornflower": {
+   "up": "minecraft:block/cornflower",
+   "down": "minecraft:block/cornflower",
+   "north": "minecraft:block/cornflower",
+   "south": "minecraft:block/cornflower",
+   "west": "minecraft:block/cornflower",
+   "east": "minecraft:block/cornflower"
+  },
+  "minecraft:dandelion": {
+   "up": "minecraft:block/dandelion",
+   "down": "minecraft:block/dandelion",
+   "north": "minecraft:block/dandelion",
+   "south": "minecraft:block/dandelion",
+   "west": "minecraft:block/dandelion",
+   "east": "minecraft:block/dandelion"
+  },
+  "minecraft:deepslate_tiles": {
+   "up": "minecraft:block/deepslate_tiles",
+   "down": "minecraft:block/deepslate_tiles",
+   "north": "minecraft:block/deepslate_tiles",
+   "south": "minecraft:block/deepslate_tiles",
+   "west": "minecraft:block/deepslate_tiles",
+   "east": "minecraft:block/deepslate_tiles"
+  },
+  "minecraft:dirt": {
+   "up": "minecraft:block/dirt",
+   "down": "minecraft:block/dirt",
+   "north": "minecraft:block/dirt",
+   "south": "minecraft:block/dirt",
+   "west": "minecraft:block/dirt",
+   "east": "minecraft:block/dirt"
+  },
+  "minecraft:enchanting_table": {
+   "up": "minecraft:block/enchanting_table_top",
+   "down": "minecraft:block/enchanting_table_bottom",
+   "north": "minecraft:block/enchanting_table_side",
+   "south": "minecraft:block/enchanting_table_side",
+   "west": "minecraft:block/enchanting_table_side",
+   "east": "minecraft:block/enchanting_table_side"
+  },
+  "minecraft:glass": {
+   "up": "minecraft:block/glass",
+   "down": "minecraft:block/glass",
+   "north": "minecraft:block/glass",
+   "south": "minecraft:block/glass",
+   "west": "minecraft:block/glass",
+   "east": "minecraft:block/glass"
+  },
+  "minecraft:grass_block": {
+   "up": "minecraft:block/grass_block_top#getoent",
+   "down": "minecraft:block/dirt",
+   "north": "minecraft:block/grass_block_side",
+   "south": "minecraft:block/grass_block_side",
+   "west": "minecraft:block/grass_block_side",
+   "east": "minecraft:block/grass_block_side"
+  },
+  "minecraft:gray_concrete": {
+   "up": "minecraft:block/gray_concrete",
+   "down": "minecraft:block/gray_concrete",
+   "north": "minecraft:block/gray_concrete",
+   "south": "minecraft:block/gray_concrete",
+   "west": "minecraft:block/gray_concrete",
+   "east": "minecraft:block/gray_concrete"
+  },
+  "minecraft:honeycomb_block": {
+   "up": "minecraft:block/honeycomb_block",
+   "down": "minecraft:block/honeycomb_block",
+   "north": "minecraft:block/honeycomb_block",
+   "south": "minecraft:block/honeycomb_block",
+   "west": "minecraft:block/honeycomb_block",
+   "east": "minecraft:block/honeycomb_block"
+  },
+  "minecraft:light_blue_concrete": {
+   "up": "minecraft:block/light_blue_concrete",
+   "down": "minecraft:block/light_blue_concrete",
+   "north": "minecraft:block/light_blue_concrete",
+   "south": "minecraft:block/light_blue_concrete",
+   "west": "minecraft:block/light_blue_concrete",
+   "east": "minecraft:block/light_blue_concrete"
+  },
+  "minecraft:light_gray_concrete": {
+   "up": "minecraft:block/light_gray_concrete",
+   "down": "minecraft:block/light_gray_concrete",
+   "north": "minecraft:block/light_gray_concrete",
+   "south": "minecraft:block/light_gray_concrete",
+   "west": "minecraft:block/light_gray_concrete",
+   "east": "minecraft:block/light_gray_concrete"
+  },
+  "minecraft:oak_leaves": {
+   "up": "minecraft:block/oak_leaves#getoent",
+   "down": "minecraft:block/oak_leaves#getoent",
+   "north": "minecraft:block/oak_leaves#getoent",
+   "south": "minecraft:block/oak_leaves#getoent",
+   "west": "minecraft:block/oak_leaves#getoent",
+   "east": "minecraft:block/oak_leaves#getoent"
+  },
+  "minecraft:orange_carpet": {
+   "up": "minecraft:block/orange_wool",
+   "down": "minecraft:block/orange_wool",
+   "north": "minecraft:block/orange_wool",
+   "south": "minecraft:block/orange_wool",
+   "west": "minecraft:block/orange_wool",
+   "east": "minecraft:block/orange_wool"
+  },
+  "minecraft:polished_deepslate": {
+   "up": "minecraft:block/polished_deepslate",
+   "down": "minecraft:block/polished_deepslate",
+   "north": "minecraft:block/polished_deepslate",
+   "south": "minecraft:block/polished_deepslate",
+   "west": "minecraft:block/polished_deepslate",
+   "east": "minecraft:block/polished_deepslate"
+  },
+  "minecraft:poppy": {
+   "up": "minecraft:block/poppy",
+   "down": "minecraft:block/poppy",
+   "north": "minecraft:block/poppy",
+   "south": "minecraft:block/poppy",
+   "west": "minecraft:block/poppy",
+   "east": "minecraft:block/poppy"
+  },
+  "minecraft:purple_concrete": {
+   "up": "minecraft:block/purple_concrete",
+   "down": "minecraft:block/purple_concrete",
+   "north": "minecraft:block/purple_concrete",
+   "south": "minecraft:block/purple_concrete",
+   "west": "minecraft:block/purple_concrete",
+   "east": "minecraft:block/purple_concrete"
+  },
+  "minecraft:purple_stained_glass": {
+   "up": "minecraft:block/purple_stained_glass",
+   "down": "minecraft:block/purple_stained_glass",
+   "north": "minecraft:block/purple_stained_glass",
+   "south": "minecraft:block/purple_stained_glass",
+   "west": "minecraft:block/purple_stained_glass",
+   "east": "minecraft:block/purple_stained_glass"
+  },
+  "minecraft:quartz_pillar": {
+   "up": "minecraft:block/quartz_pillar_top",
+   "down": "minecraft:block/quartz_pillar_top",
+   "north": "minecraft:block/quartz_pillar",
+   "south": "minecraft:block/quartz_pillar",
+   "west": "minecraft:block/quartz_pillar",
+   "east": "minecraft:block/quartz_pillar"
+  },
+  "minecraft:redstone_block": {
+   "up": "minecraft:block/redstone_block",
+   "down": "minecraft:block/redstone_block",
+   "north": "minecraft:block/redstone_block",
+   "south": "minecraft:block/redstone_block",
+   "west": "minecraft:block/redstone_block",
+   "east": "minecraft:block/redstone_block"
+  },
+  "minecraft:sea_lantern": {
+   "up": "minecraft:block/sea_lantern",
+   "down": "minecraft:block/sea_lantern",
+   "north": "minecraft:block/sea_lantern",
+   "south": "minecraft:block/sea_lantern",
+   "west": "minecraft:block/sea_lantern",
+   "east": "minecraft:block/sea_lantern"
+  },
+  "minecraft:smooth_quartz": {
+   "up": "minecraft:block/quartz_block_bottom",
+   "down": "minecraft:block/quartz_block_bottom",
+   "north": "minecraft:block/quartz_block_bottom",
+   "south": "minecraft:block/quartz_block_bottom",
+   "west": "minecraft:block/quartz_block_bottom",
+   "east": "minecraft:block/quartz_block_bottom"
+  },
+  "minecraft:smooth_quartz_slab": {
+   "up": "minecraft:block/quartz_block_bottom",
+   "down": "minecraft:block/quartz_block_bottom",
+   "north": "minecraft:block/quartz_block_bottom",
+   "south": "minecraft:block/quartz_block_bottom",
+   "west": "minecraft:block/quartz_block_bottom",
+   "east": "minecraft:block/quartz_block_bottom"
+  },
+  "minecraft:stone": {
+   "up": "minecraft:block/stone",
+   "down": "minecraft:block/stone",
+   "north": "minecraft:block/stone",
+   "south": "minecraft:block/stone",
+   "west": "minecraft:block/stone",
+   "east": "minecraft:block/stone"
+  },
+  "minecraft:water": {
+   "up": "minecraft:block/water_still",
+   "down": "minecraft:block/water_still",
+   "north": "minecraft:block/water_still",
+   "south": "minecraft:block/water_still",
+   "west": "minecraft:block/water_still",
+   "east": "minecraft:block/water_still"
+  },
+  "minecraft:waxed_copper_door": {
+   "up": "minecraft:block/copper_door_bottom",
+   "down": "minecraft:block/copper_door_bottom",
+   "north": "minecraft:block/copper_door_bottom",
+   "south": "minecraft:block/copper_door_bottom",
+   "west": "minecraft:block/copper_door_bottom",
+   "east": "minecraft:block/copper_door_bottom"
+  },
+  "minecraft:waxed_copper_grate": {
+   "up": "minecraft:block/copper_grate",
+   "down": "minecraft:block/copper_grate",
+   "north": "minecraft:block/copper_grate",
+   "south": "minecraft:block/copper_grate",
+   "west": "minecraft:block/copper_grate",
+   "east": "minecraft:block/copper_grate"
+  },
+  "minecraft:waxed_cut_copper": {
+   "up": "minecraft:block/cut_copper",
+   "down": "minecraft:block/cut_copper",
+   "north": "minecraft:block/cut_copper",
+   "south": "minecraft:block/cut_copper",
+   "west": "minecraft:block/cut_copper",
+   "east": "minecraft:block/cut_copper"
+  },
+  "minecraft:white_carpet": {
+   "up": "minecraft:block/white_wool",
+   "down": "minecraft:block/white_wool",
+   "north": "minecraft:block/white_wool",
+   "south": "minecraft:block/white_wool",
+   "west": "minecraft:block/white_wool",
+   "east": "minecraft:block/white_wool"
+  },
+  "minecraft:white_concrete": {
+   "up": "minecraft:block/white_concrete",
+   "down": "minecraft:block/white_concrete",
+   "north": "minecraft:block/white_concrete",
+   "south": "minecraft:block/white_concrete",
+   "west": "minecraft:block/white_concrete",
+   "east": "minecraft:block/white_concrete"
+  },
+  "modularbees:modular_beehive_alveary": {
+   "up": "modularbees:block/beehive_end",
+   "down": "modularbees:block/beehive_end",
+   "north": "modularbees:block/beehive_alveary",
+   "south": "modularbees:block/beehive_alveary",
+   "west": "modularbees:block/beehive_alveary",
+   "east": "modularbees:block/beehive_alveary"
+  },
+  "modularbees:modular_beehive_core": {
+   "up": "modularbees:block/beehive_end",
+   "down": "modularbees:block/beehive_end",
+   "north": "modularbees:block/beehive_core_face",
+   "south": "modularbees:block/beehive_side",
+   "west": "modularbees:block/beehive_side",
+   "east": "modularbees:block/beehive_side"
+  },
+  "modularbees:modular_beehive_overclocker": {
+   "up": "modularbees:block/beehive_end",
+   "down": "modularbees:block/beehive_end",
+   "north": "modularbees:block/beehive_overclocker",
+   "south": "modularbees:block/beehive_side",
+   "west": "modularbees:block/beehive_side",
+   "east": "modularbees:block/beehive_side"
+  },
+  "modularbees:modular_treater": {
+   "up": "modularbees:block/beehive_end",
+   "down": "modularbees:block/beehive_end",
+   "north": "modularbees:block/beehive_treater",
+   "south": "modularbees:block/beehive_treater",
+   "west": "modularbees:block/beehive_treater",
+   "east": "modularbees:block/beehive_treater"
+  },
+  "powah:ender_gate_nitro": {
+   "up": "powah:block/ender_gate",
+   "down": "powah:block/ender_gate",
+   "north": "powah:block/ender_gate",
+   "south": "powah:block/ender_gate",
+   "west": "powah:block/ender_gate",
+   "east": "powah:block/ender_gate"
+  },
+  "productivebees:advanced_birch_beehive": {
+   "up": "productivebees:block/advanced_beehive/tinted/birch/end_front#getoent",
+   "down": "productivebees:block/advanced_beehive/tinted/birch/end_back#getoent",
+   "north": "productivebees:block/advanced_beehive/tinted/birch/front#getoent",
+   "south": "productivebees:block/advanced_beehive/tinted/birch/side#getoent",
+   "west": "productivebees:block/advanced_beehive/tinted/birch/side_left#getoent",
+   "east": "productivebees:block/advanced_beehive/tinted/birch/side_right#getoent"
+  },
+  "productivebees:expansion_box_birch": {
+   "up": "productivebees:block/advanced_beehive/tinted/birch/end_back#getoent",
+   "down": "productivebees:block/advanced_beehive/tinted/birch/end_front#getoent",
+   "north": "productivebees:block/advanced_beehive/tinted/birch/side#getoent",
+   "south": "productivebees:block/advanced_beehive/tinted/birch/side#getoent",
+   "west": "productivebees:block/advanced_beehive/tinted/birch/side_right#getoent",
+   "east": "productivebees:block/advanced_beehive/tinted/birch/side_left#getoent"
+  },
+  "rftoolsutility:environmental_controller": {
+   "up": "rftoolsbase:block/base/machinetop",
+   "down": "rftoolsbase:block/base/machinebottom",
+   "north": "rftoolsutility:block/machineenvironmentalcontroller",
+   "south": "rftoolsutility:block/machineenvironmentalcontroller",
+   "west": "rftoolsutility:block/machineenvironmentalcontroller",
+   "east": "rftoolsutility:block/machineenvironmentalcontroller"
+  },
+  "supplementaries:pedestal": {
+   "up": "supplementaries:block/pedestal_bottom",
+   "down": "supplementaries:block/pedestal_top",
+   "north": "supplementaries:block/pedestal_side",
+   "south": "supplementaries:block/pedestal_side",
+   "west": "supplementaries:block/pedestal_side",
+   "east": "supplementaries:block/pedestal_side"
+  }
+ }
+}

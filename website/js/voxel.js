@@ -24,11 +24,121 @@
     return (n - Math.floor(n)) * 0.08 - 0.04;
   }
 
+  /* --- Blocktexturen ---
+   * texturen/texturen.json ordnet jeder Block-ID je Seite eine Kachel im Atlas zu
+   * (erzeugt mit tools/hole-texturen.py). Die Offline-Ansicht bringt dieselben Daten
+   * samt Atlas als data-URL in window.CAMPUS_TEXTUREN mit. Fehlt etwas, bleibt die Farbe. */
+  var TEX = { daten: null, atlas: null };
+  var bereit = new Promise(function (fertig) {
+    function mitBild(d, url) {
+      var img = new Image();
+      img.onload = function () {
+        var t = new THREE.Texture(img);
+        t.magFilter = THREE.NearestFilter;            /* Pixel-Look */
+        t.minFilter = THREE.NearestMipmapLinearFilter; /* weit weg ohne Flimmern */
+        t.anisotropy = 8;
+        t.needsUpdate = true;
+        TEX.daten = d; TEX.atlas = t;
+        fertig();
+      };
+      img.onerror = function () { fertig(); };
+      img.src = url;
+    }
+    if (window.CAMPUS_TEXTUREN) { mitBild(window.CAMPUS_TEXTUREN, window.CAMPUS_TEXTUREN.atlasDaten); return; }
+    fetch(ROOT + "texturen/texturen.json")
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (d) { if (d) mitBild(d, ROOT + "texturen/" + d.atlas); else fertig(); })
+      .catch(function () { fertig(); });
+  });
+
+  /* Reihenfolge der Flächen in BoxGeometry: +x, -x, +y, -y, +z, -z */
+  var BOX_SEITEN = ["east", "west", "up", "down", "south", "north"];
+  function kachelUV(name) {
+    var d = TEX.daten, t = d.texturen[name];
+    if (!t) return null;
+    var zelle = d.kachel + 2 * d.rand, w = d.groesse[0], h = d.groesse[1];
+    var x = (t.nr % d.spalten) * zelle + d.rand, y = Math.floor(t.nr / d.spalten) * zelle + d.rand;
+    return { u0: x / w, u1: (x + d.kachel) / w, v0: 1 - (y + d.kachel) / h, v1: 1 - y / h, alpha: t.alpha };
+  }
+  /* Kacheln je Seite für eine Palettensorte, oder null ohne Textur */
+  function texturVon(p) {
+    if (!TEX.daten || !p.id || p.id.indexOf("platzhalter:") === 0) return null;
+    var b = TEX.daten.bloecke[p.id];
+    if (!b) return null;
+    var k = {}, alpha = "voll";
+    for (var i = 0; i < BOX_SEITEN.length; i++) {
+      var uv = kachelUV(b[BOX_SEITEN[i]]);
+      if (!uv) return null;
+      k[BOX_SEITEN[i]] = uv;
+      if (uv.alpha === "halb" || (uv.alpha === "loch" && alpha === "voll")) alpha = uv.alpha;
+    }
+    k.alpha = alpha;
+    return k;
+  }
+  /* Würfel, dessen sechs Flächen auf die Kacheln im Atlas zeigen */
+  function texturWuerfel(basis, k) {
+    var g = basis.clone(), uv = g.attributes.uv;
+    for (var f = 0; f < 6; f++) {
+      var t = k[BOX_SEITEN[f]];
+      for (var v = f * 4; v < f * 4 + 4; v++) {
+        uv.setXY(v, t.u0 + uv.getX(v) * (t.u1 - t.u0), t.v0 + uv.getY(v) * (t.v1 - t.v0));
+      }
+    }
+    return g;
+  }
+  /* Zwei gekreuzte Flächen wie bei Blumen und Ketten im Spiel, Mitte auf Höhe 0 */
+  function kreuz(t) {
+    var pos = [], uv = [], nor = [], idx = [], s = 0.45, h = 0.5;
+    [[1, 1], [1, -1]].forEach(function (r, i) {
+      var dx = s * r[0], dz = s * r[1], n = [r[1] * 0.7071, 0, -r[0] * 0.7071];
+      pos.push(-dx, -h, -dz, dx, -h, dz, dx, h, dz, -dx, h, -dz);
+      uv.push(t.u0, t.v0, t.u1, t.v0, t.u1, t.v1, t.u0, t.v1);
+      for (var j = 0; j < 4; j++) nor.push(n[0], n[1], n[2]);
+      idx.push(i * 4, i * 4 + 1, i * 4 + 2, i * 4, i * 4 + 2, i * 4 + 3);
+    });
+    var g = new THREE.BufferGeometry();
+    g.setAttribute("position", new THREE.Float32BufferAttribute(pos, 3));
+    g.setAttribute("normal", new THREE.Float32BufferAttribute(nor, 3));
+    g.setAttribute("uv", new THREE.Float32BufferAttribute(uv, 2));
+    g.setIndex(idx);
+    return g;
+  }
+
+  /* Geometrie und Material je Sorte nur einmal bauen, der Schnitt-Regler baut sonst ständig neu. */
+  var cache = {};
+  function teileFuer(p, wuerfel, klein) {
+    var k = texturVon(p), schluessel = p.id + "|" + (p.klein ? 1 : 0) + "|" + (p.transparent ? 1 : 0) + "|" + p.farbe + "|" + (k ? 1 : 0);
+    if (cache[schluessel]) return cache[schluessel];
+    var r;
+    if (!k || p.form === "kabel") {
+      /* ohne Textur wie bisher: Farbe; Kabel bleiben auch einfarbig, ihre Texturen sind UV-Bögen */
+      r = {
+        geo: p.klein ? klein : wuerfel, mitte: p.klein ? 0.25 : 0.5, textur: false, pickbar: !p.transparent,
+        mat: p.transparent
+          ? new THREE.MeshLambertMaterial({ color: p.farbe, transparent: true, opacity: p.id === "glass" ? 0.32 : 0.75, depthWrite: false })
+          : new THREE.MeshLambertMaterial({ color: 0xffffff })
+      };
+    } else if (p.klein && k.alpha !== "voll") {
+      /* Blumen, Kette: gekreuzte Flächen mit ausgestanzter Textur */
+      r = { geo: kreuz(k.north), mitte: 0.5, textur: true, pickbar: true,
+            mat: new THREE.MeshLambertMaterial({ map: TEX.atlas, alphaTest: 0.5, side: THREE.DoubleSide }) };
+    } else {
+      var opt = { map: TEX.atlas };
+      if (k.alpha === "halb") { opt.transparent = true; opt.depthWrite = false; }   /* Stained Glass, Water */
+      else if (k.alpha === "loch") opt.alphaTest = 0.5;                              /* Glass, Leaves */
+      r = { geo: texturWuerfel(p.klein ? klein : wuerfel, k), mitte: p.klein ? 0.25 : 0.5, textur: true,
+            pickbar: !p.transparent, blend: k.alpha === "halb", mat: new THREE.MeshLambertMaterial(opt) };
+    }
+    cache[schluessel] = r;
+    return r;
+  }
+
   /**
-   * Baut ein Blockmodell als Gruppe aus InstancedMeshes.
+   * Baut ein Blockmodell als Gruppe aus InstancedMeshes, eins pro Palettensorte.
    * modell: { palette: [...], bloecke: [[x,y,z,i], ...] }
    * opt.maxY: nur Blöcke bis zu dieser Höhe; opt.versatz: [x,y,z]
    * Rückgabe: { gruppe, pickbar: [mesh], gibBlock(mesh, instanceId) }
+   * Texturen werden genutzt, sobald Campus.bereit erfüllt ist; vorher kommt die Farbe.
    */
   function baueModell(modell, opt) {
     opt = opt || {};
@@ -38,34 +148,33 @@
     var proSorte = modell.palette.map(function () { return []; });
     modell.bloecke.forEach(function (b) { if (b[1] <= maxY) proSorte[b[3]].push(b); });
 
-    var wuerfel = new THREE.BoxGeometry(1, 1, 1);
-    var klein = new THREE.BoxGeometry(0.4, 0.5, 0.4);
+    var wuerfel = WUERFEL, klein = KLEIN;
     var pickbar = [];
     var m4 = new THREE.Matrix4(), farbe = new THREE.Color();
 
     modell.palette.forEach(function (p, i) {
       var liste = proSorte[i];
       if (!liste.length) return;
-      var mat = p.transparent
-        ? new THREE.MeshLambertMaterial({ color: p.farbe, transparent: true, opacity: p.id === "glass" ? 0.32 : 0.75, depthWrite: false })
-        : new THREE.MeshLambertMaterial({ color: 0xffffff });
-      if (p.form === "kabel") { gruppe.add(baueKabel(p, liste, mat, wuerfel, vs, pickbar)); return; }
-      var mesh = new THREE.InstancedMesh(p.klein ? klein : wuerfel, mat, liste.length);
-      var basis = new THREE.Color(p.farbe);
+      var t = teileFuer(p, wuerfel, klein);
+      if (p.form === "kabel") { gruppe.add(baueKabel(p, liste, t.mat, wuerfel, vs, pickbar)); return; }
+      var mesh = new THREE.InstancedMesh(t.geo, t.mat, liste.length);
+      var basis = new THREE.Color(p.farbe), mitFarbe = t.textur ? !t.blend : !p.transparent;
       liste.forEach(function (b, j) {
-        m4.makeTranslation(b[0] + vs[0] + 0.5, b[1] + vs[1] + (p.klein ? 0.25 : 0.5), b[2] + vs[2] + 0.5);
+        m4.makeTranslation(b[0] + vs[0] + 0.5, b[1] + vs[1] + t.mitte, b[2] + vs[2] + 0.5);
         mesh.setMatrixAt(j, m4);
-        if (!p.transparent) {
+        if (mitFarbe) {
           var r = rauschen(b[0], b[1], b[2]);
-          farbe.copy(basis).offsetHSL(0, 0, r);
+          /* mit Textur nur ein Hauch Helligkeit, damit große Flächen nicht wie Tapete wirken */
+          if (t.textur) farbe.setScalar(0.97 + r * 0.6);
+          else farbe.copy(basis).offsetHSL(0, 0, r);
           mesh.setColorAt(j, farbe);
         }
       });
       mesh.instanceMatrix.needsUpdate = true;
       if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
       mesh.userData = { sorte: p, bloecke: liste };
-      if (p.transparent) mesh.renderOrder = 2;
-      else pickbar.push(mesh);
+      if (t.blend || (!t.textur && p.transparent)) mesh.renderOrder = 2;
+      if (t.pickbar) pickbar.push(mesh);
       gruppe.add(mesh);
     });
     return {
@@ -77,6 +186,8 @@
       }
     };
   }
+  var WUERFEL = new THREE.BoxGeometry(1, 1, 1);
+  var KLEIN = new THREE.BoxGeometry(0.4, 0.5, 0.4);
 
   /* AE2-Kabel als Strang: Mittelstück plus ein Arm pro Verbindung.
    * Block = [x, y, z, sorte, maske], Bits der maske: unten, oben, Nord, Süd, West, Ost. */
@@ -238,5 +349,5 @@
 
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;" }[c]; }); }
 
-  window.Campus = { ladeJSON: ladeJSON, ladeText: ladeText, baueModell: baueModell, baueSzene: baueSzene, blickeAuf: blickeAuf, rahmen: rahmen, cssVar: cssVar, esc: esc, drehGruppe: drehGruppe, weltVon: weltVon, weltBox: weltBox, navi: navi, ladeGebaeude: ladeGebaeude };
+  window.Campus = { bereit: bereit, ladeJSON: ladeJSON, ladeText: ladeText, baueModell: baueModell, baueSzene: baueSzene, blickeAuf: blickeAuf, rahmen: rahmen, cssVar: cssVar, esc: esc, drehGruppe: drehGruppe, weltVon: weltVon, weltBox: weltBox, navi: navi, ladeGebaeude: ladeGebaeude };
 })();

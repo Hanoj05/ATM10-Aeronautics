@@ -21,7 +21,8 @@ gebaeude/
   magiehaus/           Pentagramm mit fünf Magie-Flügeln
 schematics/
   campus.nbt           die ganze Campus-Fläche, daraus werden alle Modelle ausgeschnitten
-tools/                 Hilfsskripte: modell.json aus Bauplan oder Schematic, Zip bauen
+texturen/              Blocktexturen für die 3D-Ansicht (Atlas plus Zuordnung), erzeugt mit tools/hole-texturen.py
+tools/                 Hilfsskripte: modell.json aus Bauplan oder Schematic, Texturen holen, Zip bauen
 website/               Die Campus-Website
 download/              campus-ansicht.zip: nur Map und 3D-Ansicht, offline per Doppelklick
 ```

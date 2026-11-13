@@ -120,5 +120,9 @@
     });
   }
 
-  window.Ansicht = { map: map, gebaeude: gebaeude };
+  /* erst zeichnen, wenn der Texturatlas geladen ist (ohne Atlas: Farben) */
+  window.Ansicht = {
+    map: function () { C.bereit.then(map); },
+    gebaeude: function () { C.bereit.then(gebaeude); }
+  };
 })();

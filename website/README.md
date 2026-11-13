@@ -33,6 +33,10 @@ Dann im Browser `http://localhost:8000` öffnen. Die Startseite leitet auf die C
 | `konfig.json` | Teile mit Position (`von`, `bis`), Einstellungen, Nodes und Kanälen. Das liest die Hover-Ansicht |
 | `konfig.md` | Lesbare Details, erscheinen im Tab Konfiguration unter der Matrix |
 
+## Texturen
+
+Die 3D-Ansicht zeichnet die Blöcke mit den echten Texturen aus dem Spiel (`texturen/atlas.png`, Zuordnung in `texturen/texturen.json`). Fehlt für einen Block die Textur, bleibt er in seiner Palettenfarbe. Nach neuen Blöcken in einem Modell `tools/hole-texturen.py` laufen lassen, Details in [texturen/README.md](../texturen/README.md).
+
 ## Ursprünglicher Plan
 
 - Statische Seite ohne Build-Schritt: eine `index.html` plus ein paar JavaScript-Dateien. Läuft auf jedem Webserver.

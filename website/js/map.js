@@ -19,6 +19,8 @@
   }).then(function (liste) {
     eintraege = liste;
     zeigeListe();
+    return C.bereit;
+  }).then(function () {
     starte3D();
   }).catch(function (e) { $("loading").textContent = "Fehler: " + e.message; });
 
