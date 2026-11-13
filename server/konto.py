@@ -20,7 +20,7 @@ import time
 
 sys.dont_write_bytecode = True      # kein __pycache__ im Repo
 import dienst                       # noqa: E402
-from dienst import Fehler
+from fehler import Fehler      # noqa: E402
 
 
 def startpasswort():

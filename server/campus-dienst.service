@@ -17,12 +17,14 @@ ExecStart=/usr/bin/python3 /srv/campus/repo/server/dienst.py
 Restart=on-failure
 RestartSec=2
 UMask=0022
+# Obergrenze für den Speicher, auch für die Skripte beim Schematic-Import
+MemoryMax=1500M
 
 # /var/lib/campus anlegen, nur für den Nutzer campus lesbar
 StateDirectory=campus
 StateDirectoryMode=0700
 
-# Absichern: darf nur ins Repo und nach /var/lib/campus schreiben
+# Absichern: darf nur ins Repo und nach /var/lib/campus schreiben (dort liegt auch die Import-Vorschau)
 NoNewPrivileges=yes
 ProtectSystem=strict
 ProtectHome=yes
