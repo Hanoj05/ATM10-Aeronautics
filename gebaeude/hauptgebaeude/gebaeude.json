@@ -1,0 +1,39 @@
+{
+  "id": "hauptgebaeude",
+  "name": "Hauptgebäude",
+  "zweck": "Flacher Glasring nach dem Vorbild des Apple Park: weiße Bänder an jeder Etage, Solardach, Park mit Teich, Energy Core schwebt in der Mitte",
+  "status": "geplant",
+  "welt": {
+    "p0": [
+      198,
+      65,
+      -372
+    ],
+    "drehung": 0,
+    "hinweis": "P0 = Nordwest-Ecke unten. Mittelpunkt bei Plan (85, 0, 85), also etwa Welt (283, 65, -287). Lage nur geschätzt, nicht eingemessen: vor dem Bauen mit F3 prüfen. Ersetzt Haus West und Haus Ost; das Wabenhaus liegt innerhalb des Fußabdrucks und müsste umziehen oder der Mittelpunkt wandern."
+  },
+  "masse": {
+    "breite": 171,
+    "tiefe": 171,
+    "hoehe": 39
+  },
+  "ring": {
+    "aussenDurchmesser": 149,
+    "innenDurchmesser": 115,
+    "ringbreite": 17,
+    "etagen": 4,
+    "etagenhoehe": 5,
+    "hinweis": "Glas außen bei Radius 74,5, innen bei 57,5. An jeder Decke ein weißes Band mit 2 Blöcken Überstand, Dach mit 3 Blöcken Überstand und dunkler Solarfläche. Vier Durchgänge N, O, S, W im Erdgeschoss (9 breit, 4 hoch)."
+  },
+  "zellen": [],
+  "maschinen": [],
+  "netzwerke": [],
+  "dateien": {
+    "bauplan": null,
+    "modell": "modell.json",
+    "konfigDaten": "konfig.json",
+    "konfig": "konfig.md",
+    "schematic": null,
+    "generator": "tools/modell-hauptgebaeude.py"
+  }
+}

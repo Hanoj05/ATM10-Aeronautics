@@ -55,6 +55,19 @@
         -307
       ],
       "drehung": 0
+    },
+    {
+      "id": "hauptgebaeude",
+      "name": "Hauptgebäude",
+      "ordner": "gebaeude/hauptgebaeude",
+      "zweck": "Ring mit Garten, Energy Core",
+      "status": "geplant",
+      "position": [
+        198,
+        65,
+        -372
+      ],
+      "drehung": 0
     }
   ]
 }

@@ -1,0 +1,136 @@
+{
+  "hinweis": "Maschinendaten für die Website. Positionen relativ zu P0, [x, y, z]. Lesbare Fassung: konfig.md",
+  "netzwerke": [],
+  "teile": [
+    {
+      "id": "energy-core",
+      "name": "Draconic Evolution Energy Core",
+      "art": "Energie",
+      "zelle": "Park",
+      "von": [
+        79,
+        26,
+        79
+      ],
+      "bis": [
+        91,
+        38,
+        91
+      ],
+      "einstellungen": [
+        [
+          "Stand",
+          "Platzhalter-Kugel, Radius 6,5. Tier und echte Maße noch festlegen."
+        ],
+        [
+          "Lage",
+          "über dem Teich, Kernmitte auf Höhe 32, über dem Dach (20)"
+        ]
+      ]
+    },
+    {
+      "id": "stabilizer-1",
+      "name": "Energy Core Stabilizer",
+      "art": "Energie",
+      "zelle": "Park",
+      "von": [
+        99,
+        32,
+        85
+      ],
+      "bis": [
+        99,
+        32,
+        85
+      ],
+      "einstellungen": [
+        [
+          "Säule",
+          "White Concrete auf einer kleinen Insel im Teich"
+        ],
+        [
+          "Abstand",
+          "14 Blöcke zur Kernmitte, an das Tier anpassen"
+        ]
+      ]
+    },
+    {
+      "id": "stabilizer-2",
+      "name": "Energy Core Stabilizer",
+      "art": "Energie",
+      "zelle": "Park",
+      "von": [
+        71,
+        32,
+        85
+      ],
+      "bis": [
+        71,
+        32,
+        85
+      ],
+      "einstellungen": [
+        [
+          "Säule",
+          "White Concrete auf einer kleinen Insel im Teich"
+        ],
+        [
+          "Abstand",
+          "14 Blöcke zur Kernmitte, an das Tier anpassen"
+        ]
+      ]
+    },
+    {
+      "id": "stabilizer-3",
+      "name": "Energy Core Stabilizer",
+      "art": "Energie",
+      "zelle": "Park",
+      "von": [
+        85,
+        32,
+        99
+      ],
+      "bis": [
+        85,
+        32,
+        99
+      ],
+      "einstellungen": [
+        [
+          "Säule",
+          "White Concrete auf einer kleinen Insel im Teich"
+        ],
+        [
+          "Abstand",
+          "14 Blöcke zur Kernmitte, an das Tier anpassen"
+        ]
+      ]
+    },
+    {
+      "id": "stabilizer-4",
+      "name": "Energy Core Stabilizer",
+      "art": "Energie",
+      "zelle": "Park",
+      "von": [
+        85,
+        32,
+        71
+      ],
+      "bis": [
+        85,
+        32,
+        71
+      ],
+      "einstellungen": [
+        [
+          "Säule",
+          "White Concrete auf einer kleinen Insel im Teich"
+        ],
+        [
+          "Abstand",
+          "14 Blöcke zur Kernmitte, an das Tier anpassen"
+        ]
+      ]
+    }
+  ]
+}
