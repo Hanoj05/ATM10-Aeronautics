@@ -70,6 +70,7 @@ BLOECKE = [
     ("l_red", "ars_nouveau:red_archwood_leaves", "Red Archwood Leaves", "#c23a3a", False, False),
     ("l_green", "ars_nouveau:green_archwood_leaves", "Green Archwood Leaves", "#4f8a3c", False, False),
     ("flower", "minecraft:allium", "Allium", "#b565e0", False, True),
+    ("elev", "elevatorid:elevator_purple", "Elevator (Purple)", "#7a3fbf", False, False),
     # Platzhalter: nur Markierungen, keine echten Blöcke
     ("p_p2p", "platzhalter:p2p_einspeisung", "Platz: ME P2P Tunnels aus dem ME-Gebäude, Verteilung zu den Flügeln", "#2fb0a0", False, False),
     ("p_kabel", "platzhalter:kabelweg", "Kabelweg (ME Cable unter der Decke)", "#5ad1c2", False, True),
@@ -95,6 +96,7 @@ BLOECKE = [
 ]
 
 V = {}
+AUFZUEGE = []
 
 
 def setze(x, y, z, m):
@@ -392,6 +394,21 @@ def baue():
         for ox in (-1, 0, 1):
             for oz in (-1, 0, 1):
                 loesche(tx + ox, y, tz + oz)
+
+    # ================================================================ Aufzüge (Elevator Mod)
+    # Je eine Spalte Keller – EG – OG: eine am Atrium neben der Treppe, eine in jedem Flügel.
+    # Die Aufzüge müssen genau übereinander stehen, darüber jeweils 2 Blöcke Luft.
+    spalten = [(tx + round(2 * ez), tz - round(2 * ex))]
+    for i in range(5):
+        ax, az = achse(i)
+        spalten.append((round(19 * ax + 6 * az), round(19 * az - 6 * ax)))
+    AUFZUEGE.clear()
+    for sx, sz in spalten:
+        for y in (0, G, EG_DECKE):
+            setze(sx, y, sz, "elev")
+            for h in (1, 2):
+                loesche(sx, y + h, sz)
+        AUFZUEGE.append((sx, sz))
 
     # ================================================================ Eingang und Allee
     for x, z, d, drin, rd in FELD:

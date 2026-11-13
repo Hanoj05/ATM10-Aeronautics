@@ -261,6 +261,40 @@
           "Verzaubern bleibt Handarbeit"
         ]
       ]
+    },
+    {
+      "id": "aufzuege",
+      "name": "Aufzüge (Elevator Mod)",
+      "art": "Transport",
+      "zelle": "Atrium und Flügel",
+      "von": [
+        48,
+        0,
+        64
+      ],
+      "bis": [
+        48,
+        12,
+        64
+      ],
+      "einstellungen": [
+        [
+          "Spalten",
+          "6: eine am Atrium, eine in jedem Flügel"
+        ],
+        [
+          "Ebenen",
+          "Keller, EG, OG (Welt 59, 65, 71)"
+        ],
+        [
+          "Bedienung",
+          "Springen = hoch, Schleichen = runter"
+        ],
+        [
+          "Regel",
+          "genau übereinander, 2 Blöcke Luft darüber"
+        ]
+      ]
     }
   ]
 }

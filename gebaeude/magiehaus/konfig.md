@@ -12,6 +12,21 @@ Blöcke mit der Kennung `platzhalter:*` im Modell sind keine echten Blöcke. Sie
 | EG | 66–70 | 5 | Werkstätten und Maschinen, Eingangshalle mit Wasserbecken |
 | OG | 72–79 | 8 | Ritualsäle, Verzauberungshalle im Atrium |
 
+## Aufzüge (Elevator Mod)
+
+Sechs Aufzugsspalten, jede mit einem Elevator auf Keller-, EG- und OG-Boden (Welt-Höhe 59, 65 und 71). Springen fährt eine Ebene hoch, Schleichen eine runter. Die Aufzüge einer Spalte müssen genau übereinander stehen und brauchen darüber 2 Blöcke Luft, Decken dazwischen stören nicht.
+
+| Spalte | Welt x, z |
+| --- | --- |
+| Atrium (neben der Treppe) | 113, -133 |
+| Flügel Ars Nouveau | 145, -141 |
+| Flügel Occultism | 136, -119 |
+| Flügel Iron's Spells | 113, -121 |
+| Flügel Forbidden & Arcanus | 108, -144 |
+| Flügel EvilCraft | 128, -156 |
+
+Die Block-ID `elevatorid:elevator_purple` bitte im JEI mit F3 + H prüfen.
+
 ## Platz je Flügel
 
 Jeder Flügel ist bei den Ritualen 29 Blöcke breit, die größte freie Fläche ist 21 × 21. Die Spitzen werden ab etwa 15 Blöcken vor der Spitze schmal und eignen sich für Lager und Deko.
