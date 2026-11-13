@@ -25,6 +25,7 @@
       (p.minecraft ? "<span class='mc' title='Minecraft-Name'>" + esc(p.minecraft) + "</span>" : "<span class='note'>kein Minecraft-Name</span>") + "</div></div>" +
       (p.info ? "<p class='team-info'>" + esc(p.info) + "</p>" : "") +
       "<div class='team-aufgaben-box'><h3 class='team-h3'>Aufgaben</h3>" + aufgaben(p.id) + "</div>" +
+      (wer && wer.id === p.id ? "<div class='team-aufgaben-box'><h3 class='team-h3'>Darstellung</h3>" + C.themaWahl() + "<p class='note' style='margin:0'>Gilt für diesen Browser.</p></div>" : "") +
       (darf ? "<button type='button' class='knopf leise' data-bearbeiten='" + esc(p.id) + "'>Bearbeiten</button>" : "") +
       "<div class='bearbeiten'></div>" +
       "</article>";

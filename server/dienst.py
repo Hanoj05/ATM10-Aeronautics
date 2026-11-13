@@ -617,7 +617,8 @@ class Handler(BaseHTTPRequestHandler):
             raise Fehler(401, "Nicht angemeldet.")
         p = lies_profil(kid) or {}
         self.antwort(200, {"id": kid, "admin": bool(konto.get("admin")), "authentik": konto.get("authentik"),
-                           "anzeigename": p.get("anzeigename") or kid, "farbe": p.get("farbe")})
+                           "anzeigename": p.get("anzeigename") or kid, "farbe": p.get("farbe"),
+                           "minecraft": p.get("minecraft")})
 
     # -- Profile --
 
