@@ -4,6 +4,9 @@ Nutzung:  python3 tools/bauhilfe-hauptgebaeude.py
 Ergebnis: gebaeude/hauptgebaeude/schematics/*.nbt
           gebaeude/hauptgebaeude/bauabschnitte.json  (liest bauplan.html)
 
+Alle Schematics haben denselben Nullpunkt: die Ecke P0 des Hauptgebäudes. Im Spiel
+gibt man deshalb bei jedem Abschnitt dieselbe Position ein (siehe bauplan.html).
+
 Das Skript baut das Modell mit tools/modell-hauptgebaeude.py neu auf und teilt die
 Blöcke in Abschnitte: acht Achtel vom Ring (mit Vorplatz und Baumreihe), der Park,
 die Halterung vom Energy Core und die beiden Alleen. Jede Datei bleibt klein genug
@@ -131,10 +134,13 @@ def main():
         mn = [min(b[i] for b in bl) for i in range(3)]
         mx = [max(b[i] for b in bl) for i in range(3)]
         groesse = [mx[i] - mn[i] + 1 for i in range(3)]
+        # Alle Abschnitte teilen sich denselben Nullpunkt (P0) und denselben Rahmen.
+        # So gibt man im Spiel bei jeder Schematic dieselbe Position ein.
+        rahmen = [gen.NX, max(b[1] for b in gen.V) + 1, gen.NZ]
         schluessel = sorted({b[3] for b in bl}, key=lambda k: [x[0] for x in gen.BLOECKE].index(k))
         idx = {k: i for i, k in enumerate(schluessel)}
         palette = [(info[k][1], EIGENSCHAFTEN.get(k)) for k in schluessel]
-        daten = schematic_bytes(groesse, palette, [((x - mn[0], y - mn[1], z - mn[2]), idx[m]) for x, y, z, m in sorted(bl, key=lambda b: (b[1], b[2], b[0]))])
+        daten = schematic_bytes(rahmen, palette, [((x, y, z), idx[m]) for x, y, z, m in sorted(bl, key=lambda b: (b[1], b[2], b[0]))])
         datei = "%02d-%s.nbt" % (nr, a)
         (ZIEL / "schematics" / datei).write_bytes(daten)
         kb = len(daten) / 1024
@@ -152,10 +158,10 @@ def main():
         ecke = [gen.P0[0] + mn[0], gen.P0[1] + mn[1], gen.P0[2] + mn[2]]
         liste.append({
             "nr": nr, "id": a, "name": name, "text": text, "datei": "schematics/" + datei, "kb": round(kb, 1),
-            "ecke": ecke, "eckePlan": mn, "groesse": groesse, "bloecke": len(bl),
+            "position": list(gen.P0), "bereichAb": ecke, "bereichPlan": mn, "groesse": groesse, "bloecke": len(bl),
             "material": [{"id": info[k][1], "name": info[k][2], "farbe": info[k][3], "anzahl": menge[k]} for k in schluessel],
         })
-        print(f"{datei:24} {len(bl):6} Blöcke  {kb:6.1f} KB  Ecke Welt {ecke}  Größe {groesse}")
+        print(f"{datei:24} {len(bl):6} Blöcke  {kb:6.1f} KB  Bereich ab Welt {ecke}  Größe {groesse}")
 
     gesamt = {}
     for t in liste:
@@ -165,6 +171,8 @@ def main():
     daten = {
         "hinweis": "Erzeugt von tools/bauhilfe-hauptgebaeude.py. Nicht von Hand ändern.",
         "p0": list(gen.P0),
+        "position": list(gen.P0),
+        "rahmen": [gen.NX, max(b[1] for b in gen.V) + 1, gen.NZ],
         "mitte": [gen.MITTE[0], 65, gen.MITTE[1]],
         "mittePlan": [gen.CX, 0, gen.CZ],
         "torWinkel": round(gen.TOR_WINKEL, 2),

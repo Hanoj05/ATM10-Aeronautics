@@ -57,6 +57,10 @@ a.btn.dl { background: var(--accent); color: #fff; border-color: var(--accent); 
 .leinwand { position: relative; height: min(70vh, 640px); touch-action: none; }
 canvas { display: block; width: 100%; height: 100%; cursor: crosshair; }
 #info { position: absolute; left: 12px; bottom: 12px; background: var(--surface); border: 1px solid var(--line); border-radius: 3px; padding: 8px 10px; font: 13px var(--f-mono); max-width: calc(100% - 24px); pointer-events: none; }
+.pos { display: grid; grid-template-columns: 1fr auto; gap: 8px 16px; align-items: center; padding: 18px 20px; border-left: 4px solid var(--accent); }
+.pos .lbl { font: 600 12px var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.pos .gross { font: 700 clamp(26px, 5vw, 40px)/1.1 var(--f-mono); letter-spacing: .02em; }
+.pos p { grid-column: 1 / -1; }
 .hinweis { border-left: 3px solid var(--accent); padding: 10px 14px; background: var(--surface); border-radius: 0 4px 4px 0; }
 .hinweis + .hinweis { margin-top: 8px; }
 </style>
@@ -67,9 +71,17 @@ canvas { display: block; width: 100%; height: 100%; cursor: crosshair; }
 <header>
   <div class="eyebrow">Tech-Campus · Bauplan</div>
   <h1>Hauptgebäude</h1>
-  <p class="lede">Der Glasring wird in zwölf Abschnitten gebaut. Zu jedem gibt es eine Create-Schematic, die du im Spiel als Hologramm an die richtige Stelle legst und dann Block für Block nachbaust. Wer will, druckt sie mit der Schematicannon.</p>
+  <p class="lede">Der Glasring wird in zwölf Abschnitten gebaut. Zu jedem gibt es eine Create-Schematic. Alle bekommen dieselbe Position, dann liegt jeder Abschnitt von selbst an der richtigen Stelle und du baust dem Hologramm nach. Wer will, druckt sie mit der Schematicannon.</p>
   <div class="stats" id="stats"></div>
 </header>
+
+<section>
+  <div class="pos panel">
+    <div><div class="lbl">Position für alle Schematics</div><div class="gross" id="posK"></div></div>
+    <button id="posKopie">Kopieren</button>
+    <p class="klein">Diese Koordinate bei jedem der zwölf Abschnitte eingeben. Sie ist die untere Nordwest-Ecke des gemeinsamen Rahmens (<span id="rahmenK"></span> Blöcke), nicht die Mitte.</p>
+  </div>
+</section>
 
 <section>
   <h2><span class="no">01</span>So gehst du vor</h2>
@@ -77,7 +89,7 @@ canvas { display: block; width: 100%; height: 100%; cursor: crosshair; }
     <li><div><b>Fläche vorbereiten.</b> Rund um die Mitte <span class="koord" id="mitteK"></span> einen Kreis mit gut 84 Blöcken Radius freiräumen und den Boden so einebnen, dass die oberste Erde auf Höhe <span class="koord">64</span> liegt. Die Schematics setzen den Boden selbst auf Höhe 65.</div></li>
     <li><div><b>Mitte markieren.</b> Auf die Mitte einen auffälligen Block stellen, zum Beispiel einen Gold Block. Von dort aus lässt sich jede Ecke leicht abzählen, und du merkst sofort, wenn ein Hologramm verrutscht ist.</div></li>
     <li><div><b>Schematics ins Spiel holen.</b> Die Dateien unten herunterladen und in den Ordner <code>schematics</code> der Prism-Instanz kopieren (neben <code>mods</code> und <code>saves</code>). Am <b>Schematic Table</b> eine <b>Empty Schematic</b> einlegen und den Abschnitt auswählen.</div></li>
-    <li><div><b>Hologramm ausrichten.</b> Die fertige Schematic in die Hand nehmen und mit Rechtsklick ablegen. Mit Strg und Mausrad das Werkzeug wählen und den Rahmen verschieben, bis seine <b>untere Nordwest-Ecke</b> (kleinstes x, y und z) genau auf der Koordinate in der Tabelle sitzt. Nicht drehen und nicht spiegeln.</div></li>
+    <li><div><b>Position eingeben.</b> Bei <b>jeder</b> Schematic als Position <span class="koord" id="posK2"></span> eintragen, nicht drehen und nicht spiegeln. Alle zwölf Abschnitte haben denselben Nullpunkt und denselben Rahmen, jeder füllt nur seinen Teil davon. Kontrolle: Die Mitte vom Teich muss genau über deinem markierten Block liegen.</div></li>
     <li><div><b>Bauen.</b> Entweder von Hand dem Hologramm nach, oder eine <b>Schematicannon</b> danebenstellen, die Schematic einlegen und mit Material füllen. Die Ebenen-Ansicht weiter unten zeigt jede Lage mit Weltkoordinaten, falls du im Hologramm etwas nicht erkennst.</div></li>
     <li><div><b>Reihenfolge.</b> Erst die acht Ring-Achtel, dann Park, Core-Halterung und die beiden Alleen. Die Achtel schließen nahtlos aneinander an, du kannst also auch mit dem Achtel anfangen, das euch am wichtigsten ist.</div></li>
   </ol>
@@ -85,10 +97,10 @@ canvas { display: block; width: 100%; height: 100%; cursor: crosshair; }
 
 <section>
   <h2><span class="no">02</span>Bauabschnitte</h2>
-  <p class="klein">Koordinate anklicken kopiert sie. „Material“ klappt die Liste für den Abschnitt auf.</p>
+  <p class="klein">Alle mit derselben Position laden. „Landet bei“ zeigt, wo der Abschnitt in der Welt anfängt, damit du weißt, wo du hinlaufen musst. „Material“ klappt die Liste für den Abschnitt auf.</p>
   <div class="panel scroll">
     <table>
-      <thead><tr><th>Nr</th><th>Abschnitt</th><th>Ecke in der Welt</th><th class="n">Größe</th><th class="n">Blöcke</th><th></th></tr></thead>
+      <thead><tr><th>Nr</th><th>Abschnitt</th><th>Landet bei</th><th class="n">Größe</th><th class="n">Blöcke</th><th></th></tr></thead>
       <tbody id="abschnitte"></tbody>
     </table>
   </div>
@@ -128,7 +140,7 @@ canvas { display: block; width: 100%; height: 100%; cursor: crosshair; }
   <div>
     <div class="hinweis"><b>Energy Core:</b> Die Halterung (Säulen, Ring, Stabilizer) steckt in Abschnitt 10. Die Stabilizer stehen genau nördlich, östlich, südlich und westlich von der Mitte des Cores auf <span class="koord" id="coreK"></span>, je 14 Blöcke entfernt. Ob 14 zum gewählten Tier passt, im Spiel prüfen und die Säulen notfalls versetzen.</div>
     <div class="hinweis"><b>Laub:</b> Die Blätter in den Schematics sind auf <code>persistent</code> gesetzt und fallen deshalb nicht ab, auch wenn sie weit vom Stamm sind. Wer sie von Hand setzt, nimmt Blätter aus dem Inventar, die bleiben ebenfalls.</div>
-    <div class="hinweis"><b>Lage:</b> Die Koordinaten sind aus den Modellen von Wabenhaus und ME-Gebäude gerechnet, nicht im Spiel eingemessen. Bevor du die Fläche räumst, mit F3 an der Mitte prüfen, ob der Abstand zu beiden Gebäuden passt.</div>
+    <div class="hinweis"><b>Lage:</b> Die Position ist aus den Modellen von Wabenhaus und ME-Gebäude gerechnet, nicht im Spiel eingemessen. Bevor du die Fläche räumst, mit F3 an der Mitte prüfen, ob der Abstand zu beiden Gebäuden passt.</div>
   </div>
 </section>
 
@@ -153,9 +165,9 @@ canvas { display: block; width: 100%; height: 100%; cursor: crosshair; }
     var tb = $("abschnitte");
     B.abschnitte.forEach(function (a) {
       var tr = document.createElement("tr");
-      var k = a.ecke.join(", ");
+      var k = a.bereichAb.join(", ");
       tr.innerHTML = "<td class='n'>" + String(a.nr).padStart(2, "0") + "</td><td><div class='name'>" + a.name + "</div><div class='klein'>" + a.text + "</div></td>" +
-        "<td><button class='koord kopier' data-k='" + a.ecke.join(" ") + "' title='Kopieren'>" + k + "</button></td>" +
+        "<td><span class='m'>" + k + "</span></td>" +
         "<td class='n'>" + a.groesse.join(" × ") + "</td><td class='n'>" + fmt(a.bloecke) + "</td>" +
         "<td><a class='btn dl' href='" + a.datei + "' download>Schematic</a> <button class='mt'>Material</button></td>";
       var mt = document.createElement("tr"); mt.className = "mat";
@@ -164,11 +176,12 @@ canvas { display: block; width: 100%; height: 100%; cursor: crosshair; }
       tb.appendChild(tr); tb.appendChild(mt);
       var o = document.createElement("option"); o.value = a.id; o.textContent = String(a.nr).padStart(2, "0") + " " + a.name; $("filter").appendChild(o);
     });
-    tb.addEventListener("click", function (e) {
-      var b = e.target.closest(".kopier"); if (!b) return;
-      var alt = b.textContent;
-      try { navigator.clipboard.writeText(b.dataset.k).then(function () { b.textContent = "kopiert"; setTimeout(function () { b.textContent = alt; }, 900); }); } catch (x) {}
-    });
+    var pos = B.position.join(" ");
+    $("posK").textContent = pos; $("posK2").textContent = pos; $("rahmenK").textContent = B.rahmen.join(" × ");
+    $("posKopie").onclick = function () {
+      var b = this;
+      try { navigator.clipboard.writeText(pos).then(function () { b.textContent = "kopiert"; setTimeout(function () { b.textContent = "Kopieren"; }, 900); }); } catch (x) {}
+    };
 
     /* Material gesamt */
     var mb = $("material");
