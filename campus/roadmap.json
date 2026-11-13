@@ -239,14 +239,15 @@
           "titel": "Hosting entscheiden",
           "wo": "Website",
           "bereich": "Betrieb",
-          "status": "offen",
-          "text": "Cloudflare Pages, eigener Debian-Server oder Netlify. Vergleich in website/README.md."
+          "status": "erledigt",
+          "text": "Eigener Server (CentOS) mit nginx und dem Campus-Dienst, holt den Stand alle 2 Minuten von GitHub."
         },
         {
           "titel": "Zugriff nur für Mitspieler",
           "wo": "Website",
           "bereich": "Betrieb",
-          "status": "offen"
+          "status": "in Arbeit",
+          "text": "Login mit eigenem Konto pro Person, Profile unter Team. Fertig, sobald es auf dem Server läuft."
         },
         {
           "titel": "Modelle und Zip bei jedem Push automatisch bauen",

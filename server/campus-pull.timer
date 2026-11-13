@@ -1,0 +1,11 @@
+# Alle 2 Minuten den Stand von GitHub holen. Kopieren nach /etc/systemd/system/
+[Unit]
+Description=Campus: regelmäßig den Stand von GitHub holen
+
+[Timer]
+OnBootSec=1min
+OnUnitActiveSec=2min
+AccuracySec=10s
+
+[Install]
+WantedBy=timers.target

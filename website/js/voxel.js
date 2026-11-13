@@ -36,6 +36,7 @@
     function mitBild(d, url) {
       var img = new Image();
       img.onload = function () {
+        if (typeof THREE === "undefined") { fertig(); return; }
         var t = new THREE.Texture(img);
         t.magFilter = THREE.NearestFilter;            /* Pixel-Look */
         t.minFilter = THREE.NearestMipmapLinearFilter; /* weit weg ohne Flimmern */
@@ -47,6 +48,7 @@
       img.onerror = function () { fertig(); };
       img.src = url;
     }
+    if (typeof THREE === "undefined") { fertig(); return; }   /* Seite ohne 3D: Atlas gar nicht erst laden */
     if (window.CAMPUS_TEXTUREN) { mitBild(window.CAMPUS_TEXTUREN, window.CAMPUS_TEXTUREN.atlasDaten); return; }
     fetch(ROOT + "texturen/texturen.json", FRISCH)
       .then(function (r) { return r.ok ? r.json() : null; })
@@ -195,8 +197,10 @@
       }
     };
   }
-  var WUERFEL = new THREE.BoxGeometry(1, 1, 1);
-  var KLEIN = new THREE.BoxGeometry(0.4, 0.5, 0.4);
+  /* Seiten ohne 3D (Übersicht, Technik, Team …) laden three.js nicht, dort bleiben die beiden leer */
+  var MIT_3D = typeof THREE !== "undefined";
+  var WUERFEL = MIT_3D ? new THREE.BoxGeometry(1, 1, 1) : null;
+  var KLEIN = MIT_3D ? new THREE.BoxGeometry(0.4, 0.5, 0.4) : null;
 
   /* AE2-Kabel als Strang: Mittelstück plus ein Arm pro Verbindung.
    * Block = [x, y, z, sorte, maske], Bits der maske: unten, oben, Nord, Süd, West, Ost. */
@@ -328,17 +332,57 @@
     return [p0[0] + dx, p0[1] + y, p0[2] + dz];
   }
 
-  /* Navigation oben auf jeder Seite. aktiv: "uebersicht", "map", "technik", "roadmap" oder eine Gebäude-ID */
+  /* --- Campus-Dienst (Login, Speichern) ---
+   * Gibt es nur auf dem Server. Lokal mit python3 -m http.server fehlt er, dann bleibt die
+   * Seite einfach ohne Login-Teil. */
+  function api(pfad, daten) {
+    var opt = { credentials: "same-origin", cache: "no-store" };
+    if (daten !== undefined) { opt.method = "POST"; opt.headers = { "Content-Type": "application/json" }; opt.body = JSON.stringify(daten); }
+    return fetch(ROOT + "api/" + pfad, opt).then(function (r) {
+      return r.json().catch(function () { return {}; }).then(function (j) {
+        if (!r.ok) { var e = new Error(j.fehler || "Der Dienst antwortet nicht (" + r.status + ")."); e.status = r.status; throw e; }
+        return j;
+      });
+    });
+  }
+  var ichAnfrage = null;
+  /* Wer ist eingeloggt? null ohne Dienst oder ohne Login. */
+  function ich() {
+    if (!ichAnfrage) ichAnfrage = api("ich").catch(function () { return null; });
+    return ichAnfrage;
+  }
+  /* Rundes Bild mit Initialen in der Profilfarbe */
+  function avatar(p, groesse) {
+    var name = (p && (p.anzeigename || p.id)) || "?", teile = name.trim().split(/\s+/);
+    var ini = (teile[0].charAt(0) + (teile.length > 1 ? teile[teile.length - 1].charAt(0) : "")).toUpperCase();
+    return "<span class='avatar' style='--av:" + esc((p && p.farbe) || "#62645f") + (groesse ? ";--av-g:" + groesse + "px" : "") + "' aria-hidden='true'>" + esc(ini) + "</span>";
+  }
+
+  /* Navigation oben auf jeder Seite. aktiv: "uebersicht", "map", "technik", "roadmap", "team", "admin" oder eine Gebäude-ID */
   function navi(aktiv) {
     var nav = document.getElementById("nav");
     if (!nav) return;
     function link(href, text, an) { return "<a href='" + href + "'" + (an ? " aria-current='page'" : "") + ">" + esc(text) + "</a>"; }
-    nav.innerHTML = link("index.html", "Übersicht", aktiv === "uebersicht") + link("map.html", "Map", aktiv === "map") + link("technik.html", "Technik", aktiv === "technik") + link("roadmap.html", "Roadmap", aktiv === "roadmap");
-    ladeJSON("campus/campus.json").then(function (c) {
+    nav.innerHTML = link("index.html", "Übersicht", aktiv === "uebersicht") + link("map.html", "Map", aktiv === "map") + link("technik.html", "Technik", aktiv === "technik") + link("roadmap.html", "Roadmap", aktiv === "roadmap") + link("team.html", "Team", aktiv === "team");
+    var gebaeude = ladeJSON("campus/campus.json").then(function (c) {
       var h = "";
       c.gebaeude.forEach(function (g) { if (g.ordner) h += link("gebaeude.html?id=" + encodeURIComponent(g.id), g.name, aktiv === g.id); });
       if (h) nav.insertAdjacentHTML("beforeend", "<span class='sep' aria-hidden='true'></span>" + h);
     }).catch(function () {});
+    var site = nav.parentNode;
+    Promise.all([ich(), gebaeude]).then(function (r) {
+      var i = r[0];
+      if (!i || !site) return;
+      var box = document.createElement("div");
+      box.className = "wer";
+      box.innerHTML = (i.admin ? link("admin.html", "Admin", aktiv === "admin") : "") +
+        "<a class='ich' href='team.html#" + encodeURIComponent(i.id) + "' title='Mein Profil'>" + avatar(i) + "<span>" + esc(i.anzeigename) + "</span></a>" +
+        "<button type='button' class='abmelden'>Abmelden</button>";
+      box.querySelector(".abmelden").addEventListener("click", function () {
+        api("abmelden", {}).catch(function () {}).then(function () { location.href = "/login"; });
+      });
+      site.appendChild(box);
+    });
   }
 
   /* Alle Daten eines Gebäudes laden. Fehlende Dateien werden zu null. */
@@ -358,5 +402,5 @@
 
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;" }[c]; }); }
 
-  window.Campus = { bereit: bereit, ladeJSON: ladeJSON, ladeText: ladeText, baueModell: baueModell, baueSzene: baueSzene, blickeAuf: blickeAuf, rahmen: rahmen, cssVar: cssVar, esc: esc, drehGruppe: drehGruppe, weltVon: weltVon, weltBox: weltBox, navi: navi, ladeGebaeude: ladeGebaeude };
+  window.Campus = { bereit: bereit, ladeJSON: ladeJSON, ladeText: ladeText, baueModell: baueModell, baueSzene: baueSzene, blickeAuf: blickeAuf, rahmen: rahmen, cssVar: cssVar, esc: esc, drehGruppe: drehGruppe, weltVon: weltVon, weltBox: weltBox, navi: navi, ladeGebaeude: ladeGebaeude, api: api, ich: ich, avatar: avatar };
 })();

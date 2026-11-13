@@ -302,3 +302,44 @@ ul.hinweise { margin: 0; padding-left: 18px; display: grid; gap: 4px; font-size:
 @media (max-width: 640px) {
   .tk-netz > summary { grid-template-columns: 1fr; padding-left: 26px; }
 }
+
+/* ---------- Login-Teil in der Kopfzeile ---------- */
+.wer { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; margin-left: auto; }
+.wer a { font: 600 12px var(--f-mono); letter-spacing: .05em; text-transform: uppercase; color: var(--bg); opacity: .72; text-decoration: none; padding: 6px 10px; border-radius: 3px; }
+.wer a:hover, .wer a[aria-current="page"] { opacity: 1; }
+.wer a[aria-current="page"] { background: var(--honey); color: #1f2124; }
+.wer .ich { display: inline-flex; align-items: center; gap: 8px; text-transform: none; letter-spacing: 0; font: 600 13px var(--f-body); opacity: 1; }
+.wer .abmelden { font: 600 12px var(--f-mono); letter-spacing: .05em; text-transform: uppercase; color: var(--bg); background: none; border: 1px solid currentColor; opacity: .6; border-radius: 3px; padding: 5px 9px; cursor: pointer; }
+.wer .abmelden:hover { opacity: 1; }
+.avatar { --av-g: 26px; display: inline-grid; place-items: center; flex: none; width: var(--av-g); height: var(--av-g); border-radius: 50%; background: var(--av); color: #fff; font: 700 calc(var(--av-g) * .4)/1 var(--f-display); letter-spacing: .02em; text-shadow: 0 1px 1px rgba(0, 0, 0, .25); }
+
+/* ---------- Formulare ---------- */
+.formbox { padding: 18px 18px 20px; display: grid; gap: 12px; max-width: 560px; }
+.formbox h2 { margin: 0; font: 700 20px/1.2 var(--f-display); }
+.formular { display: grid; gap: 12px; }
+.formular label { display: grid; gap: 4px; font: 600 11px var(--f-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.formular label.haken { display: flex; align-items: center; gap: 8px; }
+.formular input:not([type=checkbox]):not([type=color]), .formular textarea, form.inline input { font: 15px var(--f-body); padding: 7px 10px; border: 1px solid var(--line); border-radius: 4px; background: var(--bg); color: var(--fg); text-transform: none; letter-spacing: 0; }
+.formular input[type=color] { width: 64px; height: 34px; padding: 2px; border: 1px solid var(--line); border-radius: 4px; background: var(--bg); }
+.formular textarea { resize: vertical; }
+.knoepfe { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.knopf { font: 600 12px var(--f-mono); letter-spacing: .04em; text-transform: uppercase; padding: 7px 12px; border-radius: 3px; border: 1px solid var(--fg); background: var(--fg); color: var(--bg); cursor: pointer; }
+.knopf.leise { background: var(--surface); color: var(--fg); border-color: var(--line); }
+.knopf.leise:hover { border-color: var(--fg); }
+.knopf:disabled { opacity: .6; cursor: wait; }
+.meldung { font-size: 13px; color: var(--muted); }
+.meldung.fehler { color: #b3261e; }
+@media (prefers-color-scheme: dark) { .meldung.fehler { color: #ff8a80; } }
+.chip.warn { border-color: #b3261e; color: #b3261e; }
+form.inline { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-top: 8px; }
+.konten td { vertical-align: top; }
+
+/* ---------- Team ---------- */
+.team-karten { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; }
+.team-karte { padding: 16px; display: grid; gap: 10px; align-content: start; scroll-margin: 80px; }
+.team-karte.hervor { border-color: var(--honey); box-shadow: 0 0 0 1px var(--honey); }
+.team-karte > .knopf { justify-self: start; }
+.team-kopf { display: flex; align-items: center; gap: 12px; }
+.team-kopf h2 { margin: 0; font: 700 20px/1.2 var(--f-display); }
+.team-kopf .mc { font: 13px var(--f-mono); color: var(--muted); }
+.team-info { margin: 0; white-space: pre-line; }
