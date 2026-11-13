@@ -49,6 +49,39 @@ Ohne Server und ohne Technik: [download/campus-ansicht.zip](download/campus-ansi
 3. Das Gebäude in `campus/campus.json` eintragen.
 4. `konfig.json` und `konfig.md` nach und nach füllen, dann erscheinen die Teile auf der Website.
 
+## Karte aktualisieren
+
+Für alle, die die 3D-Karte auf den Stand der Welt bringen wollen. Du brauchst nur Minecraft und den Browser.
+
+### In Minecraft: die Schematic speichern
+
+1. Ein **Schematic and Quill** (aus Create) craften und in die Hand nehmen.
+2. Auf der Website unter **Import** steht die Ecke vom letzten Mal, zum Beispiel `221, 65, -391`. Geh in der Welt genau zu diesem Block (mit F3 siehst du die Koordinaten) und klick ihn als erste Ecke an.
+3. Die zweite Ecke diagonal gegenüber anklicken: so weit, dass alle Gebäude drin sind, und höher als das höchste Gebäude. Mit Strg und Mausrad lässt sich die Auswahl noch vergrößern.
+4. Speichern und einen Namen vergeben, zum Beispiel `campus`.
+5. Die Datei liegt jetzt im Ordner `schematics` deiner Minecraft-Instanz, neben `mods` und `saves`. In Prism: Instanz anklicken, **Ordner** öffnen.
+
+Wichtig: Unten auf Bodenhöhe anfangen, sonst fehlt der Boden. Wählst du eine andere erste Ecke, musst du auf der Website die neue Koordinate eintragen: das kleinste x, das kleinste y und das kleinste z deiner Auswahl.
+
+### Auf der Website: hochladen und prüfen
+
+1. Einloggen, oben rechts auf **Import**.
+2. Die Datei auswählen. Die Ecke ist schon eingetragen, nur ändern, wenn du in Minecraft eine andere erste Ecke genommen hast.
+3. **Hochladen und Vorschau** und kurz warten. Bis du übernimmst, ändert sich an der Website noch nichts.
+4. Die Vorschau prüfen:
+   - **Tabelle:** pro Gebäude, wie viele Blöcke es vorher und nachher hat. Ist eine Zeile rot („verliert … % der Blöcke“), war meistens die Auswahl zu klein oder die Ecke falsch. Dann **Verwerfen** und noch einmal.
+   - **3D-Ansicht:** bei „Unterschied“ ist grün dazugekommen und rot weggefallen. Oben lässt sich ein einzelnes Gebäude auswählen.
+   - **Neue Blöcke ohne Textur:** harmlos, sie sind erst einmal einfarbig. Die Texturen holt Jonah später am PC.
+   - **Gebautes außerhalb aller Gebäude:** vielleicht ein neues Gebäude. Das wird nicht von allein angelegt, sag Bescheid oder leg eine Karte im Kanban an.
+   - **Modell aus:** nur nach Absprache ändern. „Schematic“ heißt: so wie in der Welt. „Entwurfs-Skript“ heißt: der Plan, für Gebäude, die noch nicht fertig sind. Nach einer Änderung **Mit diesen Einstellungen neu berechnen**.
+5. Passt alles: **Übernehmen**. Gab es Warnungen, musst du vorher bestätigen, dass du sie gesehen hast. Danach zeigt die Map den neuen Stand.
+
+Es kann immer nur einer gleichzeitig importieren. Steht oben, dass gerade jemand anderes dran ist, warte einfach. Spätestens nach 30 Minuten ist wieder frei.
+
+### Wenn etwas schiefgegangen ist
+
+Ein Admin geht auf **Versionen**, wählt oben **Karte** und klickt beim letzten guten Stand auf **Diesen Kartenstand wiederherstellen** (zweimal, zur Sicherheit). Das holt Schematic und Modelle zurück, als neuer Eintrag im Verlauf. Kanban und Profile bleiben dabei unverändert.
+
 ## Gebäude
 
 | Gebäude | Zweck | Status |
@@ -214,6 +247,7 @@ Das Skript fragt jeweils nach dem Startpasswort. Beim ersten Login muss jeder ei
 | Passwort zurücksetzen | `sudo -u campus python3 server/konto.py zuruecksetzen felix` (oder auf der Website unter Admin) |
 | Konto sperren | `sudo -u campus python3 server/konto.py sperren felix` |
 | Konten sichern | `/var/lib/campus/konten.json` wegkopieren |
+| Liegen gebliebenen Import entfernen | auf der Website unter Import **Verwerfen** (geht auch für Admins), oder er verfällt nach 30 Minuten von selbst |
 
 - **Neuer Code kommt von selbst:** Der Timer holt ihn. Ändert sich etwas unter `server/*.py`, startet sich der Dienst innerhalb von 20 Sekunden selbst neu.
 - **Von Hand nachziehen** muss man nur geänderte Vorlagen: nach einer Änderung an `server/nginx-campus.conf` die Datei wieder nach `/etc/nginx/conf.d/` kopieren (Domain und certbot-Zeilen behalten) und `sudo systemctl reload nginx`, nach einer Änderung an den Units wieder kopieren und `sudo systemctl daemon-reload`.

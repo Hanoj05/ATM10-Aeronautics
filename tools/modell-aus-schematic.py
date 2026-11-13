@@ -7,6 +7,9 @@ Braucht:  nur Python 3, keine Zusatzpakete
 Liest die Schematic aus gebaeude.json (dateien.schematic, Pfad relativ zum Repo)
 und schreibt modell.json in den Gebäudeordner.
 
+Mit --alle werden Gebäude mit "modellquelle": "entwurf" übersprungen, ihr Modell kommt
+aus dem Entwurfs-Skript (dateien.generator). Einstellbar auf der Website unter Import.
+
 Steht in gebaeude.json ein "ausschnitt", wird nur dieser Teil einer großen Schematic
 genommen (z. B. ein Gebäude aus schematics/campus.nbt):
   "ausschnitt": {"schematicP0": [x, y, z],   Weltkoordinate der Ecke (0, 0, 0) der Schematic
@@ -345,6 +348,9 @@ def baue(ordner):
         f.write(',"bloecke":[\n')
         f.write(",\n".join(json.dumps(b, separators=(",", ":")) for b in bloecke))
         f.write("\n]}\n")
+    if not bloecke:
+        print(f"{ziel}: keine Blöcke im Ausschnitt")
+        return
     print(f"{ziel}: {len(bloecke)} Blöcke, {len(sorten)} Sorten, Größe {groesse}, "
           f"x {min(xs)}..{max(xs)}, y {min(ys)}..{max(ys)}, z {min(zs)}..{max(zs)}")
     unbekannt = sorted({s["id"].split("|")[-1] for s in sorten if s.get("form") != "kabel"} - set(FARBEN))
@@ -355,8 +361,12 @@ def baue(ordner):
 def main():
     if len(sys.argv) > 1 and sys.argv[1] == "--alle":
         for g in sorted((REPO / "gebaeude").iterdir()):
-            if g.name != "vorlage" and (g / "gebaeude.json").exists():
-                baue(g)
+            if g.name == "vorlage" or not (g / "gebaeude.json").exists():
+                continue
+            if json.loads((g / "gebaeude.json").read_text(encoding="utf-8")).get("modellquelle") == "entwurf":
+                print(f"{g}: Modell kommt aus dem Entwurfs-Skript, übersprungen")
+                continue
+            baue(g)
         return
     baue(Path(sys.argv[1] if len(sys.argv) > 1 else "gebaeude/me-zentrale"))
 

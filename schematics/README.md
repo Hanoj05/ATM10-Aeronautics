@@ -19,6 +19,12 @@ In `gebaeude/<id>/gebaeude.json`:
 
 `von` und `bis` sind Weltkoordinaten. Das Skript rechnet die Blöcke über `welt.p0` und `welt.drehung` in die Koordinaten des Gebäudes um, beim gedrehten Wabenhaus also in die Plan-Koordinaten. Gelände in der untersten Lage bleibt nur innerhalb des Gebäudes stehen.
 
+## Über die Website (empfohlen)
+
+Auf der Website unter **Import** die neue `campus.nbt` hochladen, Vorschau prüfen, übernehmen. Das macht alles unten automatisch und ist im Haupt-README unter „Karte aktualisieren“ für alle ohne Technikwissen beschrieben.
+
+Pro Gebäude steht in `gebaeude.json` unter `modellquelle`, woher das Modell kommt: `schematic` (aus dem Ausschnitt dieser Datei) oder `entwurf` (aus dem Skript in `dateien.generator`). Gebäude mit `entwurf` lässt `--alle` aus.
+
 ## Ins Modell für die Website umwandeln
 
 ```

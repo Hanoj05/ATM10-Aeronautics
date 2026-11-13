@@ -33,7 +33,10 @@ from contextlib import contextmanager
 from datetime import datetime, timezone
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from urllib.parse import urlsplit
+from urllib.parse import parse_qs, urlsplit
+
+import karte as karte_modul
+from fehler import Fehler
 
 HIER = Path(__file__).resolve().parent
 
@@ -57,7 +60,7 @@ MIN_PASSWORT = 8
 SCRYPT = {"n": 2 ** 14, "r": 8, "p": 1}
 
 # Nur diese Ordner darf der Dienst im Repo beschreiben
-SCHREIBBAR = ("team/", "kanban/")
+SCHREIBBAR = ("team/", "kanban/", "gebaeude/", "schematics/", "download/")
 
 ID_MUSTER = re.compile(r"^[a-z][a-z0-9-]{1,23}$")
 MC_MUSTER = re.compile(r"^[A-Za-z0-9_]{3,16}$")
@@ -75,15 +78,6 @@ def zeitstempel(t=None):
 
 def log(*teile):
     print(zeitstempel(), *teile, file=sys.stderr, flush=True)
-
-
-class Fehler(Exception):
-    """Wird als JSON {"fehler": text} mit HTTP-Status an den Browser gegeben."""
-
-    def __init__(self, status, text):
-        super().__init__(text)
-        self.status = status
-        self.text = text
 
 
 # --- Dateien sicher schreiben ---
@@ -345,44 +339,48 @@ class Git:
                     aktuellen Inhalt (bytes oder None) unter der Sperre den neuen macht}
         erwartet: {pfad: Blob-Version, die der Browser gesehen hat (None = darf noch nicht existieren)}
         autor: (Name, E-Mail). bezeichnung: wie die Datei in Meldungen heißt. Gibt den neuen Commit-Hash zurück, oder None ohne Änderung."""
-        for pfad in list(dateien) + list(erwartet):
-            if ".." in pfad.split("/") or not pfad.startswith(SCHREIBBAR) or pfad.startswith("/"):
-                raise Fehler(400, "Pfad nicht erlaubt: %s" % pfad)
         with self.gesperrt():
             self.aktualisieren()
             for pfad, version in erwartet.items():
                 if blob_version(self.repo / pfad) != version:
                     raise Fehler(409, "%s wurde inzwischen von jemand anderem geändert. Nichts gespeichert. "
                                       "Bitte die Seite neu laden und es noch einmal versuchen." % (bezeichnung or pfad))
-            vorher = self.git("rev-parse", "HEAD").stdout.strip()
-            for pfad, inhalt in dateien.items():
-                ziel = self.repo / pfad
-                if callable(inhalt):
-                    inhalt = inhalt(ziel.read_bytes() if ziel.exists() else None)
-                if inhalt is None:
-                    if ziel.exists():
-                        ziel.unlink()
-                else:
-                    ziel.parent.mkdir(parents=True, exist_ok=True)
-                    schreibe_atomar(ziel, inhalt, 0o644)
-            self.git("add", "--all", "--", *dateien.keys())
-            if self.git("diff", "--cached", "--quiet", pruefen=False).returncode == 0:
-                return None
-            env = {"GIT_AUTHOR_NAME": autor[0], "GIT_AUTHOR_EMAIL": autor[1],
-                   "GIT_COMMITTER_NAME": "Campus-Website", "GIT_COMMITTER_EMAIL": "website@campus.invalid"}
-            try:
-                self.git("commit", "--quiet", "-m", nachricht, env=env)
-            except Fehler:
+            return self.schreibe_gesperrt(dateien, nachricht, autor)
+
+    def schreibe_gesperrt(self, dateien, nachricht, autor):
+        """Schreiben, committen, pushen. Nur innerhalb von gesperrt() nach aktualisieren() aufrufen."""
+        for pfad in dateien:
+            if ".." in pfad.split("/") or not pfad.startswith(SCHREIBBAR) or pfad.startswith("/"):
+                raise Fehler(400, "Pfad nicht erlaubt: %s" % pfad)
+        vorher = self.git("rev-parse", "HEAD").stdout.strip()
+        for pfad, inhalt in dateien.items():
+            ziel = self.repo / pfad
+            if callable(inhalt):
+                inhalt = inhalt(ziel.read_bytes() if ziel.exists() else None)
+            if inhalt is None:
+                if ziel.exists():
+                    ziel.unlink()
+            else:
+                ziel.parent.mkdir(parents=True, exist_ok=True)
+                schreibe_atomar(ziel, inhalt, 0o644)
+        self.git("add", "--all", "--", *dateien.keys())
+        if self.git("diff", "--cached", "--quiet", pruefen=False).returncode == 0:
+            return None
+        env = {"GIT_AUTHOR_NAME": autor[0], "GIT_AUTHOR_EMAIL": autor[1],
+               "GIT_COMMITTER_NAME": "Campus-Website", "GIT_COMMITTER_EMAIL": "website@campus.invalid"}
+        try:
+            self.git("commit", "--quiet", "-m", nachricht, env=env)
+        except Fehler:
+            self.git("reset", "--hard", "--quiet", vorher, pruefen=False)
+            raise
+        if self.hat_remote():
+            r = self.git("push", "--quiet", self.remote, "HEAD:" + self.branch, pruefen=False)
+            if r.returncode != 0:
                 self.git("reset", "--hard", "--quiet", vorher, pruefen=False)
-                raise
-            if self.hat_remote():
-                r = self.git("push", "--quiet", self.remote, "HEAD:" + self.branch, pruefen=False)
-                if r.returncode != 0:
-                    self.git("reset", "--hard", "--quiet", vorher, pruefen=False)
-                    log("push abgelehnt:", r.stderr.strip())
-                    raise Fehler(409, "GitHub hat die Änderung nicht angenommen, vermutlich kam gerade etwas "
-                                      "von außen dazu. Nichts gespeichert. Bitte neu laden und noch einmal versuchen.")
-            return self.git("rev-parse", "HEAD").stdout.strip()
+                log("push abgelehnt:", r.stderr.strip())
+                raise Fehler(409, "GitHub hat die Änderung nicht angenommen, vermutlich kam gerade etwas "
+                                  "von außen dazu. Nichts gespeichert. Bitte neu laden und noch einmal versuchen.")
+        return self.git("rev-parse", "HEAD").stdout.strip()
 
     def kopf(self):
         return self.git("rev-parse", "HEAD").stdout.strip()
@@ -559,11 +557,13 @@ def kurz(titel):
 
 def dienst_bauen():
     DATEN.mkdir(parents=True, exist_ok=True)
+    git = Git(REPO, DATEN / "git.lock")
     return {
         "konten": Konten(DATEN),
         "sitzungen": Sitzungen(DATEN),
         "bremse": Bremse(),
-        "git": Git(REPO, DATEN / "git.lock"),
+        "git": git,
+        "karte": karte_modul.Karte(git, DATEN, log),
     }
 
 
@@ -856,10 +856,86 @@ class Handler(BaseHTTPRequestHandler):
             {karten_pfad(karte_id): e.get("version")}, "Die Karte „%s“" % kurz(alt.get("titel", "")))
         self.antwort(200, {"ok": True, "commit": commit})
 
+    # -- Karte: Import und Versionen --
+
+    def import_status(self):
+        kid, _ = self.eingeloggt()
+        k = self.d["karte"]
+        s = k.status()
+        self.antwort(200, {"import": dict(s, meins=s["wer"] == kid) if s else None,
+                           "ecke": k.letzte_ecke(), "gebaeude": k.gebaeude(),
+                           "maxUploadMB": karte_modul.MAX_UPLOAD // 1024 // 1024})
+
+    def import_hochladen(self):
+        kid, _ = self.eingeloggt()
+        laenge = int(self.headers.get("Content-Length") or 0)
+        if laenge > karte_modul.MAX_UPLOAD:
+            raise Fehler(413, "Die Datei ist größer als %d MB." % (karte_modul.MAX_UPLOAD // 1024 // 1024))
+        if laenge <= 0:
+            raise Fehler(400, "Keine Datei.")
+        q = parse_qs(urlsplit(self.path).query)
+        try:
+            ecke = [int(v) for v in (q.get("ecke") or [""])[0].split(",")]
+        except ValueError:
+            raise Fehler(400, "Die Ecke bitte als drei ganze Zahlen x, y, z.")
+        roh = self.rfile.read(laenge)
+        k = self.d["karte"]
+        k.hochladen(kid, autor_von(kid)[0], roh, (q.get("name") or ["Schematic"])[0])
+        s = k.vorschau(kid, ecke, {})
+        self.antwort(200, {"import": dict(s, meins=True)})
+
+    def import_vorschau(self):
+        kid, _ = self.eingeloggt()
+        e = self.eingabe()
+        s = self.d["karte"].vorschau(kid, e.get("ecke"), e.get("einstellungen") or {})
+        self.antwort(200, {"import": dict(s, meins=True)})
+
+    def import_modell(self, gid):
+        kid, _ = self.eingeloggt()
+        inhalt = self.d["karte"].modell(kid, gid)
+        self.send_response(200)
+        self.send_header("Content-Type", "application/json; charset=utf-8")
+        self.send_header("Content-Length", str(len(inhalt)))
+        self.send_header("Cache-Control", "no-store")
+        self.end_headers()
+        self.wfile.write(inhalt)
+
+    def import_uebernehmen(self):
+        kid, _ = self.eingeloggt()
+        commit = self.d["karte"].uebernehmen(kid, autor_von(kid))
+        self.antwort(200, {"ok": True, "commit": commit})
+
+    def import_verwerfen(self):
+        kid, konto = self.eingeloggt()
+        self.d["karte"].verwerfen(kid, bool(konto.get("admin")))
+        self.antwort(200, {"ok": True})
+
+    def versionen(self):
+        self.eingeloggt()
+        q = parse_qs(urlsplit(self.path).query)
+        try:
+            ab = max(0, int((q.get("ab") or ["0"])[0]))
+        except ValueError:
+            ab = 0
+        self.antwort(200, {"versionen": self.d["karte"].versionen(ab), "github": github_adresse(self.d["git"])})
+
+    def wiederherstellen(self, commit):
+        kid, _ = self.eingeloggt(admin=True)
+        neu = self.d["karte"].wiederherstellen(commit, kid, autor_von(kid))
+        log("Karte zurückgesetzt auf", commit, "von", kid)
+        self.antwort(200, {"ok": True, "commit": neu})
+
     def stand(self):
         """Aktueller Commit, damit offene Seiten merken, dass es etwas Neues gibt."""
         self.eingeloggt()
         self.antwort(200, {"commit": self.d["git"].kopf()})
+
+
+def github_adresse(git):
+    """https://github.com/<besitzer>/<repo> aus der Remote-Adresse, sonst None."""
+    url = git.git("remote", "get-url", git.remote, pruefen=False).stdout.strip() if git.remote else ""
+    m = re.search(r"github\.com[:/]([^/]+/[^/]+?)(\.git)?$", url)
+    return "https://github.com/" + m.group(1) if m else None
 
 
 def _r(methode, muster, funktion):
@@ -880,6 +956,14 @@ ROUTEN = [
     _r("POST", r"/api/karten", Handler.karte_neu),
     _r("POST", r"/api/karten/(" + KARTEN_ID + r")", Handler.karte_aendern),
     _r("POST", r"/api/karten/(" + KARTEN_ID + r")/loeschen", Handler.karte_loeschen),
+    _r("GET", r"/api/import/status", Handler.import_status),
+    _r("POST", r"/api/import/hochladen", Handler.import_hochladen),
+    _r("POST", r"/api/import/vorschau", Handler.import_vorschau),
+    _r("GET", r"/api/import/modell/([a-z0-9-]{1,48})", Handler.import_modell),
+    _r("POST", r"/api/import/uebernehmen", Handler.import_uebernehmen),
+    _r("POST", r"/api/import/verwerfen", Handler.import_verwerfen),
+    _r("GET", r"/api/versionen", Handler.versionen),
+    _r("POST", r"/api/versionen/([0-9a-f]{40})/wiederherstellen", Handler.wiederherstellen),
     _r("GET", r"/api/konten", Handler.konten_liste),
     _r("POST", r"/api/konten", Handler.konto_anlegen),
     _r("POST", r"/api/konten/([a-z][a-z0-9-]{1,23})", Handler.konto_aendern),

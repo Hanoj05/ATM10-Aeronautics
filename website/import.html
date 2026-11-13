@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Karte aktualisieren</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,500..800&family=IBM+Plex+Sans:wght@400;600&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="style.css?v=20261114">
+</head>
+<body>
+<header class="site"><a class="brand" href="index.html">Tech<b>·</b>Campus</a><nav id="nav" aria-label="Hauptnavigation"></nav></header>
+<header class="topbar">
+  <h1>Karte aktualisieren</h1>
+  <span class="sub">Neue Campus-Schematic aus Create hochladen, Vorschau prüfen, übernehmen</span>
+</header>
+<main class="page im-seite">
+  <p class="note" id="hinweis" hidden></p>
+
+  <section class="box formbox im-hoch" id="hochBox" hidden>
+    <h2>1. Schematic hochladen</h2>
+    <form id="hoch" class="formular">
+      <label>Datei (.nbt aus dem Ordner <code>schematics</code> der Minecraft-Instanz)
+        <input name="datei" type="file" accept=".nbt" required></label>
+      <fieldset class="im-ecke"><legend>Weltkoordinate der Ecke (kleinstes x, y und z der Auswahl)</legend>
+        <label>x <input name="x" type="number" required></label>
+        <label>y <input name="y" type="number" required></label>
+        <label>z <input name="z" type="number" required></label>
+      </fieldset>
+      <p class="note">Vorbelegt mit der Ecke vom letzten Import. Nur ändern, wenn du in Minecraft eine andere Fläche ausgewählt hast.</p>
+      <div class="knoepfe"><button type="submit" class="knopf">Hochladen und Vorschau</button><span class="meldung" role="status"></span></div>
+    </form>
+  </section>
+
+  <section id="vorschau" class="im-vorschau" hidden>
+    <div class="box im-kopf" id="kopf"></div>
+    <section class="box scrollx">
+      <table class="matrix im-tabelle">
+        <thead><tr><th>Gebäude</th><th>Modell aus</th><th>Bereich in der Welt (von / bis)</th><th>Blöcke vorher → nachher</th><th>Änderung</th><th></th></tr></thead>
+        <tbody id="tabelle"></tbody>
+      </table>
+    </section>
+    <div class="knoepfe"><button type="button" class="knopf leise" id="neuRechnen">Mit diesen Einstellungen neu berechnen</button><span class="meldung" id="rechnenMeldung" role="status"></span></div>
+    <div class="im-hinweise" id="hinweise"></div>
+
+    <section class="box im-3d">
+      <div class="im-3d-leiste">
+        <div class="seg2" role="group" aria-label="Was zeigen" id="modus">
+          <button type="button" data-m="vorher" aria-pressed="false">Vorher</button>
+          <button type="button" data-m="nachher" aria-pressed="false">Nachher</button>
+          <button type="button" data-m="unterschied" aria-pressed="true">Unterschied</button>
+        </div>
+        <label class="kb-filter">Gebäude <select id="fokus"><option value="">ganzer Campus</option></select></label>
+        <span class="im-legende" id="legende"><i class="g"></i>gleich <i class="d"></i>dazu <i class="w"></i>weg</span>
+      </div>
+      <div class="viewport im-viewport" id="viewport"><div class="loading" id="loading">Lade Modelle …</div></div>
+    </section>
+
+    <section class="box formbox im-ende">
+      <h2>2. Übernehmen</h2>
+      <p>Übernehmen schreibt die neue Schematic, die Modelle und die Offline-Zip als einen Commit mit dir als Autor und schickt ihn nach GitHub. Geht etwas schief, kann ein Admin unter <a href="versionen.html">Versionen</a> den alten Stand zurückholen.</p>
+      <label class="haken" id="warnOk" hidden><input type="checkbox" id="warnHaken"> Ich habe die Warnungen gesehen und will trotzdem übernehmen.</label>
+      <div class="knoepfe">
+        <button type="button" class="knopf" id="uebernehmen">Übernehmen</button>
+        <button type="button" class="knopf leise" id="verwerfen">Verwerfen</button>
+        <span class="meldung" id="endeMeldung" role="status"></span>
+      </div>
+    </section>
+  </section>
+
+  <section class="box formbox" id="fertig" hidden></section>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/controls/OrbitControls.js"></script>
+<script src="js/voxel.js?v=20261114"></script>
+<script src="js/import.js?v=20261114"></script>
+</body>
+</html>

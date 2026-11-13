@@ -358,7 +358,7 @@
     return "<span class='avatar' style='--av:" + esc((p && p.farbe) || "#62645f") + (groesse ? ";--av-g:" + groesse + "px" : "") + "' aria-hidden='true'>" + esc(ini) + "</span>";
   }
 
-  /* Navigation oben auf jeder Seite. aktiv: "uebersicht", "map", "technik", "kanban", "team", "admin" oder eine Gebäude-ID */
+  /* Navigation oben auf jeder Seite. aktiv: "uebersicht", "map", "technik", "kanban", "team", "import", "versionen", "admin" oder eine Gebäude-ID */
   function navi(aktiv) {
     var nav = document.getElementById("nav");
     if (!nav) return;
@@ -375,7 +375,8 @@
       if (!i || !site) return;
       var box = document.createElement("div");
       box.className = "wer";
-      box.innerHTML = (i.admin ? link("admin.html", "Admin", aktiv === "admin") : "") +
+      box.innerHTML = link("import.html", "Import", aktiv === "import") + link("versionen.html", "Versionen", aktiv === "versionen") +
+        (i.admin ? link("admin.html", "Admin", aktiv === "admin") : "") +
         "<a class='ich' href='team.html#" + encodeURIComponent(i.id) + "' title='Mein Profil'>" + avatar(i) + "<span>" + esc(i.anzeigename) + "</span></a>" +
         "<button type='button' class='abmelden'>Abmelden</button>";
       box.querySelector(".abmelden").addEventListener("click", function () {
