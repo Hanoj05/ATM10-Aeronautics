@@ -1,0 +1,212 @@
+{
+  "hinweis": "Maschinendaten für die Website. Positionen relativ zu P0, [x, y, z]. Lesbare Fassung: konfig.md",
+  "netzwerke": [],
+  "teile": [
+    {
+      "id": "ars",
+      "name": "Ars Nouveau",
+      "art": "Magie",
+      "zelle": "Ars Nouveau",
+      "von": [
+        78,
+        1,
+        50
+      ],
+      "bis": [
+        88,
+        11,
+        60
+      ],
+      "einstellungen": [
+        [
+          "Oben",
+          "Wixie Enchanting Apparatus mit Arcane Pedestals und Arcane Core, Source Jars an Relays"
+        ],
+        [
+          "Unten",
+          "Imbuement Chambers, Source-Erzeugung (Volcanic/Agronomic Sourcelinks), Pattern Provider"
+        ],
+        [
+          "Automatisierung",
+          "Wixie Charm per Schleichen auf den Apparatus: der Wixie holt die Zutaten aus Kisten in der Nähe. Ein Pattern Provider füllt eine Kiste neben dem Wixie, ein Import Bus oder Hopper bringt das Ergebnis zurück ins ME."
+        ]
+      ]
+    },
+    {
+      "id": "occultism",
+      "name": "Occultism",
+      "art": "Magie",
+      "zelle": "Occultism",
+      "von": [
+        55,
+        1,
+        77
+      ],
+      "bis": [
+        65,
+        11,
+        87
+      ],
+      "einstellungen": [
+        [
+          "Oben",
+          "Ritualkreis mit Golden Sacrificial Bowl in der Mitte und Sacrificial Bowls ringsum, polierter Boden für die Kreide"
+        ],
+        [
+          "Unten",
+          "Djinni oder Afrit als Crusher, Spirit Fire, Dimensional Storage"
+        ],
+        [
+          "Automatisierung",
+          "Rituale bleiben Handarbeit (Occult Engineering ist nicht im Pack). Crusher-Spirits arbeiten selbst: der Pattern Provider füllt ihre Eingangskiste mit Erz, die Ausgabekiste geht per Import Bus zurück ins ME."
+        ]
+      ]
+    },
+    {
+      "id": "irons",
+      "name": "Iron's Spells 'n Spellbooks",
+      "art": "Magie",
+      "zelle": "Iron's Spells 'n Spellbooks",
+      "von": [
+        23,
+        1,
+        64
+      ],
+      "bis": [
+        33,
+        11,
+        74
+      ],
+      "einstellungen": [
+        [
+          "Oben",
+          "Arcane Anvil, Scroll Forge, Inscription Table, Ausstellung der Spellbooks"
+        ],
+        [
+          "Unten",
+          "Alchemist Cauldrons für Tinten und Tränke, Pattern Provider"
+        ],
+        [
+          "Automatisierung",
+          "Cauldrons lassen sich mit Items und Flüssigkeiten beliefern. Schriftrollen und Inschriften bleiben Handarbeit."
+        ]
+      ]
+    },
+    {
+      "id": "forbidden",
+      "name": "Forbidden & Arcanus",
+      "art": "Magie",
+      "zelle": "Forbidden & Arcanus",
+      "von": [
+        25,
+        1,
+        29
+      ],
+      "bis": [
+        35,
+        11,
+        39
+      ],
+      "einstellungen": [
+        [
+          "Oben",
+          "Hephaestus Forge mit Darkstone Pedestals, genug Platz für die Ausbaustufen"
+        ],
+        [
+          "Unten",
+          "Clibano, Lager für Essenzen, Pattern Provider"
+        ],
+        [
+          "Automatisierung",
+          "Die Forge-Rituale bleiben Handarbeit (der mittlere Slot lässt sich ohne Zusatzmod nicht befüllen). Die Clibano läuft automatisch über den Pattern Provider."
+        ]
+      ]
+    },
+    {
+      "id": "evilcraft",
+      "name": "EvilCraft",
+      "art": "Magie",
+      "zelle": "EvilCraft",
+      "von": [
+        59,
+        1,
+        20
+      ],
+      "bis": [
+        69,
+        11,
+        30
+      ],
+      "einstellungen": [
+        [
+          "Oben",
+          "Blood Infuser und Purifier"
+        ],
+        [
+          "Unten",
+          "Dark Tanks, Blood Extractor, Leitung zur Blut-Quelle, Pattern Provider"
+        ],
+        [
+          "Automatisierung",
+          "Der Blood Infuser ist eine normale Maschine: der Pattern Provider schiebt Item und Blut hinein, das Ergebnis geht zurück ins ME. Blut kommt aus einer Mobfarm mit Blood Extractor, gelagert in Dark Tanks."
+        ]
+      ]
+    },
+    {
+      "id": "me-knoten",
+      "name": "ME-Knoten",
+      "art": "ME",
+      "zelle": "Atrium",
+      "von": [
+        52,
+        1,
+        52
+      ],
+      "bis": [
+        54,
+        3,
+        54
+      ],
+      "einstellungen": [
+        [
+          "Aufgabe",
+          "Eigener ME-Controller im Atrium, von hier gehen die Kabel zu den Pattern Providern in jedem Flügel"
+        ],
+        [
+          "Anbindung",
+          "Quantum Network Bridge oder P2P zum ME-Gebäude, alternativ Kabel unter der Allee und dem Ring"
+        ]
+      ]
+    },
+    {
+      "id": "verzauberung",
+      "name": "Verzauberungshalle (Apothic Enchanting)",
+      "art": "Magie",
+      "zelle": "Atrium",
+      "von": [
+        47,
+        13,
+        47
+      ],
+      "bis": [
+        59,
+        17,
+        59
+      ],
+      "einstellungen": [
+        [
+          "Aufbau",
+          "Enchanting Table mit Regalring, im Modell Bookshelf als Platzhalter für die starken Apothic-Regale"
+        ],
+        [
+          "Bibliothek",
+          "Library of Alexandria daneben, Bücher per Hopper einwerfen"
+        ],
+        [
+          "Automatisierung",
+          "Verzaubern bleibt Handarbeit, die Bibliothek ist der Speicher für Verzauberungen"
+        ]
+      ]
+    }
+  ]
+}

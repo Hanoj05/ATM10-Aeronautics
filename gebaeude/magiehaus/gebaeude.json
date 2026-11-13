@@ -1,0 +1,31 @@
+{
+  "id": "magiehaus",
+  "name": "Magiehaus",
+  "zweck": "Pentagramm mit fünf Flügeln für Ars Nouveau, Occultism, Iron's Spells, Forbidden & Arcanus und EvilCraft, Atrium mit ME-Knoten und Verzauberungshalle (Apothic Enchanting)",
+  "status": "geplant",
+  "welt": {
+    "p0": [
+      83,
+      65,
+      -195
+    ],
+    "drehung": 0,
+    "hinweis": "P0 = Nordwest-Ecke unten. Mitte bei Plan (53, 0, 53) = Welt (136, 65, -142), 150 Blöcke westsüdwestlich der Ringmitte. Die Kerbe mit dem Eingang zeigt genau auf das Westsüdwest-Tor vom Hauptgebäude, eine Allee verbindet beide. Lage gerechnet, nicht eingemessen."
+  },
+  "masse": {
+    "breite": 112,
+    "tiefe": 107,
+    "hoehe": 35
+  },
+  "zellen": [],
+  "maschinen": [],
+  "netzwerke": [],
+  "dateien": {
+    "bauplan": null,
+    "modell": "modell.json",
+    "konfigDaten": "konfig.json",
+    "konfig": "konfig.md",
+    "schematic": null,
+    "generator": "tools/modell-magiehaus.py"
+  }
+}

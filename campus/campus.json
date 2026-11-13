@@ -42,6 +42,19 @@
         -334
       ],
       "drehung": 0
+    },
+    {
+      "id": "magiehaus",
+      "name": "Magiehaus",
+      "ordner": "gebaeude/magiehaus",
+      "zweck": "Ars, Occultism, EvilCraft, Forbidden, Iron's Spells, Apothic",
+      "status": "geplant",
+      "position": [
+        83,
+        65,
+        -195
+      ],
+      "drehung": 0
     }
   ]
 }

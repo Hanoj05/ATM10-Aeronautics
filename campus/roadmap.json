@@ -135,6 +135,14 @@
           "bereich": "3D",
           "status": "offen",
           "text": "Damit große Gebäude auch auf schwächeren Rechnern flüssig laufen."
+        },
+        {
+          "titel": "Magiehaus bauen und ans ME anbinden",
+          "wo": "Minecraft",
+          "bereich": "Gebäude",
+          "status": "offen",
+          "gebaeude": "magiehaus",
+          "text": "Pentagramm westsüdwestlich vom Ring, Mitte etwa 136, 65, -142. Pro Flügel einen Pattern Provider, ME-Knoten im Atrium über Quantum Network Bridge oder P2P ans ME-Gebäude."
         }
       ]
     },
