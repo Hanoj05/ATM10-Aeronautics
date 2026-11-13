@@ -12,8 +12,8 @@
   --r: 10px; --r-s: 7px; --r-xs: 5px;
   --ease: cubic-bezier(.2, .7, .2, 1);
   --f-display: "Archivo", "Arial Narrow", system-ui, sans-serif;
-  --f-body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
-  --f-mono: "IBM Plex Mono", ui-monospace, monospace;
+  --f-body: "Inter", "Segoe UI", system-ui, sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, monospace;
   color-scheme: light;
 }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="hell"]) {
@@ -54,9 +54,6 @@ a, button, input, select, textarea, .box, .kb-karte, .campus-list a, .node, .tea
 html.thema-wechsel, html.thema-wechsel *, html.thema-wechsel *::before { transition: background-color .3s var(--ease), border-color .3s var(--ease), color .3s var(--ease), box-shadow .3s var(--ease) !important; }
 @media (prefers-reduced-motion: reduce) { *, *::before { transition: none !important; animation: none !important; } html { scroll-behavior: auto; } }
 
-/* Inhalt blendet beim Laden sanft ein */
-@keyframes rein { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
-main, .layout, .view.on > .page { animation: rein .35s var(--ease) both; }
 
 .topbar { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 16px; padding: 30px max(16px, env(safe-area-inset-right, 0px)) 18px max(16px, env(safe-area-inset-left, 0px)); background: linear-gradient(180deg, var(--surface), var(--bg)); border-bottom: 1px solid var(--line); }
 .topbar .back { font: 600 12px var(--f-mono); letter-spacing: .06em; text-transform: uppercase; text-decoration: none; }
@@ -440,3 +437,95 @@ form.inline { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; mar
 .ver-unten a { text-decoration: none; }
 .ver-unten .knopf { margin-left: auto; }
 .ver-unten .knopf.sicher { background: var(--danger); border-color: var(--danger); color: var(--bg); }
+
+
+/* =====================================================================
+   Effekte: Kopfbereich, Einfliegen, Lichtschein, Seitenwechsel
+   ===================================================================== */
+
+/* Weiche Überblendung zwischen den Seiten (Chrome/Edge, sonst einfach normal) */
+@view-transition { navigation: auto; }
+::view-transition-old(root) { animation: vt-raus .18s var(--ease) both; }
+::view-transition-new(root) { animation: vt-rein .32s var(--ease) both; }
+@keyframes vt-raus { to { opacity: 0; transform: translateY(-4px); } }
+@keyframes vt-rein { from { opacity: 0; transform: translateY(8px); } }
+.site { view-transition-name: kopfleiste; }
+
+/* Kopfbereich mit Waben-Muster und langsam wanderndem Honig-Schimmer */
+.topbar { position: relative; overflow: hidden; isolation: isolate; padding-top: 44px; padding-bottom: 26px; background: var(--bg); border-bottom: 1px solid var(--line); }
+.topbar::before { content: ""; position: absolute; inset: -30% -15%; z-index: -2;
+  background:
+    radial-gradient(60% 120% at 12% 0%, color-mix(in srgb, var(--honey) 22%, transparent), transparent 70%),
+    radial-gradient(40% 90% at 88% 10%, color-mix(in srgb, var(--honey) 12%, transparent), transparent 70%);
+  animation: schimmer 18s ease-in-out infinite alternate; }
+.topbar::after { content: ""; position: absolute; inset: 0; z-index: -1; opacity: .5;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='97' viewBox='0 0 56 97'%3E%3Cpath d='M28 0l28 16v32L28 64 0 48V16zM28 64l28 16v32M28 64L0 80v32' fill='none' stroke='%23d9840b' stroke-opacity='.22' stroke-width='1'/%3E%3C/svg%3E");
+  background-size: 56px 97px;
+  -webkit-mask-image: linear-gradient(100deg, #000 0%, transparent 55%); mask-image: linear-gradient(100deg, #000 0%, transparent 55%);
+  animation: waben 60s linear infinite; }
+@keyframes schimmer { from { transform: translateX(-4%) scale(1); } to { transform: translateX(6%) scale(1.08); } }
+@keyframes waben { to { background-position: 56px 97px; } }
+.topbar h1 { font-weight: 900; letter-spacing: -.025em;
+  background: linear-gradient(100deg, var(--fg) 30%, color-mix(in srgb, var(--fg) 55%, var(--honey)) 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  animation: titel-rein .7s var(--ease) both; }
+.topbar .sub, .topbar .chip { animation: titel-rein .7s .08s var(--ease) both; }
+@keyframes titel-rein { from { opacity: 0; transform: translateY(10px); filter: blur(4px); } }
+
+/* Einfliegen beim Scrollen: JS setzt .vorher und nimmt es wieder weg */
+.vorher { opacity: 0; transform: translateY(16px) scale(.985); }
+.einflug { transition: opacity .55s var(--ease), transform .55s var(--ease), box-shadow .22s var(--ease), border-color .18s var(--ease) !important; transition-delay: var(--verz, 0ms) !important; }
+
+/* Lichtschein unter der Maus auf Karten */
+.box { position: relative; }
+.box::before { content: ""; position: absolute; inset: -1px; border-radius: inherit; pointer-events: none; opacity: 0; transition: opacity .3s var(--ease);
+  background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), color-mix(in srgb, var(--honey) 9%, transparent), transparent 45%); }
+.box::after { content: ""; position: absolute; inset: -1px; border-radius: inherit; pointer-events: none; opacity: 0; transition: opacity .3s var(--ease); padding: 1px;
+  background: radial-gradient(260px circle at var(--mx, 50%) var(--my, 50%), color-mix(in srgb, var(--honey) 70%, transparent), transparent 60%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0); }
+.box:hover::before, .box:hover::after { opacity: 1; }
+.box > * { position: relative; }
+
+/* Karten: kräftiger anheben */
+.gebkarte:hover, .team-karte:hover { transform: translateY(-4px); box-shadow: var(--shadow-l); }
+.gebkarte h3 { transition: color .2s var(--ease); }
+.gebkarte:hover h3 { color: var(--honey-ink); }
+
+/* Gleitender Marker in der Navigation */
+#nav { position: relative; }
+#nav .marker { position: absolute; top: 0; height: 100%; border-radius: 999px; background: var(--honey-soft); z-index: -1; transition: left .35s var(--ease), width .35s var(--ease), opacity .2s; pointer-events: none; }
+#nav a { position: relative; }
+#nav.mit-marker a[aria-current="page"], #nav.mit-marker a:hover { background: none; }
+#nav.mit-marker a:hover { color: var(--fg); }
+.site { isolation: isolate; }
+
+/* Knöpfe mit Glanz */
+.knopf { position: relative; overflow: hidden; }
+.knopf::after { content: ""; position: absolute; inset: 0; background: linear-gradient(110deg, transparent 35%, rgba(255, 255, 255, .28) 50%, transparent 65%); transform: translateX(-120%); transition: transform .6s var(--ease); pointer-events: none; }
+.knopf:hover::after { transform: translateX(120%); }
+.knopf:not(.leise) { background: linear-gradient(180deg, color-mix(in srgb, var(--fg) 88%, var(--honey)), var(--fg)); }
+
+/* Kacheln mit Zahlen: großer, mit Verlauf */
+.tk-kachel { overflow: hidden; position: relative; }
+.tk-kachel b { font-size: 34px; font-weight: 900; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+.tk-kachel::after { content: ""; position: absolute; right: -30px; top: -30px; width: 90px; height: 90px; border-radius: 50%; background: radial-gradient(circle, color-mix(in srgb, var(--honey) 18%, transparent), transparent 70%); }
+
+/* Status-Chips leuchten */
+.chip.ok, .status.offen { background: var(--honey-soft); }
+.kb-live::before { animation: puls 2s ease-in-out infinite; }
+@keyframes puls { 0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--live) 60%, transparent); } 50% { box-shadow: 0 0 0 5px transparent; } }
+
+/* Menü und Dialoge federn */
+.menue { animation: menue-auf .22s cubic-bezier(.3, 1.4, .5, 1); }
+.kb-editor[open] { animation: dialog-auf .28s cubic-bezier(.3, 1.3, .5, 1); }
+@keyframes dialog-auf { from { opacity: 0; transform: translateY(12px) scale(.97); } }
+
+/* Ladehinweis als Schimmer statt nur Text */
+.note.laedt { background: linear-gradient(90deg, var(--muted) 30%, var(--fg) 50%, var(--muted) 70%) 0 0 / 300% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: lade 1.6s linear infinite; justify-self: start; }
+@keyframes lade { to { background-position: -300% 0; } }
+
+/* Dunkel: Karten leicht gläsern */
+:root[data-theme="dunkel"] .box { background: linear-gradient(180deg, color-mix(in srgb, var(--surface) 100%, #fff 2%), var(--surface)); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="hell"]) .box { background: linear-gradient(180deg, color-mix(in srgb, var(--surface) 100%, #fff 2%), var(--surface)); } }
+
+@media (prefers-reduced-motion: reduce) { .vorher { opacity: 1; transform: none; } .topbar::before, .topbar::after { animation: none; } }

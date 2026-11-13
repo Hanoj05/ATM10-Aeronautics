@@ -420,7 +420,7 @@
       var h = "";
       c.gebaeude.forEach(function (g) { if (g.ordner) h += link("gebaeude.html?id=" + encodeURIComponent(g.id), g.name, aktiv === g.id); });
       if (h) nav.insertAdjacentHTML("beforeend", "<span class='sep' aria-hidden='true'></span>" + h);
-    }).catch(function () {});
+    }).catch(function () {}).then(function () { var m = nav.querySelector(".marker"); if (m) m.remove(); navMarker(nav); });
     var site = nav.parentNode;
     Promise.all([ich(), gebaeude]).then(function (r) {
       var i = r[0];
@@ -466,6 +466,91 @@
         return { id: id, ordner: ordner, geb: geb, modell: r[0], konfig: r[1] || { netzwerke: [], teile: [] } };
       });
     });
+  }
+
+  /* --- Effekte: Einfliegen beim Scrollen, Lichtschein unter der Maus, hochzählende Zahlen, Nav-Marker ---
+   * Die Seiten bauen ihren Inhalt erst nach dem Laden, darum schaut ein MutationObserver nach neuen Elementen. */
+  (function effekte() {
+    var ruhig = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var ZIELE = ".box, .gebkarte, .team-karte, .kb-spalte, .tk-kachel, .campus-list a, .flow";
+    var io = !ruhig && "IntersectionObserver" in window ? new IntersectionObserver(function (eintraege) {
+      eintraege.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        io.unobserve(e.target);
+        e.target.classList.remove("vorher");
+        setTimeout(function () { e.target.classList.remove("einflug"); e.target.style.removeProperty("--verz"); }, 900);
+      });
+    }, { rootMargin: "0px 0px -6% 0px" }) : null;
+
+    function zaehle(el) {
+      var m = /^(\d+)(\D*)$/.exec(el.textContent.trim());
+      if (!m || ruhig) return;
+      var ziel = +m[1], rest = m[2], t0 = null;
+      if (ziel < 2) return;
+      function schritt(t) {
+        if (t0 === null) t0 = t;
+        var p = Math.min(1, (t - t0) / 900), e = 1 - Math.pow(1 - p, 3);
+        el.textContent = Math.round(ziel * e) + rest;
+        if (p < 1) requestAnimationFrame(schritt);
+      }
+      requestAnimationFrame(schritt);
+    }
+
+    function neu(wurzel) {
+      if (!wurzel.querySelectorAll) return;
+      var liste = [].slice.call(wurzel.querySelectorAll(ZIELE));
+      if (wurzel.matches && wurzel.matches(ZIELE)) liste.unshift(wurzel);
+      var nr = 0;
+      liste.forEach(function (el) {
+        if (el.dataset.fx) return;
+        el.dataset.fx = "1";
+        /* nur beim ersten Aufbau, nicht wenn Kanban & Co. später neu zeichnen */
+        if (io && !el.closest(".menue") && performance.now() < 4000) {
+          el.classList.add("einflug", "vorher");
+          el.style.setProperty("--verz", Math.min(nr++, 10) * 55 + "ms");
+          io.observe(el);
+        }
+        if (el.classList.contains("tk-kachel")) { var b = el.querySelector("b"); if (b) zaehle(b); }
+      });
+      [].slice.call(wurzel.querySelectorAll(".note")).forEach(function (n) { n.classList.toggle("laedt", /^Lade\b/.test(n.textContent.trim())); });
+    }
+
+    function start() {
+      neu(document.body);
+      new MutationObserver(function (ms) {
+        ms.forEach(function (m) { m.addedNodes.forEach(function (n) { if (n.nodeType === 1) neu(n); else if (n.parentNode) neu(n.parentNode); }); });
+      }).observe(document.body, { childList: true, subtree: true });
+    }
+    if (document.body) start(); else document.addEventListener("DOMContentLoaded", start);
+
+    /* Lichtschein: Mausposition in der Karte als CSS-Variablen */
+    document.addEventListener("pointermove", function (ev) {
+      var box = ev.target.closest && ev.target.closest(".box");
+      if (!box) return;
+      var r = box.getBoundingClientRect();
+      box.style.setProperty("--mx", (ev.clientX - r.left) + "px");
+      box.style.setProperty("--my", (ev.clientY - r.top) + "px");
+    }, { passive: true });
+  })();
+
+  /* Marker, der in der Navigation zum Link unter der Maus gleitet und zur aktiven Seite zurückkehrt */
+  function navMarker(nav) {
+    if (nav.querySelector(".marker")) return;
+    var m = document.createElement("span");
+    m.className = "marker"; m.setAttribute("aria-hidden", "true");
+    nav.appendChild(m); nav.classList.add("mit-marker");
+    function auf(a) {
+      if (!a) { m.style.opacity = "0"; return; }
+      m.style.opacity = "1"; m.style.left = a.offsetLeft + "px"; m.style.width = a.offsetWidth + "px";
+      m.style.top = a.offsetTop + "px"; m.style.height = a.offsetHeight + "px";
+    }
+    function aktiv() { auf(nav.querySelector("a[aria-current='page']")); }
+    nav.addEventListener("pointerover", function (ev) { var a = ev.target.closest("a"); if (a) auf(a); });
+    nav.addEventListener("pointerleave", aktiv);
+    window.addEventListener("resize", aktiv);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(aktiv);
+    m.style.transition = "none"; aktiv(); m.offsetWidth; m.style.transition = "";
+    return aktiv;
   }
 
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;" }[c]; }); }
