@@ -38,6 +38,12 @@ SEITEN = ["up", "down", "north", "south", "west", "east"]
 FARBE_GRAS = (0x91, 0xBD, 0x59)
 FARBE_LAUB = (0x77, 0xAB, 0x2F)
 FARBE_WASSER = (0x3F, 0x76, 0xE4)
+# Blöcke mit fester Farbe im Spiel (nicht vom Biom abhängig)
+FESTE_FARBEN = {
+    "minecraft:birch_leaves": (0x80, 0xA7, 0x55),
+    "minecraft:spruce_leaves": (0x61, 0x99, 0x61),
+    "minecraft:lily_pad": (0x20, 0x80, 0x30),
+}
 
 
 # ---------------------------------------------------------------- PNG
@@ -370,6 +376,8 @@ def mittelfarbe(res, textur):
 
 
 def toenung(res, block_id, textur):
+    if block_id in FESTE_FARBEN:
+        return FESTE_FARBEN[block_id]
     # Productive Bees färbt seine grauen Bienenstöcke in der Holzfarbe ein
     if "tinted/" in textur:
         for holz in HOLZ:

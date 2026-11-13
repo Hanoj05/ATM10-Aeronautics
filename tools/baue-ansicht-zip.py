@@ -63,18 +63,30 @@ def texturen_js():
     return "window.CAMPUS_TEXTUREN = " + json.dumps(t, ensure_ascii=False, separators=(",", ":")) + ";\n"
 
 
+# Feste Zeit für alle Einträge: gleicher Inhalt ergibt Byte für Byte dieselbe Zip,
+# sonst zeigt git nach jedem Bauen eine Änderung und Pull klappt nicht mehr.
+ZEIT = (2020, 1, 1, 0, 0, 0)
+
+
+def schreibe(z, name, inhalt):
+    info = zipfile.ZipInfo(name, ZEIT)
+    info.compress_type = zipfile.ZIP_DEFLATED
+    info.external_attr = 0o644 << 16
+    z.writestr(info, inhalt, compresslevel=9)
+
+
 def main():
     d = daten()
     js = "window.CAMPUS_DATEN = " + json.dumps(d, ensure_ascii=False, separators=(",", ":")) + ";\n"
     ZIEL.parent.mkdir(exist_ok=True)
-    with zipfile.ZipFile(ZIEL, "w", zipfile.ZIP_DEFLATED, compresslevel=9) as z:
+    with zipfile.ZipFile(ZIEL, "w") as z:
         for datei in sorted(VORLAGE.rglob("*")):
             if datei.is_file():
-                z.write(datei, ORDNER + datei.relative_to(VORLAGE).as_posix())
-        z.write(REPO / "website" / "js" / "voxel.js", ORDNER + "voxel.js")
-        z.writestr(ORDNER + "daten.js", js)
-        z.writestr(ORDNER + "texturen.js", texturen_js())
-        z.writestr(ORDNER + "LIES-MICH.txt", LIES_MICH)
+                schreibe(z, ORDNER + datei.relative_to(VORLAGE).as_posix(), datei.read_bytes())
+        schreibe(z, ORDNER + "voxel.js", (REPO / "website" / "js" / "voxel.js").read_bytes())
+        schreibe(z, ORDNER + "daten.js", js)
+        schreibe(z, ORDNER + "texturen.js", texturen_js())
+        schreibe(z, ORDNER + "LIES-MICH.txt", LIES_MICH)
     mit = [g["name"] for g in d["gebaeude"] if g["modell"]]
     print(f"{ZIEL.relative_to(REPO)}: {ZIEL.stat().st_size // 1024} KB, Gebäude mit Modell: {', '.join(mit)}")
 
