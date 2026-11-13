@@ -21,12 +21,14 @@
   "maschinen": [],
   "netzwerke": [],
   "dateien": {
-    "bauplan": null,
+    "bauplan": "bauplan.html",
     "modell": "modell.json",
     "konfigDaten": "konfig.json",
     "konfig": "konfig.md",
     "schematic": null,
-    "generator": "tools/modell-magiehaus.py"
+    "generator": "tools/modell-magiehaus.py",
+    "bauabschnitte": "bauabschnitte.json",
+    "bauhilfe": "tools/bauhilfe-magiehaus.py"
   },
   "ebenen": {
     "keller": "Plan y 0 bis 5 (Welt 59 bis 64), 5 Blöcke hoch",
