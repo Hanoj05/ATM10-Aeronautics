@@ -1,7 +1,7 @@
 {
   "id": "zugriff-nur-fuer-mitspieler",
   "titel": "Zugriff nur für Mitspieler",
-  "beschreibung": "Login mit eigenem Konto pro Person, Profile unter Team. Fertig, sobald es auf dem Server läuft.",
+  "beschreibung": "Anmeldung per Authentik (Single Sign-on) über den Nginx Proxy Manager, ein Campus-Konto pro Authentik-Benutzer, Profile unter Team. Fertig, sobald es auf dem Server läuft.",
   "status": "in Arbeit",
   "phase": "online",
   "wo": "Website",

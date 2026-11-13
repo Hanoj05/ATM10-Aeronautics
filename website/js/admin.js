@@ -1,4 +1,5 @@
-/* Admin: Konten verwalten über den Campus-Dienst. */
+/* Admin: Campus-Konten verwalten. Ein Konto verbindet einen Authentik-Benutzer mit einem Profil.
+ * Passwörter und Admin-Recht kommen aus Authentik. */
 (function () {
   "use strict";
   var C = window.Campus, esc = C.esc;
@@ -14,18 +15,20 @@
   }
 
   function zeile(k) {
-    var status = k.gesperrt ? "<span class='chip warn'>gesperrt</span>" : k.muss_aendern ? "<span class='chip'>Startpasswort</span>" : "<span class='chip ok'>aktiv</span>";
+    var status = k.gesperrt ? "<span class='chip warn'>gesperrt</span>" : "<span class='chip ok'>aktiv</span>";
     var selbst = k.id === ichId, a = [];
-    a.push("<button type='button' class='knopf leise' data-a='zuruecksetzen'>Passwort zurücksetzen</button>");
-    if (!selbst) a.push(k.gesperrt ? "<button type='button' class='knopf leise' data-a='entsperren'>Entsperren</button>" : "<button type='button' class='knopf leise' data-a='sperren'>Sperren</button>");
-    if (!selbst) a.push(k.admin ? "<button type='button' class='knopf leise' data-a='admin_weg'>Admin weg</button>" : "<button type='button' class='knopf leise' data-a='admin'>Zum Admin</button>");
+    if (!selbst) {
+      a.push("<button type='button' class='knopf leise' data-a='authentik'>Authentik-Name ändern</button>");
+      a.push(k.gesperrt ? "<button type='button' class='knopf leise' data-a='entsperren'>Entsperren</button>" : "<button type='button' class='knopf leise' data-a='sperren'>Sperren</button>");
+    }
     return "<tr data-id='" + esc(k.id) + "'><td><b>" + esc(k.anzeigename) + "</b><br><code>" + esc(k.id) + "</code></td>" +
-      "<td>" + (k.admin ? "Admin" : "Mitglied") + "</td><td>" + status + "</td><td>" + esc(zeit(k.letzter_login)) + "</td>" +
+      "<td><code>" + esc(k.authentik || "–") + "</code></td><td>" + status + "</td><td>" + esc(zeit(k.letzter_login)) + "</td>" +
       "<td><div class='knoepfe'>" + a.join("") + "</div><div class='zeilenform'></div></td></tr>";
   }
 
   function laden() {
     return C.api("konten").then(function (j) {
+      if (j.adminGruppe) $("adminGruppe").textContent = j.adminGruppe;
       $("konten").innerHTML = j.konten.map(zeile).join("") || "<tr><td colspan='5' class='note'>Keine Konten.</td></tr>";
     }).catch(function (e) {
       $("konten").innerHTML = "<tr><td colspan='5' class='meldung fehler'>" + esc(e.message) + "</td></tr>";
@@ -43,14 +46,14 @@
     var b = ev.target.closest("button[data-a]");
     if (!b) return;
     var tr = b.closest("tr"), id = tr.getAttribute("data-id"), was = b.getAttribute("data-a"), platz = tr.querySelector(".zeilenform");
-    if (was === "zuruecksetzen") {
-      platz.innerHTML = "<form class='inline'><input name='passwort' type='text' minlength='8' required placeholder='Neues Startpasswort' autocomplete='off'>" +
+    if (was === "authentik") {
+      platz.innerHTML = "<form class='inline'><input name='authentik' type='text' maxlength='150' required placeholder='Benutzername in Authentik' autocapitalize='none' spellcheck='false'>" +
         "<button type='submit' class='knopf'>Setzen</button><span class='meldung' role='status'></span></form>";
       var f = platz.querySelector("form");
-      f.elements.passwort.focus();
+      f.elements.authentik.focus();
       f.addEventListener("submit", function (e2) {
         e2.preventDefault();
-        aktion(id, { aktion: "zuruecksetzen", passwort: f.elements.passwort.value }, f.querySelector(".meldung"));
+        aktion(id, { aktion: "authentik", authentik: f.elements.authentik.value.trim() }, f.querySelector(".meldung"));
       });
       return;
     }
@@ -64,7 +67,7 @@
     m.className = "meldung"; m.textContent = "Lege an …";
     C.api("konten", {
       id: f.elements.id.value.trim().toLowerCase(), anzeigename: f.elements.anzeigename.value, minecraft: f.elements.minecraft.value,
-      passwort: f.elements.passwort.value, admin: f.elements.admin.checked
+      authentik: f.elements.authentik.value.trim()
     }).then(function (j) {
       m.className = j.warnung ? "meldung fehler" : "meldung";
       m.textContent = j.warnung || "Angelegt. Profil liegt jetzt unter team/.";
@@ -73,7 +76,7 @@
   });
 
   C.ich().then(function (i) {
-    if (!i) { $("hinweis").hidden = false; $("hinweis").textContent = "Die Admin-Seite geht nur auf dem Server mit Login."; return; }
+    if (!i) { $("hinweis").hidden = false; $("hinweis").textContent = "Die Admin-Seite geht nur auf dem Server mit Anmeldung."; return; }
     if (!i.admin) { $("hinweis").hidden = false; $("hinweis").textContent = "Nur für Admins."; return; }
     ichId = i.id; laden();
   });

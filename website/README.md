@@ -20,11 +20,11 @@ Daten (JSON, Texturen) holt die Seite immer frisch. Die Skripte in `website/js/`
 - `index.html` – **Übersicht:** eine Karte pro Gebäude mit Kennzahlen und Sprungmarken.
 - `map.html` – **Map:** der Campus in 3D. Hover zeigt den Gebäudenamen, Klick öffnet die Gebäudeseite.
 - `technik.html` – **Technik:** ME-System (Zahlen aus dem Blockmodell, Zellen und Anbindungen aus `konfig.json` unter `me`) und alle Logistics Networks, jedes einzeln aufklappbar mit Kanälen, Flüssen und Nodes.
-- `team.html` – **Team:** ein Profil pro Person aus `team/`. Das eigene Profil lässt sich bearbeiten, darunter das Passwort ändern (nur mit Login auf dem Server).
+- `team.html` – **Team:** ein Profil pro Person aus `team/`. Das eigene Profil lässt sich bearbeiten (nur angemeldet auf dem Server). Das Passwort ändert man in Authentik.
 - `import.html` – **Karte aktualisieren:** neue Campus-Schematic hochladen, Vorschau mit Blöcken dazu/weg pro Gebäude, neuen Blöcken ohne Textur, Gebautem außerhalb aller Gebäude und 3D-Vergleich (vorher, nachher, Unterschied). Pro Gebäude einstellbar, ob das Modell aus der Schematic oder aus dem Entwurfs-Skript kommt. Übernehmen wird ein Commit. Anleitung im Haupt-README unter „Karte aktualisieren“.
 - `versionen.html` – **Versionen:** alle Commits mit Autor, Zeit und Bereich. Admins können einen früheren Kartenstand zurückholen (als neuer Commit).
-- `admin.html` – **Admin:** Konten anlegen, Passwort zurücksetzen, sperren, Admin-Recht geben (nur für Admins).
-- `kanban.html` – **Kanban:** Spalten offen, in Arbeit, erledigt. Karten per Drag & Drop verschieben, anklicken zum Bearbeiten. Filter nach Person („Meine Aufgaben“), Gebäude, Bereich, Ort und Phase, auf Wunsch nach Phase gruppiert. Die Filter stehen in der Adresse, ein Link zeigt also genau diese Ansicht. Offene Seiten holen sich Änderungen von anderen alle 20 Sekunden. Daten in `kanban/`, Ändern nur mit Login auf dem Server. `roadmap.html` leitet hierher weiter.
+- `admin.html` – **Admin:** Konten anlegen (Authentik-Benutzer mit Profil verbinden), Authentik-Namen ändern, sperren (nur für Admins, also Authentik-Gruppe `campus-admins`).
+- `kanban.html` – **Kanban:** Spalten offen, in Arbeit, erledigt. Karten per Drag & Drop verschieben, anklicken zum Bearbeiten. Filter nach Person („Meine Aufgaben“), Gebäude, Bereich, Ort und Phase, auf Wunsch nach Phase gruppiert. Die Filter stehen in der Adresse, ein Link zeigt also genau diese Ansicht. Offene Seiten holen sich Änderungen von anderen alle 20 Sekunden. Daten in `kanban/`, Ändern nur angemeldet auf dem Server. `roadmap.html` leitet hierher weiter.
 - `gebaeude.html?id=<id>` – **Gebäude** mit Unter-Tabs:
   - `#ansicht`: 3D-Modell mit Schnitt-Regler. Hover zeigt die Konfiguration eines Teils, Kanäle lassen sich markieren.
   - `#konfig`: Matrix, welches Teil auf welchem Kanal sendet oder empfängt, die Flüsse pro Kanal und darunter `konfig.md`.
@@ -62,4 +62,4 @@ Die 3D-Ansicht zeichnet die Blöcke mit den echten Texturen aus dem Spiel (`text
 | Eigener Debian-Server | Volle Kontrolle, alles bleibt bei dir | Ein Webserver wie Caddy, dazu `git pull` per Cron. Zugriff von außen über Tailscale, dann müssen die Mitspieler auch Tailscale haben |
 | Netlify | Ähnlich wie Cloudflare Pages | Free-Plan hat Limits bei Build-Minuten, für eine statische Seite reicht es |
 
-Entscheidung: **eigener Server** (CentOS) mit nginx und Login für jede Person. Einrichtung im Haupt-README unter „Server einrichten“.
+Entscheidung: **eigener Server** (CentOS) mit nginx, davor Nginx Proxy Manager mit Authentik (Single Sign-on). Einrichtung im Haupt-README unter „Server einrichten“.

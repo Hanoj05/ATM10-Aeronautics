@@ -1,21 +1,29 @@
-"""Campus-Dienst: Login, Konten, Profile und Schreiben ins Repo.
+"""Campus-Dienst: Konten, Profile und Schreiben ins Repo.
 
 Läuft hinter nginx und lauscht nur auf 127.0.0.1. nginx liefert die statischen Dateien
-selbst aus und fragt vorher per auth_request bei /api/auth nach, ob der Login gültig ist.
+selbst aus und fragt vorher per auth_request bei /api/auth nach, ob die Person rein darf.
+
+Den Login macht Authentik (Single Sign-on) über den Nginx Proxy Manager (NPM). NPM schickt
+nach dem Login den Authentik-Benutzernamen und die Gruppen als Header mit. Der Dienst glaubt
+diesen Headern nur, wenn auch das geheime Proxy-Passwort (CAMPUS_PROXY_GEHEIMNIS) mitkommt,
+das nur NPM kennt. Wer welches Campus-Konto ist, steht in konten.json (Feld "authentik").
+Admin ist, wer in Authentik in der Gruppe CAMPUS_ADMIN_GRUPPE ist.
 
 Nutzung:  python3 server/dienst.py
 Braucht:  Python ab 3.9 und git, keine Zusatzpakete
 
 Einstellungen kommen aus Umgebungsvariablen (siehe server/campus-dienst.service):
   CAMPUS_REPO     Pfad zum Repo-Checkout            (Standard: Ordner über server/)
-  CAMPUS_DATEN    Konten, Sitzungen, Sperrdatei     (Standard: /var/lib/campus)
+  CAMPUS_DATEN    Konten, Sperrdateien, Import     (Standard: /var/lib/campus)
   CAMPUS_ADRESSE  Adresse zum Lauschen              (Standard: 127.0.0.1)
   CAMPUS_PORT     Port                              (Standard: 8090)
   CAMPUS_BRANCH   Branch, auf den geschrieben wird  (Standard: main)
   CAMPUS_REMOTE   Remote für fetch und push         (Standard: origin, leer = ohne GitHub)
+  CAMPUS_PROXY_GEHEIMNIS  muss im Header X-Campus-Proxy mitkommen (Pflicht, sonst kommt niemand rein)
+  CAMPUS_ADMIN_GRUPPE     Authentik-Gruppe der Admins   (Standard: campus-admins)
 
-Konten und Passwort-Hashes liegen in CAMPUS_DATEN, nie im Repo. Ins Repo kommen nur
-die öffentlichen Profilfelder unter team/.
+Die Konten (Zuordnung Authentik-Name zu Campus-Konto) liegen in CAMPUS_DATEN, nie im Repo.
+Ins Repo kommen nur die öffentlichen Profilfelder unter team/.
 """
 import fcntl
 import hashlib
@@ -23,7 +31,6 @@ import hmac
 import json
 import os
 import re
-import secrets
 import subprocess
 import sys
 import threading
@@ -48,21 +55,16 @@ ADRESSE = os.environ.get("CAMPUS_ADRESSE") or "127.0.0.1"
 PORT = int(os.environ.get("CAMPUS_PORT") or 8090)
 BRANCH = os.environ.get("CAMPUS_BRANCH") or "main"
 REMOTE = os.environ.get("CAMPUS_REMOTE", "origin")
+PROXY_GEHEIMNIS = os.environ.get("CAMPUS_PROXY_GEHEIMNIS") or ""
+ADMIN_GRUPPE = os.environ.get("CAMPUS_ADMIN_GRUPPE") or "campus-admins"
 
-COOKIE = "__Host-campus"            # __Host-: nur über HTTPS, nur für genau diese Domain
-SITZUNG_TAGE = 30                   # so lange bleibt man eingeloggt, verlängert sich bei Nutzung
 MAX_ANFRAGE = 64 * 1024             # größte erlaubte Anfrage an die API in Byte
-FEHLVERSUCHE = 5                    # so viele falsche Passwörter ...
-SPERRZEIT = 15 * 60                 # ... innerhalb dieser Sekunden, dann Pause
-MIN_PASSWORT = 8
-
-# scrypt: N = 2^14, r = 8, p = 1 braucht 16 MB Speicher und ca. 50 ms pro Versuch
-SCRYPT = {"n": 2 ** 14, "r": 8, "p": 1}
 
 # Nur diese Ordner darf der Dienst im Repo beschreiben
 SCHREIBBAR = ("team/", "kanban/", "gebaeude/", "schematics/", "download/")
 
 ID_MUSTER = re.compile(r"^[a-z][a-z0-9-]{1,23}$")
+AUTHENTIK_MUSTER = re.compile(r"^[A-Za-z0-9._@+-]{1,150}$")
 MC_MUSTER = re.compile(r"^[A-Za-z0-9_]{3,16}$")
 FARB_MUSTER = re.compile(r"^#[0-9a-f]{6}$")
 FARBEN = ["#d9840b", "#3c7fc4", "#4f9a3a", "#b0457a", "#7a5cc4", "#c4553c", "#2f9a94", "#8a7a2a"]
@@ -106,31 +108,12 @@ def dateisperre(pfad):
             fcntl.flock(f, fcntl.LOCK_UN)
 
 
-# --- Passwörter ---
-
-def passwort_hash(passwort, salz=None, n=SCRYPT["n"], r=SCRYPT["r"], p=SCRYPT["p"]):
-    salz = salz if salz is not None else secrets.token_bytes(16)
-    h = hashlib.scrypt(passwort.encode("utf-8"), salt=salz, n=n, r=r, p=p, maxmem=64 * 1024 * 1024, dklen=32)
-    return {"salz": salz.hex(), "hash": h.hex(), "n": n, "r": r, "p": p}
-
-
-def passwort_passt(passwort, eintrag):
-    h = passwort_hash(passwort, bytes.fromhex(eintrag["salz"]), eintrag["n"], eintrag["r"], eintrag["p"])
-    return hmac.compare_digest(h["hash"], eintrag["hash"])
-
-
-def passwort_pruefen(passwort):
-    if not isinstance(passwort, str) or len(passwort) < MIN_PASSWORT:
-        raise Fehler(400, "Das Passwort braucht mindestens %d Zeichen." % MIN_PASSWORT)
-    if len(passwort) > 200:
-        raise Fehler(400, "Das Passwort ist zu lang.")
-
-
-# Vergleichswert für unbekannte Namen: so dauert ein Fehlversuch immer gleich lang
-_ATTRAPPE = passwort_hash(secrets.token_hex(8))
-
-
 # --- Konten ---
+
+def authentik_pruefen(name):
+    if not isinstance(name, str) or not AUTHENTIK_MUSTER.match(name):
+        raise Fehler(400, "Authentik-Benutzername fehlt oder enthält ungültige Zeichen.")
+
 
 class Konten:
     """Konten in DATEN/konten.json. Lesen mit Zwischenspeicher, Schreiben immer frisch
@@ -171,113 +154,45 @@ class Konten:
             schreibe_atomar(self.datei, inhalt.encode("utf-8"))
             self._stand = None
 
-    def anlegen(self, kid, passwort, admin=False):
+    def anlegen(self, kid, authentik):
         if not ID_MUSTER.match(kid or ""):
             raise Fehler(400, "Kontoname: 2 bis 24 Zeichen, nur a-z, 0-9 und Bindestrich, vorne ein Buchstabe.")
-        passwort_pruefen(passwort)
+        authentik_pruefen(authentik)
         with self.aendern() as k:
             if kid in k:
                 raise Fehler(409, "Das Konto „%s“ gibt es schon." % kid)
-            k[kid] = dict(passwort_hash(passwort), admin=bool(admin), gesperrt=False, muss_aendern=True,
-                          angelegt=zeitstempel(), sitzungen_ab=jetzt(), letzter_login=None)
+            self._schon_vergeben(k, authentik, kid)
+            k[kid] = dict(authentik=authentik, gesperrt=False, angelegt=zeitstempel(), letzter_login=None)
 
-    def passwort_setzen(self, kid, passwort, muss_aendern):
-        passwort_pruefen(passwort)
+    def authentik_setzen(self, kid, authentik):
+        authentik_pruefen(authentik)
         with self.aendern() as k:
             if kid not in k:
                 raise Fehler(404, "Konto nicht gefunden.")
-            k[kid].update(passwort_hash(passwort))
-            k[kid]["muss_aendern"] = bool(muss_aendern)
-            k[kid]["sitzungen_ab"] = jetzt()      # alle bisherigen Logins werden ungültig
+            self._schon_vergeben(k, authentik, kid)
+            k[kid]["authentik"] = authentik
+
+    @staticmethod
+    def _schon_vergeben(k, authentik, kid):
+        for andere, konto in k.items():
+            if andere != kid and str(konto.get("authentik", "")).lower() == authentik.lower():
+                raise Fehler(409, "Der Authentik-Name „%s“ gehört schon zum Konto „%s“." % (authentik, andere))
+
+    def zu_authentik(self, name):
+        """(Konto-ID, Konto) zum Authentik-Benutzernamen, Groß- und Kleinschreibung egal."""
+        name = (name or "").lower()
+        if not name:
+            return None, None
+        for kid, konto in self._lies().items():
+            if str(konto.get("authentik", "")).lower() == name:
+                return kid, konto
+        return None, None
 
     def setze(self, kid, **felder):
         with self.aendern() as k:
             if kid not in k:
                 raise Fehler(404, "Konto nicht gefunden.")
             k[kid].update(felder)
-
-
-# --- Sitzungen ---
-
-class Sitzungen:
-    """Sitzungen in DATEN/sitzungen.json. Gespeichert ist nur der SHA-256 des Tokens:
-    wer die Datei liest, kann sich damit nicht einloggen."""
-
-    def __init__(self, ordner):
-        self.datei = Path(ordner) / "sitzungen.json"
-        self.lock = threading.Lock()
-        try:
-            self.daten = json.loads(self.datei.read_text(encoding="utf-8"))
-        except (FileNotFoundError, ValueError):
-            self.daten = {}
-
-    @staticmethod
-    def _schluessel(token):
-        return hashlib.sha256(token.encode("ascii", "replace")).hexdigest()
-
-    def _speichern(self):
-        t = jetzt()
-        self.daten = {k: v for k, v in self.daten.items() if v["ablauf"] > t}
-        self.datei.parent.mkdir(parents=True, exist_ok=True)
-        schreibe_atomar(self.datei, (json.dumps(self.daten, indent=1, sort_keys=True) + "\n").encode("utf-8"))
-
-    def neu(self, kid):
-        token = secrets.token_urlsafe(32)
-        with self.lock:
-            self.daten[self._schluessel(token)] = {"konto": kid, "beginn": jetzt(), "ablauf": jetzt() + SITZUNG_TAGE * 86400}
-            self._speichern()
-        return token
-
-    def pruefe(self, token, konten):
-        """Gibt (Konto-ID, Konto) zurück oder (None, None)."""
-        if not token or len(token) > 100:
-            return None, None
-        s = self._schluessel(token)
-        with self.lock:
-            e = self.daten.get(s)
-            if not e or e["ablauf"] < jetzt():
-                return None, None
-            konto = konten.hole(e["konto"])
-            if not konto or konto.get("gesperrt") or e["beginn"] < konto.get("sitzungen_ab", 0):
-                return None, None
-            # Gleitend verlängern, aber höchstens einmal pro Stunde auf die Platte schreiben
-            neu_ablauf = jetzt() + SITZUNG_TAGE * 86400
-            if neu_ablauf - e["ablauf"] > 3600:
-                e["ablauf"] = neu_ablauf
-                self._speichern()
-            return e["konto"], konto
-
-    def beenden(self, token):
-        with self.lock:
-            if self.daten.pop(self._schluessel(token or ""), None):
-                self._speichern()
-
-
-# --- Bremse gegen Passwort-Raten ---
-
-class Bremse:
-    def __init__(self):
-        self.lock = threading.Lock()
-        self.versuche = {}
-
-    def _liste(self, schluessel):
-        grenze = jetzt() - SPERRZEIT
-        liste = [t for t in self.versuche.get(schluessel, []) if t > grenze]
-        self.versuche[schluessel] = liste
-        return liste
-
-    def gesperrt(self, *schluessel):
-        with self.lock:
-            return any(len(self._liste(s)) >= FEHLVERSUCHE * (4 if s.startswith("ip:") else 1) for s in schluessel)
-
-    def fehlschlag(self, *schluessel):
-        with self.lock:
-            for s in schluessel:
-                self._liste(s).append(jetzt())
-
-    def erfolg(self, schluessel):
-        with self.lock:
-            self.versuche.pop(schluessel, None)
 
 
 # --- Git ---
@@ -560,8 +475,7 @@ def dienst_bauen():
     git = Git(REPO, DATEN / "git.lock")
     return {
         "konten": Konten(DATEN),
-        "sitzungen": Sitzungen(DATEN),
-        "bremse": Bremse(),
+        "zuletzt": {},          # wann letzter_login zuletzt geschrieben wurde, pro Konto
         "git": git,
         "karte": karte_modul.Karte(git, DATEN, log),
     }
@@ -580,13 +494,6 @@ class Handler(BaseHTTPRequestHandler):
     def ip(self):
         return self.headers.get("X-Real-IP") or self.client_address[0]
 
-    def cookie(self):
-        for teil in (self.headers.get("Cookie") or "").split(";"):
-            name, _, wert = teil.strip().partition("=")
-            if name == COOKIE:
-                return wert
-        return None
-
     def antwort(self, status, daten=None, kopf=None):
         inhalt = b"" if daten is None else json.dumps(daten, ensure_ascii=False).encode("utf-8")
         self.send_response(status)
@@ -599,9 +506,6 @@ class Handler(BaseHTTPRequestHandler):
         self.end_headers()
         if self.command != "HEAD":
             self.wfile.write(inhalt)
-
-    def setze_cookie(self, token, sekunden):
-        return {"Set-Cookie": "%s=%s; Path=/; Max-Age=%d; HttpOnly; Secure; SameSite=Strict" % (COOKIE, token, sekunden)}
 
     def eingabe(self):
         laenge = int(self.headers.get("Content-Length") or 0)
@@ -623,16 +527,44 @@ class Handler(BaseHTTPRequestHandler):
         host = self.headers.get("Host")
         return bool(herkunft and host and urlsplit(herkunft).netloc == host)
 
-    def wer(self):
-        """(id, konto) des eingeloggten Nutzers oder (None, None)."""
-        return self.d["sitzungen"].pruefe(self.cookie(), self.d["konten"])
+    def vom_proxy(self):
+        """Kommt die Anfrage wirklich über NPM? Nur dann zählen die Authentik-Header."""
+        if not PROXY_GEHEIMNIS:
+            return False
+        return hmac.compare_digest((self.headers.get("X-Campus-Proxy") or "").encode(), PROXY_GEHEIMNIS.encode())
 
-    def eingeloggt(self, admin=False, auch_ohne_neues_passwort=False):
+    def authentik(self):
+        """(Benutzername, Gruppen) aus den Headern von Authentik, oder (None, []) ohne gültigen Proxy."""
+        if not self.vom_proxy():
+            return None, []
+        name = (self.headers.get("X-authentik-username") or "").strip()
+        gruppen = [g.strip() for g in (self.headers.get("X-authentik-groups") or "").split("|") if g.strip()]
+        return (name or None), gruppen
+
+    def wer(self):
+        """(id, konto) der angemeldeten Person oder (None, None). konto["admin"] kommt aus der Gruppe."""
+        name, gruppen = self.authentik()
+        kid, konto = self.d["konten"].zu_authentik(name)
+        if not kid or konto.get("gesperrt"):
+            return None, None
+        konto = dict(konto, admin=ADMIN_GRUPPE in gruppen)
+        self.merke_login(kid)
+        return kid, konto
+
+    def merke_login(self, kid):
+        """letzter_login höchstens alle 10 Minuten auf die Platte schreiben."""
+        if jetzt() - self.d["zuletzt"].get(kid, 0) < 600:
+            return
+        self.d["zuletzt"][kid] = jetzt()
+        try:
+            self.d["konten"].setze(kid, letzter_login=zeitstempel())
+        except (Fehler, OSError):
+            pass
+
+    def eingeloggt(self, admin=False):
         kid, konto = self.wer()
         if not kid:
-            raise Fehler(401, "Nicht eingeloggt.")
-        if konto.get("muss_aendern") and not auch_ohne_neues_passwort:
-            raise Fehler(403, "Bitte zuerst ein eigenes Passwort setzen.")
+            raise Fehler(401, "Nicht angemeldet oder kein Campus-Konto.")
         if admin and not konto.get("admin"):
             raise Fehler(403, "Nur für Admins.")
         return kid, konto
@@ -664,69 +596,27 @@ class Handler(BaseHTTPRequestHandler):
             log("Fehler bei", methode, pfad, repr(e))
             self.antwort(500, {"fehler": "Interner Fehler im Dienst."})
 
-    # -- Login --
+    # -- Anmeldung --
 
     def auth(self):
-        """Für nginx auth_request: 204 = darf rein, 401 = zum Login."""
-        kid, konto = self.wer()
-        if kid and not konto.get("muss_aendern"):
+        """Für nginx auth_request: 204 = darf rein, 401 = nicht über NPM, 403 = kein Campus-Konto."""
+        name, _ = self.authentik()
+        if not name:
+            if not PROXY_GEHEIMNIS:
+                log("CAMPUS_PROXY_GEHEIMNIS ist nicht gesetzt, niemand kommt rein.")
+            return self.antwort(401)
+        kid, _ = self.wer()
+        if kid:
             return self.antwort(204, kopf={"X-Campus-Konto": kid})
-        return self.antwort(401)
-
-    def login_seite(self):
-        inhalt = (HIER / "login.html").read_bytes()
-        self.send_response(200)
-        self.send_header("Content-Type", "text/html; charset=utf-8")
-        self.send_header("Content-Length", str(len(inhalt)))
-        self.send_header("Cache-Control", "no-store")
-        self.end_headers()
-        if self.command != "HEAD":
-            self.wfile.write(inhalt)
-
-    def login(self):
-        e = self.eingabe()
-        kid = str(e.get("name", "")).strip().lower()[:40]
-        passwort = str(e.get("passwort", ""))
-        bremse = self.d["bremse"]
-        schluessel = ("ip:" + self.ip(), "konto:%s|%s" % (kid, self.ip()))
-        if bremse.gesperrt(*schluessel):
-            raise Fehler(429, "Zu viele Fehlversuche. Bitte in 15 Minuten noch einmal probieren.")
-        konto = self.d["konten"].hole(kid)
-        ok = passwort_passt(passwort, konto or _ATTRAPPE) and konto is not None
-        if not ok or konto.get("gesperrt"):
-            bremse.fehlschlag(*schluessel)
-            log("Login fehlgeschlagen:", kid or "-", "von", self.ip())
-            raise Fehler(401, "Name oder Passwort falsch.")
-        bremse.erfolg(schluessel[1])
-        self.d["konten"].setze(kid, letzter_login=zeitstempel())
-        token = self.d["sitzungen"].neu(kid)
-        log("Login:", kid, "von", self.ip())
-        self.antwort(200, {"ok": True, "muss_aendern": bool(konto.get("muss_aendern"))},
-                     self.setze_cookie(token, SITZUNG_TAGE * 86400))
-
-    def abmelden(self):
-        self.d["sitzungen"].beenden(self.cookie())
-        self.antwort(200, {"ok": True}, self.setze_cookie("", 0))
-
-    def passwort(self):
-        kid, konto = self.eingeloggt(auch_ohne_neues_passwort=True)
-        e = self.eingabe()
-        if not passwort_passt(str(e.get("alt", "")), konto):
-            raise Fehler(400, "Das bisherige Passwort stimmt nicht.")
-        neu = str(e.get("neu", ""))
-        if neu == str(e.get("alt", "")):
-            raise Fehler(400, "Das neue Passwort muss anders sein als das alte.")
-        self.d["konten"].passwort_setzen(kid, neu, muss_aendern=False)
-        token = self.d["sitzungen"].neu(kid)     # alte Sitzungen sind jetzt ungültig, diese bleibt
-        log("Passwort geändert:", kid)
-        self.antwort(200, {"ok": True}, self.setze_cookie(token, SITZUNG_TAGE * 86400))
+        log("Kein aktives Campus-Konto für Authentik-Name", name)
+        return self.antwort(403)
 
     def ich(self):
         kid, konto = self.wer()
         if not kid:
-            raise Fehler(401, "Nicht eingeloggt.")
+            raise Fehler(401, "Nicht angemeldet.")
         p = lies_profil(kid) or {}
-        self.antwort(200, {"id": kid, "admin": bool(konto.get("admin")), "muss_aendern": bool(konto.get("muss_aendern")),
+        self.antwort(200, {"id": kid, "admin": bool(konto.get("admin")), "authentik": konto.get("authentik"),
                            "anzeigename": p.get("anzeigename") or kid, "farbe": p.get("farbe")})
 
     # -- Profile --
@@ -756,19 +646,19 @@ class Handler(BaseHTTPRequestHandler):
 
     def konten_liste(self):
         self.eingeloggt(admin=True)
-        felder = ("admin", "gesperrt", "muss_aendern", "angelegt", "letzter_login")
+        felder = ("authentik", "gesperrt", "angelegt", "letzter_login")
         aus = []
         for kid, k in sorted(self.d["konten"].alle().items()):
             p = lies_profil(kid) or {}
             aus.append(dict({f: k.get(f) for f in felder}, id=kid, anzeigename=p.get("anzeigename") or kid))
-        self.antwort(200, {"konten": aus})
+        self.antwort(200, {"konten": aus, "adminGruppe": ADMIN_GRUPPE})
 
     def konto_anlegen(self):
         kid, _ = self.eingeloggt(admin=True)
         e = self.eingabe()
         neu = str(e.get("id", "")).strip().lower()
         profil_pruefen(neu if ID_MUSTER.match(neu) else "x", e)   # Eingaben vorab prüfen
-        self.d["konten"].anlegen(neu, str(e.get("passwort", "")), bool(e.get("admin")))
+        self.d["konten"].anlegen(neu, str(e.get("authentik", "")).strip())
         log("Konto angelegt:", neu, "von", kid)
         try:
             profil_anlegen(self.d["git"], neu, e, autor_von(kid))
@@ -784,18 +674,14 @@ class Handler(BaseHTTPRequestHandler):
         konten = self.d["konten"]
         if not konten.hole(ziel):
             raise Fehler(404, "Konto nicht gefunden.")
-        if ziel == kid and aktion in ("sperren", "admin_weg"):
+        if ziel == kid and aktion in ("sperren", "authentik"):
             raise Fehler(400, "Das geht nicht beim eigenen Konto.")
-        if aktion == "zuruecksetzen":
-            konten.passwort_setzen(ziel, str(e.get("passwort", "")), muss_aendern=True)
-        elif aktion == "sperren":
-            konten.setze(ziel, gesperrt=True, sitzungen_ab=jetzt())
+        if aktion == "sperren":
+            konten.setze(ziel, gesperrt=True)
         elif aktion == "entsperren":
             konten.setze(ziel, gesperrt=False)
-        elif aktion == "admin":
-            konten.setze(ziel, admin=True)
-        elif aktion == "admin_weg":
-            konten.setze(ziel, admin=False)
+        elif aktion == "authentik":
+            konten.authentik_setzen(ziel, str(e.get("authentik", "")).strip())
         else:
             raise Fehler(400, "Unbekannte Aktion.")
         log("Konto", ziel, aktion, "von", kid)
@@ -944,10 +830,6 @@ def _r(methode, muster, funktion):
 
 ROUTEN = [
     _r("GET", r"/api/auth", Handler.auth),
-    _r("GET", r"/login", Handler.login_seite),
-    _r("POST", r"/api/login", Handler.login),
-    _r("POST", r"/api/abmelden", Handler.abmelden),
-    _r("POST", r"/api/passwort", Handler.passwort),
     _r("GET", r"/api/ich", Handler.ich),
     _r("GET", r"/api/stand", Handler.stand),
     _r("GET", r"/api/profil/([a-z][a-z0-9-]{1,23})", Handler.profil_lesen),
@@ -994,7 +876,9 @@ def main():
         log("Achtung:", REPO, "ist kein Git-Repo, Speichern geht nicht.")
     server = ThreadingHTTPServer((ADRESSE, PORT), Handler)
     server.daemon_threads = True
-    log("Campus-Dienst läuft auf %s:%d, Repo %s, Daten %s" % (ADRESSE, PORT, REPO, DATEN))
+    if not PROXY_GEHEIMNIS:
+        log("Achtung: CAMPUS_PROXY_GEHEIMNIS fehlt, so kommt niemand rein. Siehe README, Server einrichten.")
+    log("Campus-Dienst läuft auf %s:%d, Repo %s, Daten %s, Admin-Gruppe %s" % (ADRESSE, PORT, REPO, DATEN, ADMIN_GRUPPE))
     try:
         server.serve_forever()
     except KeyboardInterrupt:

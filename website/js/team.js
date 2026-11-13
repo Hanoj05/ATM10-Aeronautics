@@ -73,16 +73,6 @@
     if (b) formular(b.getAttribute("data-bearbeiten"), b.parentNode.querySelector(".bearbeiten"));
   });
 
-  $("passwort").addEventListener("submit", function (ev) {
-    ev.preventDefault();
-    var f = ev.target, m = f.querySelector(".meldung");
-    m.className = "meldung";
-    if (f.elements.neu.value !== f.elements.neu2.value) { m.className = "meldung fehler"; m.textContent = "Die beiden neuen Passwörter sind verschieden."; return; }
-    C.api("passwort", { alt: f.elements.alt.value, neu: f.elements.neu.value }).then(function () {
-      f.reset(); m.textContent = "Gespeichert. Auf anderen Geräten bist du jetzt ausgeloggt.";
-    }).catch(function (e) { m.className = "meldung fehler"; m.textContent = e.message; });
-  });
-
   /* Karten: mit Login über den Dienst, sonst direkt aus kanban/ */
   function ladeKarten() {
     return C.ich().then(function (i) {
@@ -100,7 +90,6 @@
   ]).then(function (r) {
     wer = r[1];
     karten = r[2];
-    $("passwortBox").hidden = !wer;
     return Promise.all(r[0].map(function (id) { return C.ladeJSON("team/" + encodeURIComponent(id) + ".json").catch(function () { return null; }); }));
   }).then(function (liste) {
     profile = liste.filter(Boolean);

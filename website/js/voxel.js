@@ -332,7 +332,7 @@
     return [p0[0] + dx, p0[1] + y, p0[2] + dz];
   }
 
-  /* --- Campus-Dienst (Login, Speichern) ---
+  /* --- Campus-Dienst (Anmeldung über Authentik, Speichern) ---
    * Gibt es nur auf dem Server. Lokal mit python3 -m http.server fehlt er, dann bleibt die
    * Seite einfach ohne Login-Teil. */
   function api(pfad, daten) {
@@ -378,10 +378,7 @@
       box.innerHTML = link("import.html", "Import", aktiv === "import") + link("versionen.html", "Versionen", aktiv === "versionen") +
         (i.admin ? link("admin.html", "Admin", aktiv === "admin") : "") +
         "<a class='ich' href='team.html#" + encodeURIComponent(i.id) + "' title='Mein Profil'>" + avatar(i) + "<span>" + esc(i.anzeigename) + "</span></a>" +
-        "<button type='button' class='abmelden'>Abmelden</button>";
-      box.querySelector(".abmelden").addEventListener("click", function () {
-        api("abmelden", {}).catch(function () {}).then(function () { location.href = "/login"; });
-      });
+        "<a class='abmelden' href='/outpost.goauthentik.io/sign_out'>Abmelden</a>";
       site.appendChild(box);
     });
   }

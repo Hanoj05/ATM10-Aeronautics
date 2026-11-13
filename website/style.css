@@ -227,7 +227,7 @@ ul.hinweise { margin: 0; padding-left: 18px; display: grid; gap: 4px; font-size:
 .wer a:hover, .wer a[aria-current="page"] { opacity: 1; }
 .wer a[aria-current="page"] { background: var(--honey); color: #1f2124; }
 .wer .ich { display: inline-flex; align-items: center; gap: 8px; text-transform: none; letter-spacing: 0; font: 600 13px var(--f-body); opacity: 1; }
-.wer .abmelden { font: 600 12px var(--f-mono); letter-spacing: .05em; text-transform: uppercase; color: var(--bg); background: none; border: 1px solid currentColor; opacity: .6; border-radius: 3px; padding: 5px 9px; cursor: pointer; }
+.wer .abmelden { font: 600 12px var(--f-mono); letter-spacing: .05em; text-transform: uppercase; color: var(--bg); background: none; border: 1px solid currentColor; opacity: .6; border-radius: 3px; padding: 5px 9px; cursor: pointer; text-decoration: none; }
 .wer .abmelden:hover { opacity: 1; }
 .avatar { --av-g: 26px; display: inline-grid; place-items: center; flex: none; width: var(--av-g); height: var(--av-g); border-radius: 50%; background: var(--av); color: #fff; font: 700 calc(var(--av-g) * .4)/1 var(--f-display); letter-spacing: .02em; text-shadow: 0 1px 1px rgba(0, 0, 0, .25); }
 

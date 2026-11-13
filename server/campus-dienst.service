@@ -1,6 +1,7 @@
-# Campus-Dienst: Login, Konten, Profile. Kopieren nach /etc/systemd/system/
+# Campus-Dienst: Konten, Profile, Speichern. Kopieren nach /etc/systemd/system/
+# Das geheime Proxy-Passwort steht in /etc/campus/dienst.env (siehe README, Server einrichten).
 [Unit]
-Description=Campus-Dienst (Login und Speichern für die Campus-Website)
+Description=Campus-Dienst (Konten und Speichern für die Campus-Website)
 After=network-online.target
 Wants=network-online.target
 
@@ -12,6 +13,9 @@ Environment=CAMPUS_REPO=/srv/campus/repo
 Environment=CAMPUS_DATEN=/var/lib/campus
 Environment=CAMPUS_PORT=8090
 Environment=PYTHONDONTWRITEBYTECODE=1
+Environment=CAMPUS_ADMIN_GRUPPE=campus-admins
+# Enthält CAMPUS_PROXY_GEHEIMNIS=..., gehört root und ist nur für root lesbar
+EnvironmentFile=/etc/campus/dienst.env
 ExecStart=/usr/bin/python3 /srv/campus/repo/server/dienst.py
 # Beendet sich der Dienst nach einem Code-Update mit 75, startet systemd ihn neu
 Restart=on-failure
