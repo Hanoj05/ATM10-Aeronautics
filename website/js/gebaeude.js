@@ -13,7 +13,7 @@
   /* Texturen abwarten, damit das Modell gleich richtig gebaut wird */
   Promise.all([C.ladeGebaeude(id), C.bereit]).then(function (r) {
     D = r[0];
-    D.konfig.netzwerke.forEach(function (n) { n.kanaele.forEach(function (k) { kanaele[k.nr] = k; }); });
+    D.konfig.netzwerke.forEach(function (n) { (n.kanaele || []).forEach(function (k) { kanaele[k.nr] = k; }); });
     kopf();
     zeigeKonfig();
     notizen();
@@ -200,8 +200,8 @@
     {
       D.konfig.netzwerke.forEach(function (n) {
         h += "<div><h3>" + esc(n.mod) + " „" + esc(n.name) + "“</h3><div class='channels'>";
-        n.kanaele.forEach(function (k) { h += "<button type='button' data-k='" + k.nr + "' aria-pressed='" + (drei.aktiveKanaele[k.nr] ? "true" : "false") + "' title='" + esc(k.zweck) + "'>" + kChip(k.nr) + esc(k.typ) + "</button>"; });
-        h += "</div><p class='meta' style='margin:8px 0 0;font-size:13px'>Kanal anklicken, um alle Teile darauf zu markieren.</p></div>";
+        (n.kanaele || []).forEach(function (k) { h += "<button type='button' data-k='" + k.nr + "' aria-pressed='" + (drei.aktiveKanaele[k.nr] ? "true" : "false") + "' title='" + esc(k.zweck) + "'>" + kChip(k.nr) + esc(k.typ) + "</button>"; });
+        h += "</div>" + ((n.kanaele || []).length ? "<p class='meta' style='margin:8px 0 0;font-size:13px'>Kanal anklicken, um alle Teile darauf zu markieren.</p>" : "") + "</div>";
       });
       if (D.konfig.teile.length) {
         h += "<div><h3>Teile</h3><div class='parts'>";

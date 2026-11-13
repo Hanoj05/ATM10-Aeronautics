@@ -5,7 +5,7 @@ Zentrale des AE2-Hauptsystems: ein ME Controller als Säule in der Mitte, vier D
 | Datei | Inhalt |
 | --- | --- |
 | [gebaeude.json](gebaeude.json) | Steckbrief für die Website |
-| [modell.json](modell.json) | Blockmodell, erzeugt aus [schematics/me-zentrale.nbt](../../schematics/me-zentrale.nbt) |
+| [modell.json](modell.json) | Blockmodell, erzeugt als Ausschnitt aus [schematics/campus.nbt](../../schematics/campus.nbt) |
 | [konfig.json](konfig.json) | Teile mit Position (für die Hover-Ansicht) |
 | [konfig.md](konfig.md) | Technik und Konfiguration zum Lesen |
 

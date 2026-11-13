@@ -1,6 +1,12 @@
 {
   "hinweis": "Teile für die Website. Positionen in Schematic-Koordinaten [x, y, z], aus der Schematic ausgelesen. Einstellungen nach und nach ergänzen. me = von Hand gepflegte Angaben fürs ME-System: zellen als [Name, Inhalt], anbindungen als {gebaeude, wie, was}, hinweise.",
-  "netzwerke": [],
+  "netzwerke": [
+    {
+      "id": "me-hauptsystem",
+      "name": "ME-Hauptsystem",
+      "mod": "Applied Energistics 2"
+    }
+  ],
   "teile": [
     {
       "id": "controller",
@@ -20,7 +26,7 @@
       "einstellungen": [
         [
           "Aufbau",
-          "Mehrblock-Controller in der Mitte, 157 Blöcke, 7 × 7 × 17"
+          "Mehrblock-Controller in der Mitte, 157 Blöcke auf 7 × 7 Grundfläche. Keine volle Säule: belegt sind y 15 bis 21, 26 und 31, auf y 27 ist eine Lücke für den Connector-Ring"
         ]
       ],
       "nodes": []
@@ -141,6 +147,29 @@
       "nodes": []
     },
     {
+      "id": "access-point",
+      "name": "ME Wireless Access Point",
+      "art": "Netzwerk",
+      "zelle": "",
+      "von": [
+        26,
+        19,
+        26
+      ],
+      "bis": [
+        26,
+        19,
+        26
+      ],
+      "einstellungen": [
+        [
+          "Lage",
+          "Im Controller-Schacht, für Wireless Terminals"
+        ]
+      ],
+      "nodes": []
+    },
+    {
       "id": "wireless-ring",
       "name": "ME Wireless Connector (Ring)",
       "art": "Netzwerk",
@@ -158,7 +187,7 @@
       "einstellungen": [
         [
           "Inhalt",
-          "8 Connectors rund um den Controller"
+          "8 Connectors auf y 27 in der Lücke des Controllers, innerhalb seiner Grundfläche"
         ]
       ],
       "nodes": []
@@ -178,7 +207,12 @@
         19,
         26
       ],
-      "einstellungen": [],
+      "einstellungen": [
+        [
+          "Verbindung",
+          "Funkt ins alte Haus (nicht Teil des Campus)"
+        ]
+      ],
       "nodes": []
     },
     {
@@ -196,7 +230,12 @@
         19,
         26
       ],
-      "einstellungen": [],
+      "einstellungen": [
+        [
+          "Verbindung",
+          "Funkt ins alte Haus (nicht Teil des Campus)"
+        ]
+      ],
       "nodes": []
     },
     {
@@ -230,10 +269,16 @@
         "gebaeude": "Wabenhaus",
         "wie": "Powah Ender Gate, Kanal 0",
         "was": "3 Ender Gates im ME-Gebäude, 1 im Wabenhaus, alle auf Kanal 0"
+      },
+      {
+        "gebaeude": "Altes Haus",
+        "wie": "ME Wireless Connector West und Ost",
+        "was": "Je ein Connector bei 12, 19, 26 und 40, 19, 26. Das alte Haus ist nicht Teil des Campus"
       }
     ],
     "hinweise": [
-      "Die Schematic speichert keine Inventare. Zellen, Prioritäten und Partitionen hier von Hand eintragen."
+      "Die Schematic speichert keine Inventare. Zellen, Prioritäten und Partitionen hier von Hand eintragen.",
+      "Verkabelung: 222 ME Smart Cables (Blue, Black und White, normal und Dense) zwischen 7, 11, 7 und 45, 30, 45, dazu 58 ME P2P Tunnels. Nicht als Teil eingetragen, weil der Bereich fast das ganze Gebäude abdeckt und sonst jeder Block als Kabel angezeigt würde"
     ]
   }
 }
