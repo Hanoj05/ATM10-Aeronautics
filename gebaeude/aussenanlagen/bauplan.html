@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Außenanlagen – Bauanleitung</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,500..800&family=IBM+Plex+Sans:wght@400;600&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<style>
+/* Bauanleitung für den Handbau: Reihenfolge, Vorlagen, Koordinatenlisten, Ebenen-Ansicht, Material */
+:root {
+  --bg: #ecebe6; --surface: #f8f7f3; --fg: #1f2124; --muted: #62645f; --line: #d2d0c8;
+  --accent: #3d7a35; --accent-soft: #e0ecd9;
+  --f-display: "Archivo", "Arial Narrow", system-ui, sans-serif;
+  --f-body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, monospace;
+}
+@media (prefers-color-scheme: dark) { :root { --bg: #17181a; --surface: #202225; --fg: #e8e7e2; --muted: #a2a39d; --line: #34363a; --accent: #8cc47f; --accent-soft: #24301f; } }
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.6 var(--f-body); }
+.wrap { max-width: 1120px; margin: 0 auto; padding: 40px max(16px, env(safe-area-inset-right, 0px)) 72px max(16px, env(safe-area-inset-left, 0px)); display: grid; gap: 56px; }
+header { display: grid; gap: 14px; }
+.eyebrow { font: 600 12px var(--f-mono); letter-spacing: .14em; text-transform: uppercase; color: var(--accent); }
+h1 { font: 800 clamp(34px, 7vw, 60px)/1 var(--f-display); font-stretch: 112%; margin: 0; }
+h2 { font: 700 clamp(22px, 3.4vw, 28px)/1.15 var(--f-display); font-stretch: 105%; margin: 0; display: flex; gap: 12px; align-items: baseline; }
+h2 .no { font: 600 13px var(--f-mono); color: var(--accent); letter-spacing: .08em; }
+h3 { font: 700 17px/1.3 var(--f-display); margin: 0; }
+p { margin: 0; max-width: 72ch; }
+.lede { color: var(--muted); font-size: 17px; }
+section { display: grid; gap: 18px; min-width: 0; }
+.stats { display: flex; flex-wrap: wrap; gap: 8px 26px; font: 14px var(--f-mono); color: var(--muted); }
+.stats b { color: var(--fg); font-weight: 600; }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 4px; min-width: 0; }
+ol.schritte { margin: 0; padding: 0; list-style: none; counter-reset: s; display: grid; gap: 2px; }
+ol.schritte li { counter-increment: s; display: grid; grid-template-columns: 44px 1fr; gap: 12px; padding: 14px 16px; background: var(--surface); border: 1px solid var(--line); border-radius: 4px; }
+ol.schritte li::before { content: counter(s, decimal-leading-zero); font: 600 14px var(--f-mono); color: var(--accent); padding-top: 2px; }
+ol.schritte b { font-weight: 600; }
+code, .m { font-family: var(--f-mono); font-size: .92em; }
+.koord { font: 600 13px var(--f-mono); background: var(--accent-soft); padding: 1px 6px; border-radius: 3px; white-space: nowrap; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th, td { text-align: left; padding: 7px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font: 600 11px var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); position: sticky; top: 0; background: var(--surface); }
+td.n, th.n { text-align: right; font-family: var(--f-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.scroll { overflow: auto; }
+.hoch { max-height: 420px; }
+.klein { color: var(--muted); font-size: 13px; }
+button, select { font: 600 12px var(--f-mono); color: var(--fg); background: var(--bg); border: 1px solid var(--line); border-radius: 3px; padding: 6px 10px; cursor: pointer; }
+button:hover { border-color: var(--accent); color: var(--accent); }
+.sw { display: inline-block; width: 12px; height: 12px; border-radius: 2px; margin-right: 8px; vertical-align: -1px; border: 1px solid rgba(0,0,0,.15); }
+.tabs { display: flex; flex-wrap: wrap; gap: 6px; padding: 12px 14px; border-bottom: 1px solid var(--line); }
+.tabs button[aria-pressed=true] { background: var(--accent); color: #fff; border-color: var(--accent); }
+.vorlagen { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+.vorlage { padding: 16px; display: grid; gap: 10px; }
+.lagen { display: flex; flex-wrap: wrap; gap: 10px; }
+.lage { display: grid; gap: 4px; justify-items: center; font: 12px var(--f-mono); color: var(--muted); }
+.toolbar { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; padding: 12px 14px; border-bottom: 1px solid var(--line); }
+.toolbar .lbl { font: 600 12px var(--f-mono); color: var(--muted); }
+.toolbar input[type=range] { width: 180px; accent-color: var(--accent); }
+#ebeneWert { font: 600 14px var(--f-mono); min-width: 13ch; }
+.leinwand { position: relative; height: min(72vh, 680px); touch-action: none; }
+canvas.plan { display: block; width: 100%; height: 100%; cursor: crosshair; }
+#info { position: absolute; left: 12px; bottom: 12px; background: var(--surface); border: 1px solid var(--line); border-radius: 3px; padding: 8px 10px; font: 13px var(--f-mono); max-width: calc(100% - 24px); pointer-events: none; }
+.hinweis { border-left: 3px solid var(--accent); padding: 10px 14px; background: var(--surface); border-radius: 0 4px 4px 0; }
+.hinweis + .hinweis { margin-top: 8px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">Tech-Campus · Bauanleitung</div>
+  <h1>Außenanlagen</h1>
+  <p class="lede">Wege, Haine, Blumenwiesen, Teiche und Laternen zwischen den Gebäuden. Alles liegt auf Bodenhöhe 65 und wird von Hand gebaut: erst die Wege abstecken, dann Laternen und Teiche, zum Schluss Bäume und Blumen. Jede Position steht unten als Weltkoordinate.</p>
+  <div class="stats" id="stats"></div>
+</header>
+
+<section>
+  <h2><span class="no">01</span>Reihenfolge</h2>
+  <ol class="schritte">
+    <li><div><b>Fläche vorbereiten.</b> Den Grüngürtel um den Ring und den Bereich um das Magiehaus auf Höhe 64 einebnen und mit <b>Grass Block</b> auf Höhe 65 belegen. An die Gebäude nicht ran: Die Ebenen-Ansicht zeigt genau, wo der Gürtel aufhört, mit 2 Blöcken Abstand zu jedem Gebäude.</div></li>
+    <li><div><b>Promenade.</b> Ein Kreisweg um den Ring, 3 Blöcke <b>Smooth Quartz</b> mit je einer Reihe <b>Light Gray Concrete</b> als Kante. Am einfachsten mit der Kreis-Schablone unten: ein Achtel bauen und die anderen sieben spiegeln.</div></li>
+    <li><div><b>Magierweg.</b> Der geschwungene Weg vom Westsüdwest-Tor des Rings zum Magiehaus. Die Wegpunkte unten im Abstand von 6 Blöcken mit einem Block markieren, dann den Weg 5 breit dazwischen legen: 5 Blöcke <b>Smooth Quartz</b> in der Mitte, außen je eine Reihe <b>Purple Concrete</b>.</div></li>
+    <li><div><b>Zuwege.</b> Zwei kurze gerade Wege, die von den freien Ring-Toren zur Promenade führen. Anfang und Ende stehen in der Liste.</div></li>
+    <li><div><b>Laternen.</b> Jede Laterne besteht aus 2 <b>White Concrete</b> übereinander und einem Leuchtblock oben: an der Promenade <b>Sea Lantern</b>, am Magierweg <b>Amethyst Block</b>.</div></li>
+    <li><div><b>Teiche.</b> Kreis mit Radius 6 ausheben (1 tief, Höhe 65), mit <b>Water</b> füllen, rundherum eine Reihe <b>Smooth Quartz</b>. Ein paar <b>Lily Pad</b> drauf.</div></li>
+    <li><div><b>Bäume.</b> Drei feste Vorlagen (Klein, Mittel, Groß). In der Baumliste steht zu jedem Baum Vorlage, Holzart und Stammposition. Den Stamm auf die Koordinate setzen und die Krone Lage für Lage nach der Vorlage bauen.</div></li>
+    <li><div><b>Blumen.</b> Auf den Wiesenflecken locker Blumen streuen: Allium, Dandelion, Cornflower, Poppy und Oxeye Daisy. Wo genau, zeigt die Ebenen-Ansicht auf Lage 1, das muss aber nicht exakt sein.</div></li>
+  </ol>
+</section>
+
+<section>
+  <h2><span class="no">02</span>Baum-Vorlagen</h2>
+  <p class="klein">Jede Vorlage von oben, Lage für Lage. Das Kreuz ist die Stammposition. Die Holzart hängt vom Baum in der Liste ab, die Form ist immer gleich.</p>
+  <div class="vorlagen" id="vorlagen"></div>
+  <div class="panel scroll"><table><thead><tr><th>Holzart</th><th>Stamm</th><th>Blätter</th></tr></thead><tbody id="arten"></tbody></table></div>
+</section>
+
+<section>
+  <h2><span class="no">03</span>Koordinaten</h2>
+  <p class="klein">Klick auf eine Zeile kopiert die Koordinate. Die Ebenen-Ansicht springt dabei zur Stelle.</p>
+  <div class="panel">
+    <div class="tabs" id="listenTabs"></div>
+    <div class="scroll hoch"><table id="liste"></table></div>
+  </div>
+</section>
+
+<section>
+  <h2><span class="no">04</span>Ebenen-Ansicht</h2>
+  <p class="klein">Von oben, Lage für Lage. Mit der Maus über einen Block fahren zeigt Block, Element und Weltkoordinate, Klick hält fest. Mausrad zoomt, Ziehen verschiebt.</p>
+  <div class="panel">
+    <div class="toolbar">
+      <span class="lbl">Höhe</span>
+      <button id="runter" aria-label="Eine Lage tiefer">−</button>
+      <input type="range" id="ebene" min="0" value="0" aria-label="Lage">
+      <button id="hoch" aria-label="Eine Lage höher">+</button>
+      <span id="ebeneWert"></span>
+      <span class="lbl">Element</span>
+      <select id="filter" aria-label="Element hervorheben"><option value="">alle</option></select>
+      <button id="zurueck">Ansicht zurücksetzen</button>
+    </div>
+    <div class="leinwand"><canvas class="plan" id="plan"></canvas><div id="info">Lade Modell …</div></div>
+  </div>
+</section>
+
+<section>
+  <h2><span class="no">05</span>Kreis-Schablone Promenade</h2>
+  <p class="klein">Ein Achtel des Kreises, von der Ringmitte aus gezählt. Für jede Zeile (Abstand nach Süden) steht, von wo bis wo nach Osten die Promenade liegt. Die anderen sieben Achtel entstehen durch Spiegeln: x und z tauschen und Vorzeichen wechseln.</p>
+  <div class="panel scroll hoch"><table><thead><tr><th class="n">Süd</th><th>Kante innen</th><th>Quarz</th><th>Kante außen</th></tr></thead><tbody id="schablone"></tbody></table></div>
+</section>
+
+<section>
+  <h2><span class="no">06</span>Material</h2>
+  <p class="klein">Ein Shulker fasst 27 Stacks.</p>
+  <div class="panel scroll"><table><thead><tr><th>Block</th><th class="n">Anzahl</th><th class="n">Stacks</th><th class="n">Shulker</th></tr></thead><tbody id="material"></tbody></table></div>
+</section>
+
+<section>
+  <h2><span class="no">07</span>Hinweise</h2>
+  <div>
+    <div class="hinweis"><b>Gelände:</b> Die Anleitung geht von flachem Boden auf Höhe 65 aus. Wo das Gelände höher oder tiefer ist (oder Wasser), erst einebnen oder auffüllen.</div>
+    <div class="hinweis"><b>Laub:</b> Von Hand gesetzte Blätter bleiben stehen, auch weit vom Stamm.</div>
+    <div class="hinweis"><b>Gebäude:</b> Die Außenanlagen berühren kein Gebäude. Wege, die zum Bauplan eines Gebäudes gehören (Bienenallee, Wasserallee, Zufahrten am Ring, Wege im Pentakel-Kreis), stehen in dessen eigenem Bauplan.</div>
+  </div>
+</section>
+
+</div>
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var fmt = function (n) { return n.toLocaleString("de-DE"); };
+  var springeZu = null;
+
+  Promise.all([fetch("bauanleitung.json").then(function (r) { return r.json(); }), fetch("modell.json").then(function (r) { return r.json(); })])
+    .then(function (d) { start(d[0], d[1]); })
+    .catch(function (e) { $("info").textContent = "Konnte die Daten nicht laden: " + e.message + ". Die Seite braucht den lokalen Webserver (python3 -m http.server)."; });
+
+  function kopiere(text) { try { navigator.clipboard.writeText(text).catch(function () {}); } catch (x) {} }
+
+  function start(B, M) {
+    $("stats").innerHTML = "<span>Bäume <b>" + B.baeume.length + "</b></span><span>Laternen <b>" + B.laternen.length + "</b></span><span>Teiche <b>" + B.teiche.length + "</b></span><span>Blöcke <b>" + fmt(M.bloecke.length) + "</b></span><span>Promenade <b>Ø " + (B.promenade.radius * 2) + "</b></span>";
+
+    /* Vorlagen */
+    Object.keys(B.vorlagen).forEach(function (k) {
+      var v = B.vorlagen[k], box = document.createElement("div");
+      box.className = "panel vorlage";
+      box.innerHTML = "<h3>Vorlage " + k + " · " + v.name + "</h3><div class='klein'>Stamm " + v.stamm + " hoch (y 1–" + v.stamm + "), Krone wie unten</div><div class='lagen'></div>";
+      var lagen = {};
+      v.lagen.forEach(function (c) { (lagen[c[1]] = lagen[c[1]] || []).push(c); });
+      var r = Math.ceil(v.krone) + 1;
+      Object.keys(lagen).map(Number).sort(function (a, b) { return a - b; }).forEach(function (y) {
+        var n = 2 * r + 1, s = 9, cv = document.createElement("canvas");
+        cv.width = n * s; cv.height = n * s;
+        var c = cv.getContext("2d");
+        c.fillStyle = "rgba(127,127,127,.12)"; c.fillRect(0, 0, n * s, n * s);
+        c.fillStyle = "#4f8a3c";
+        lagen[y].forEach(function (p) { c.fillRect((p[0] + r) * s, (p[2] + r) * s, s - 1, s - 1); });
+        if (y <= v.stamm) { c.fillStyle = "#6b5233"; c.fillRect(r * s, r * s, s - 1, s - 1); }
+        c.strokeStyle = "#d1361f"; c.lineWidth = 1; c.beginPath(); c.moveTo(r * s + s / 2 - 3, r * s + s / 2); c.lineTo(r * s + s / 2 + 3, r * s + s / 2); c.moveTo(r * s + s / 2, r * s + s / 2 - 3); c.lineTo(r * s + s / 2, r * s + s / 2 + 3); c.stroke();
+        var l = document.createElement("div"); l.className = "lage"; l.appendChild(cv);
+        var t = document.createElement("span"); t.textContent = "y " + y; l.appendChild(t);
+        box.querySelector(".lagen").appendChild(l);
+      });
+      $("vorlagen").appendChild(box);
+    });
+    Object.keys(B.arten).forEach(function (a) {
+      var tr = document.createElement("tr");
+      tr.innerHTML = "<td>" + a + "</td><td>" + B.arten[a][0] + "</td><td>" + B.arten[a][1] + "</td>";
+      $("arten").appendChild(tr);
+    });
+
+    /* Koordinatenlisten */
+    var listen = {
+      "Bäume": { kopf: ["Nr", "Gruppe", "Vorlage", "Holzart", "Stamm bei"], zeilen: B.baeume.map(function (b, i) { return [i + 1, b.gruppe, b.vorlage, b.art, [b.x, 65, b.z]]; }) },
+      "Laternen": { kopf: ["Nr", "Weg", "oben", "Position"], zeilen: B.laternen.map(function (l, i) { return [i + 1, l.weg, l.oben, [l.x, 65, l.z]]; }) },
+      "Magierweg": { kopf: ["Punkt", "Mitte des Wegs"], zeilen: B.magierweg.punkte.map(function (p, i) { return [i + 1, p]; }) },
+      "Zuwege": { kopf: ["Tor", "von", "bis", "Breite"], zeilen: B.zuwege.map(function (w) { return [w.tor + "°", w.von, w.bis, w.breite + " (5 Quarz, 2 Kante)"]; }) },
+      "Teiche": { kopf: ["Nr", "Mitte", "Radius", "Rand"], zeilen: B.teiche.map(function (t, i) { return [i + 1, [t.x, 65, t.z], t.radius, t.rand]; }) }
+    };
+    Object.keys(listen).forEach(function (name, i) {
+      var b = document.createElement("button"); b.textContent = name + " (" + listen[name].zeilen.length + ")";
+      b.setAttribute("aria-pressed", i === 0 ? "true" : "false");
+      b.onclick = function () { $("listenTabs").querySelectorAll("button").forEach(function (x) { x.setAttribute("aria-pressed", "false"); }); b.setAttribute("aria-pressed", "true"); zeige(name); };
+      $("listenTabs").appendChild(b);
+    });
+    function zeige(name) {
+      var L = listen[name], t = $("liste");
+      t.innerHTML = "<thead><tr>" + L.kopf.map(function (k) { return "<th>" + k + "</th>"; }).join("") + "</tr></thead>";
+      var tb = document.createElement("tbody");
+      L.zeilen.forEach(function (z) {
+        var tr = document.createElement("tr"), ziel = null;
+        tr.innerHTML = z.map(function (w) { if (Array.isArray(w)) { ziel = ziel || w; return "<td><span class='koord'>" + w.join(", ") + "</span></td>"; } return "<td>" + w + "</td>"; }).join("");
+        tr.style.cursor = "pointer";
+        tr.onclick = function () { if (ziel) { kopiere(ziel.join(" ")); if (springeZu) springeZu(ziel[0], ziel[2]); } };
+        tb.appendChild(tr);
+      });
+      t.appendChild(tb);
+    }
+    zeige("Bäume");
+
+    /* Kreis-Schablone: ein Achtel, Süden 0..r/√2 */
+    var R = B.promenade.radius, sb = $("schablone");
+    function bereich(z, ri, ra) {
+      var xs = [];
+      for (var x = 0; x <= ra + 1; x++) { var d = Math.hypot(x, z); if (d >= ri && d <= ra) xs.push(x); }
+      return xs.length ? (xs[0] === xs[xs.length - 1] ? String(xs[0]) : xs[0] + " bis " + xs[xs.length - 1]) : "–";
+    }
+    for (var z = 0; z <= Math.ceil(R / Math.SQRT2) + 2; z++) {
+      var tr = document.createElement("tr");
+      tr.innerHTML = "<td class='n'>" + z + "</td><td class='m'>" + bereich(z, R - 2.5, R - 1.5 - 1e-9) + "</td><td class='m'>" + bereich(z, R - 1.5, R + 1.5) + "</td><td class='m'>" + bereich(z, R + 1.5 + 1e-9, R + 2.5) + "</td>";
+      sb.appendChild(tr);
+    }
+    var hin = document.createElement("tr");
+    hin.innerHTML = "<td colspan='4' class='klein'>Mitte: " + B.promenade.mitte.join(", ") + ". Werte sind Blöcke nach Osten, gezählt ab der Mitte. Beispiel Zeile „Süd 10“: bei z = Mitte + 10 die angegebenen x-Abstände belegen.</td>";
+    sb.appendChild(hin);
+
+    /* Material */
+    B.material.forEach(function (x) {
+      var tr = document.createElement("tr");
+      tr.innerHTML = "<td><span class='sw' style='background:" + x.farbe + "'></span>" + x.name + " <span class='klein m'>" + x.id + "</span></td><td class='n'>" + fmt(x.anzahl) + "</td><td class='n'>" + (x.anzahl / 64).toFixed(1).replace(".", ",") + "</td><td class='n'>" + (x.anzahl / 1728).toFixed(1).replace(".", ",") + "</td>";
+      $("material").appendChild(tr);
+    });
+
+    ebenen(B, M);
+  }
+
+  function ebenen(B, M) {
+    var NX = M.groesse[0], NY = M.groesse[1], NZ = M.groesse[2];
+    var lagen = []; for (var i = 0; i < NY; i++) lagen.push([]);
+    M.bloecke.forEach(function (b, i) { lagen[b[1]].push([b[0], b[2], b[3], +B.element_je_block[i]]); });
+    B.elemente.forEach(function (e, i) { var o = document.createElement("option"); o.value = i; o.textContent = e; $("filter").appendChild(o); });
+    var cv = $("plan"), ctx = cv.getContext("2d"), box = cv.parentNode;
+    var y = 0, filter = "", fest = null, maus = null, sicht = { s: 1, ox: 0, oz: 0 };
+    var slider = $("ebene"); slider.max = NY - 1;
+    function passend() {
+      var r = box.getBoundingClientRect();
+      sicht.s = Math.min(r.width / NX, r.height / NZ) * 0.96;
+      sicht.ox = (r.width - NX * sicht.s) / 2; sicht.oz = (r.height - NZ * sicht.s) / 2;
+    }
+    function groesse() {
+      var r = box.getBoundingClientRect(), dpr = window.devicePixelRatio || 1;
+      cv.width = Math.round(r.width * dpr); cv.height = Math.round(r.height * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0); zeichne();
+    }
+    var idx = {}, idxY = -1;
+    function zeichne() {
+      var r = box.getBoundingClientRect(), s = sicht.s;
+      var dunkel = matchMedia("(prefers-color-scheme: dark)").matches;
+      ctx.clearRect(0, 0, r.width, r.height);
+      ctx.fillStyle = dunkel ? "#121315" : "#d9d7cf"; ctx.fillRect(sicht.ox, sicht.oz, NX * s, NZ * s);
+      if (y > 0) {
+        ctx.globalAlpha = 0.22;
+        lagen[y - 1].forEach(function (b) { ctx.fillStyle = M.palette[b[2]].farbe; ctx.fillRect(sicht.ox + b[0] * s, sicht.oz + b[1] * s, s, s); });
+      }
+      lagen[y].forEach(function (b) {
+        ctx.globalAlpha = filter !== "" && b[3] !== +filter ? 0.15 : 1;
+        ctx.fillStyle = M.palette[b[2]].farbe;
+        var g = Math.max(s - (s > 6 ? 0.5 : 0), 0.6);
+        ctx.fillRect(sicht.ox + b[0] * s, sicht.oz + b[1] * s, g, g);
+      });
+      ctx.globalAlpha = 1;
+      if (s > 5) {
+        ctx.strokeStyle = dunkel ? "rgba(255,255,255,.12)" : "rgba(0,0,0,.12)"; ctx.lineWidth = 1; ctx.beginPath();
+        var gx0 = (10 - ((B.p0[0] % 10) + 10) % 10) % 10, gz0 = (10 - ((B.p0[2] % 10) + 10) % 10) % 10;
+        for (var gx = gx0; gx <= NX; gx += 10) { ctx.moveTo(sicht.ox + gx * s, sicht.oz); ctx.lineTo(sicht.ox + gx * s, sicht.oz + NZ * s); }
+        for (var gz = gz0; gz <= NZ; gz += 10) { ctx.moveTo(sicht.ox, sicht.oz + gz * s); ctx.lineTo(sicht.ox + NX * s, sicht.oz + gz * s); }
+        ctx.stroke();
+      }
+      ctx.fillStyle = dunkel ? "#e8e7e2" : "#1f2124"; ctx.font = "600 12px IBM Plex Mono, monospace"; ctx.fillText("N ↑", r.width - 40, 22);
+      var z = fest || maus;
+      if (z) { ctx.strokeStyle = "#d1361f"; ctx.lineWidth = 2; ctx.strokeRect(sicht.ox + z[0] * s, sicht.oz + z[1] * s, s, s); }
+      info(z);
+      $("ebeneWert").textContent = "y " + y + " · Welt " + (B.p0[1] + y);
+      slider.value = y;
+    }
+    function info(z) {
+      if (!z) { $("info").textContent = "Lage " + y + ": " + fmt(lagen[y].length) + " Blöcke · Rasterlinien alle 10 Blöcke auf glatten Weltkoordinaten"; return; }
+      if (idxY !== y) { idx = {}; lagen[y].forEach(function (b) { idx[b[0] + "," + b[1]] = b; }); idxY = y; }
+      var b = idx[z[0] + "," + z[1]];
+      $("info").innerHTML = (b ? "<b>" + M.palette[b[2]].name + "</b> · " + B.elemente[b[3]] : "leer") + "<br>Welt " + (B.p0[0] + z[0]) + ", " + (B.p0[1] + y) + ", " + (B.p0[2] + z[1]) + (fest ? " · festgehalten" : "");
+    }
+    function zelle(e) {
+      var r = cv.getBoundingClientRect();
+      var x = Math.floor((e.clientX - r.left - sicht.ox) / sicht.s), z = Math.floor((e.clientY - r.top - sicht.oz) / sicht.s);
+      return x >= 0 && z >= 0 && x < NX && z < NZ ? [x, z] : null;
+    }
+    springeZu = function (wx, wz) {
+      var r = box.getBoundingClientRect(), x = wx - B.p0[0], z = wz - B.p0[2];
+      sicht.s = 12; sicht.ox = r.width / 2 - (x + 0.5) * sicht.s; sicht.oz = r.height / 2 - (z + 0.5) * sicht.s;
+      fest = [x, z]; y = 0; zeichne();
+      box.scrollIntoView({ behavior: "smooth", block: "center" });
+    };
+    var zieh = null, bewegt = false;
+    cv.addEventListener("pointerdown", function (e) { zieh = [e.clientX, e.clientY, sicht.ox, sicht.oz]; bewegt = false; cv.setPointerCapture(e.pointerId); });
+    cv.addEventListener("pointermove", function (e) {
+      if (zieh) { var dx = e.clientX - zieh[0], dz = e.clientY - zieh[1]; if (Math.abs(dx) + Math.abs(dz) > 3) bewegt = true; if (bewegt) { sicht.ox = zieh[2] + dx; sicht.oz = zieh[3] + dz; } }
+      maus = zelle(e); zeichne();
+    });
+    cv.addEventListener("pointerup", function (e) { if (!bewegt) { var c = zelle(e); fest = fest && c && fest[0] === c[0] && fest[1] === c[1] ? null : c; } zieh = null; zeichne(); });
+    cv.addEventListener("pointerleave", function () { maus = null; zeichne(); });
+    cv.addEventListener("wheel", function (e) {
+      e.preventDefault();
+      var r = cv.getBoundingClientRect(), px = e.clientX - r.left, pz = e.clientY - r.top;
+      var f = e.deltaY < 0 ? 1.2 : 1 / 1.2, ns = Math.min(40, Math.max(0.5, sicht.s * f)); f = ns / sicht.s;
+      sicht.ox = px - (px - sicht.ox) * f; sicht.oz = pz - (pz - sicht.oz) * f; sicht.s = ns; zeichne();
+    }, { passive: false });
+    slider.addEventListener("input", function () { y = +slider.value; zeichne(); });
+    $("runter").onclick = function () { y = Math.max(0, y - 1); zeichne(); };
+    $("hoch").onclick = function () { y = Math.min(NY - 1, y + 1); zeichne(); };
+    $("filter").onchange = function () { filter = this.value; zeichne(); };
+    $("zurueck").onclick = function () { passend(); fest = null; zeichne(); };
+    new ResizeObserver(groesse).observe(box);
+    passend(); groesse();
+  }
+})();
+</script>
+</body>
+</html>

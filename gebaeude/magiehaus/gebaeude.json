@@ -10,10 +10,10 @@
       -282
     ],
     "drehung": 0,
-    "hinweis": "P0 = Nordwest-Ecke unten, also der Kellerboden auf Welt-Höhe 59. Der Erdgeschossboden liegt auf Höhe 65 (Plan y = 6). Mitte bei Plan (61, 6, 61) = Welt (88, 65, -221), genau westlich vom Hauptgebäude. Der Eingang zeigt auf das Westsüdwest-Tor vom Ring, die Allee führt dorthin. Die Mitte steht als MITTE oben in tools/modell-magiehaus.py und lässt sich verschieben. Lage gerechnet, nicht eingemessen."
+    "hinweis": "P0 = Nordwest-Ecke unten, also der Kellerboden auf Welt-Höhe 59. Der Erdgeschossboden liegt auf Höhe 65 (Plan y = 6). Mitte bei Plan (61, 6, 61) = Welt (88, 65, -221), genau westlich vom Hauptgebäude. Der Eingang zeigt auf das Westsüdwest-Tor vom Ring, der Magierweg der Außenanlagen führt dorthin. Die Mitte steht als MITTE oben in tools/modell-magiehaus.py und lässt sich verschieben. Lage gerechnet, nicht eingemessen."
   },
   "masse": {
-    "breite": 167,
+    "breite": 123,
     "tiefe": 123,
     "hoehe": 42
   },

@@ -19,6 +19,7 @@ gebaeude/
   me-zentrale/         ME-Gebäude
   hauptgebaeude/       Glasring mit Park und Energy Core
   magiehaus/           Pentagramm mit fünf Magie-Flügeln
+  aussenanlagen/       Wege, Bäume, Teiche, Laternen zwischen den Gebäuden
 schematics/
   campus.nbt           die ganze Campus-Fläche, daraus werden alle Modelle ausgeschnitten
 texturen/              Blocktexturen für die 3D-Ansicht (Atlas plus Zuordnung), erzeugt mit tools/hole-texturen.py
@@ -52,6 +53,7 @@ Ohne Server und ohne Technik: [download/campus-ansicht.zip](download/campus-ansi
 | [ME-Gebäude](gebaeude/me-zentrale/) | AE2-Hauptsystem: ME Controller, 64 Extended Drives | im Bau |
 | [Hauptgebäude](gebaeude/hauptgebaeude/) | Glasring mit Park und Energy Core | geplant |
 | [Magiehaus](gebaeude/magiehaus/) | Ars Nouveau, Occultism, Iron's Spells, Forbidden & Arcanus, EvilCraft, Apothic Enchanting | geplant |
+| [Außenanlagen](gebaeude/aussenanlagen/) | Wege, Haine, Wiesen, Teiche, Laternen zwischen den Gebäuden | geplant |
 
 ## Konventionen
 

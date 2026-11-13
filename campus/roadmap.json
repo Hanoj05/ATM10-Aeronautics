@@ -143,6 +143,14 @@
           "status": "offen",
           "gebaeude": "magiehaus",
           "text": "Pentagramm westlich vom Ring, Mitte etwa 88, 65, -221, Keller bis Höhe 59. ME per P2P-Tunnel aus dem ME-Gebäude, im Keller auf die fünf Flügel verteilen."
+        },
+        {
+          "titel": "Außenanlagen von Hand anlegen",
+          "wo": "Minecraft",
+          "bereich": "Gebäude",
+          "status": "offen",
+          "gebaeude": "aussenanlagen",
+          "text": "Promenade, Magierweg, Zuwege, Laternen, Teiche, Bäume und Blumen nach der Bauanleitung im Tab Bauplan."
         }
       ]
     },

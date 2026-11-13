@@ -435,7 +435,7 @@ def baue():
             s = (s * 1103515245 + 12345) & 0x7FFFFFFF
             if s % 9 == 0:
                 setze(x, G + 1, z, "flower")
-    lang = int(ABSTAND) + 1
+    lang = GRUND_R          # nur bis zum eigenen Kreis, weiter geht der Magierweg der Außenanlagen
     for l in range(int(R_KERBE), lang + 1):
         for q in range(-4, 5):
             x = round(l * ex - q * ez)

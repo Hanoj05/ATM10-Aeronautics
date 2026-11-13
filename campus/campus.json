@@ -55,6 +55,19 @@
         -282
       ],
       "drehung": 0
+    },
+    {
+      "id": "aussenanlagen",
+      "name": "Außenanlagen",
+      "ordner": "gebaeude/aussenanlagen",
+      "zweck": "Wege, Bäume, Teiche, Laternen",
+      "status": "geplant",
+      "position": [
+        14,
+        65,
+        -347
+      ],
+      "drehung": 0
     }
   ]
 }

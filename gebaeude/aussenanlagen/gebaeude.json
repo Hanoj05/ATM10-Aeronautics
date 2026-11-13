@@ -1,0 +1,32 @@
+{
+  "id": "aussenanlagen",
+  "name": "Außenanlagen",
+  "zweck": "Wege, Haine, Blumenwiesen, Teiche und Laternen zwischen den Gebäuden, geschwungener Magierweg zum Magiehaus",
+  "status": "geplant",
+  "welt": {
+    "p0": [
+      14,
+      65,
+      -347
+    ],
+    "drehung": 0,
+    "hinweis": "P0 = Nordwest-Ecke, Boden auf Welt-Höhe 65. Alles liegt auf Bodenhöhe. Die Gebäude-Grundflächen sind mit 2 Blöcken Abstand ausgespart. Erzeugt von tools/modell-aussenanlagen.py."
+  },
+  "masse": {
+    "breite": 378,
+    "tiefe": 255,
+    "hoehe": 11
+  },
+  "zellen": [],
+  "maschinen": [],
+  "netzwerke": [],
+  "dateien": {
+    "bauplan": "bauplan.html",
+    "modell": "modell.json",
+    "konfigDaten": null,
+    "konfig": null,
+    "schematic": null,
+    "bauanleitung": "bauanleitung.json",
+    "generator": "tools/modell-aussenanlagen.py"
+  }
+}
