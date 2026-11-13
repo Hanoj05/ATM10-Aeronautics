@@ -252,7 +252,7 @@
   }
   /* ================= Konfiguration ================= */
   function zeigeKonfig() {
-    var nrs = []; D.konfig.netzwerke.forEach(function (n) { n.kanaele.forEach(function (k) { nrs.push(k.nr); }); });
+    var nrs = []; D.konfig.netzwerke.forEach(function (n) { (n.kanaele || []).forEach(function (k) { nrs.push(k.nr); }); });
     var h = "<thead><tr><th>Teil</th>" + nrs.map(function (nr) { return "<th class='c' title='" + esc(kanaele[nr].zweck) + "'>" + kChip(nr) + "</th>"; }).join("") + "<th>Nodes</th></tr></thead><tbody>";
     D.konfig.teile.forEach(function (t, i) {
       var nodes = 0; (t.nodes || []).forEach(function (n) { nodes += n.anzahl || 1; });
