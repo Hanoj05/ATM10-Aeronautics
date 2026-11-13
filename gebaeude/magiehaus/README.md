@@ -1,6 +1,6 @@
 # Magiehaus
 
-Pentagramm im Pentakel-Kreis, westsüdwestlich vom Hauptgebäude. Fünf Flügel für Ars Nouveau, Occultism, Iron's Spells, Forbidden & Arcanus und EvilCraft, in der Mitte ein Atrium mit ME-Knoten und Verzauberungshalle (Apothic Enchanting) unter einer Glaskuppel. Modern in White Concrete und Glas, oben lila Glas, auf dem Dach leuchtende Amethyst-Linien.
+Pentagramm im Pentakel-Kreis, westsüdwestlich vom Hauptgebäude. Fünf Flügel für Ars Nouveau, Occultism, Iron's Spells, Forbidden & Arcanus und EvilCraft auf drei Ebenen: Keller mit Technik und Mobfarm, Werkstätten im EG, hohe Ritualsäle im OG. Im Atrium die Eingangshalle und darüber die Verzauberungshalle (Apothic Enchanting) unter einer Glaskuppel. Das ME kommt per P2P-Tunnel aus dem ME-Gebäude.
 
 | Datei | Inhalt |
 | --- | --- |

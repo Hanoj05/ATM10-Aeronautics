@@ -1,21 +1,21 @@
 {
   "id": "magiehaus",
   "name": "Magiehaus",
-  "zweck": "Pentagramm mit fünf Flügeln für Ars Nouveau, Occultism, Iron's Spells, Forbidden & Arcanus und EvilCraft, Atrium mit ME-Knoten und Verzauberungshalle (Apothic Enchanting)",
+  "zweck": "Pentagramm mit fünf Flügeln für Ars Nouveau, Occultism, Iron's Spells, Forbidden & Arcanus und EvilCraft: Keller mit Technik und Mobfarm, Werkstätten im EG, Ritualsäle im OG, Verzauberungshalle (Apothic Enchanting) im Atrium",
   "status": "geplant",
   "welt": {
     "p0": [
-      83,
       65,
-      -195
+      59,
+      -197
     ],
     "drehung": 0,
-    "hinweis": "P0 = Nordwest-Ecke unten. Mitte bei Plan (53, 0, 53) = Welt (136, 65, -142), 150 Blöcke westsüdwestlich der Ringmitte. Die Kerbe mit dem Eingang zeigt genau auf das Westsüdwest-Tor vom Hauptgebäude, eine Allee verbindet beide. Lage gerechnet, nicht eingemessen."
+    "hinweis": "P0 = Nordwest-Ecke unten, also der Kellerboden auf Welt-Höhe 59. Der Erdgeschossboden liegt auf Höhe 65 (Plan y = 6). Mitte bei Plan (61, 6, 61) = Welt (126, 65, -136), 161 Blöcke westsüdwestlich der Ringmitte. Die Kerbe mit dem Eingang zeigt auf das Westsüdwest-Tor vom Hauptgebäude. Lage gerechnet, nicht eingemessen."
   },
   "masse": {
-    "breite": 112,
-    "tiefe": 107,
-    "hoehe": 35
+    "breite": 130,
+    "tiefe": 123,
+    "hoehe": 42
   },
   "zellen": [],
   "maschinen": [],
@@ -27,5 +27,10 @@
     "konfig": "konfig.md",
     "schematic": null,
     "generator": "tools/modell-magiehaus.py"
+  },
+  "ebenen": {
+    "keller": "Plan y 0 bis 5 (Welt 59 bis 64), 5 Blöcke hoch",
+    "eg": "Plan y 7 bis 11 (Welt 66 bis 70), 5 Blöcke hoch",
+    "og": "Plan y 13 bis 20 (Welt 72 bis 79), 8 Blöcke hoch"
   }
 }
