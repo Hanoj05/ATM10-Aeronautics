@@ -1,0 +1,14 @@
+{
+  "id": "materialliste-pro-gebaeude-aus-der",
+  "titel": "Materialliste pro Gebäude aus der Schematic",
+  "beschreibung": "Welche Blöcke wie oft verbaut sind.",
+  "status": "offen",
+  "phase": "schoen",
+  "wo": "Website",
+  "bereich": "Website",
+  "gebaeude": null,
+  "tab": null,
+  "zustaendig": [],
+  "faellig": null,
+  "rang": 28000
+}

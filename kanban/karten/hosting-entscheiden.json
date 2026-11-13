@@ -1,0 +1,14 @@
+{
+  "id": "hosting-entscheiden",
+  "titel": "Hosting entscheiden",
+  "beschreibung": "Eigener Server (CentOS) mit nginx und dem Campus-Dienst, holt den Stand alle 2 Minuten von GitHub.",
+  "status": "erledigt",
+  "phase": "online",
+  "wo": "Website",
+  "bereich": "Betrieb",
+  "gebaeude": null,
+  "tab": null,
+  "zustaendig": [],
+  "faellig": null,
+  "rang": 29000
+}

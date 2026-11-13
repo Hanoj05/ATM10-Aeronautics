@@ -1,0 +1,14 @@
+{
+  "id": "zugriff-nur-fuer-mitspieler",
+  "titel": "Zugriff nur für Mitspieler",
+  "beschreibung": "Login mit eigenem Konto pro Person, Profile unter Team. Fertig, sobald es auf dem Server läuft.",
+  "status": "in Arbeit",
+  "phase": "online",
+  "wo": "Website",
+  "bereich": "Betrieb",
+  "gebaeude": null,
+  "tab": null,
+  "zustaendig": [],
+  "faellig": null,
+  "rang": 30000
+}

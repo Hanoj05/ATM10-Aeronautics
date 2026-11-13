@@ -1,0 +1,14 @@
+{
+  "id": "me-gebaeude-zellen-prioritaeten-kanaele",
+  "titel": "ME-Gebäude: Zellen, Prioritäten, Kanäle und Energie dokumentieren",
+  "beschreibung": "Steht dann auf der Technik-Seite. In konfig.json unter me.zellen.",
+  "status": "offen",
+  "phase": "doku",
+  "wo": "Website",
+  "bereich": "Doku",
+  "gebaeude": "me-zentrale",
+  "tab": "konfig",
+  "zustaendig": [],
+  "faellig": null,
+  "rang": 24000
+}

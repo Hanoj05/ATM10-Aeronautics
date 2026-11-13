@@ -1,0 +1,14 @@
+{
+  "id": "spark-profil-ausgewertet-konfig-zu",
+  "titel": "Spark-Profil ausgewertet, Konfig zu „Bienschen“ überarbeitet",
+  "beschreibung": "Logistics Networks ca. 1 ms pro Tick. Größere Posten: Mobs, AE2-Speicher, Aeronautics-Physik.",
+  "status": "erledigt",
+  "phase": "doku",
+  "wo": "Website",
+  "bereich": "Doku",
+  "gebaeude": "wabenhaus",
+  "tab": "konfig",
+  "zustaendig": [],
+  "faellig": null,
+  "rang": 21000
+}

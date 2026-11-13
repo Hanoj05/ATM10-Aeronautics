@@ -1,0 +1,14 @@
+{
+  "id": "me-gebaeude-fertig-bauen-und-neu",
+  "titel": "ME-Gebäude fertig bauen und neu exportieren",
+  "beschreibung": "",
+  "status": "in Arbeit",
+  "phase": "echt",
+  "wo": "Minecraft",
+  "bereich": "Gebäude",
+  "gebaeude": "me-zentrale",
+  "tab": "ansicht",
+  "zustaendig": [],
+  "faellig": null,
+  "rang": 13000
+}

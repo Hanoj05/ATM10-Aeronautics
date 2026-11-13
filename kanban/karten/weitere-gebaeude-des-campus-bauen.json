@@ -1,0 +1,14 @@
+{
+  "id": "weitere-gebaeude-des-campus-bauen",
+  "titel": "Weitere Gebäude des Campus bauen",
+  "beschreibung": "Im Spiel bauen und als Schematic exportieren, dann Ordner aus gebaeude/vorlage anlegen.",
+  "status": "offen",
+  "phase": "doku",
+  "wo": "Minecraft",
+  "bereich": "Gebäude",
+  "gebaeude": null,
+  "tab": null,
+  "zustaendig": [],
+  "faellig": null,
+  "rang": 25000
+}

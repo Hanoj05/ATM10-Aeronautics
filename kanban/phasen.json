@@ -1,0 +1,27 @@
+[
+  {
+    "id": "fundament",
+    "titel": "Fundament",
+    "ziel": "Repo, Datenformat und Website stehen, das erste Gebäude ist drin."
+  },
+  {
+    "id": "echt",
+    "titel": "Gebäude echt abbilden",
+    "ziel": "Jedes Gebäude kommt als Schematic aus der Welt und sieht im Modell aus wie im Spiel."
+  },
+  {
+    "id": "doku",
+    "titel": "Technik",
+    "ziel": "Für jedes Gebäude ist nachlesbar, wie es eingestellt ist, und die Technik läuft sparsam."
+  },
+  {
+    "id": "schoen",
+    "titel": "Nach Minecraft aussehen",
+    "ziel": "Die 3D-Ansicht zeigt echte Blöcke statt Farbwürfel."
+  },
+  {
+    "id": "online",
+    "titel": "Online stellen",
+    "ziel": "Mitspieler können die Website öffnen, ohne selbst etwas einzurichten."
+  }
+]

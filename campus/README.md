@@ -16,13 +16,4 @@ Pro Gebäude:
 
 ## Roadmap
 
-`roadmap.json` ist die Roadmap für Campus und Website, die Seite `website/roadmap.html` zeigt sie an. Pro Phase `titel`, `ziel` und `punkte`. Pro Punkt:
-
-| Feld | Bedeutung |
-| --- | --- |
-| `titel` | Was zu tun ist |
-| `wo` | `Minecraft` (im Spiel: bauen, einstellen, exportieren) oder `Website` (am Repo und an der Seite) |
-| `status` | `erledigt`, `in Arbeit` oder `offen` |
-| `bereich` | `Gebäude`, `3D`, `Doku`, `Website` oder `Betrieb` |
-| `text` | Optional: ein Satz mehr dazu |
-| `gebaeude`, `tab` | Optional: verlinkt auf die Gebäudeseite, z. B. Tab `konfig` |
+Die Roadmap ist jetzt das Kanban-Board, Daten und Felder in [kanban/README.md](../kanban/README.md).
