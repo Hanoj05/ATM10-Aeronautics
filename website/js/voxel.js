@@ -4,14 +4,17 @@
 
   var ROOT = "../";
 
+  /* "no-cache": der Browser fragt jedes Mal nach, ob sich die Datei geändert hat.
+   * python3 -m http.server schickt keine Cache-Regeln, sonst bleiben alte Daten hängen. */
+  var FRISCH = { cache: "no-cache" };
   function ladeJSON(pfad) {
-    return fetch(ROOT + pfad).then(function (r) {
+    return fetch(ROOT + pfad, FRISCH).then(function (r) {
       if (!r.ok) throw new Error(pfad + " nicht gefunden (" + r.status + ")");
       return r.json();
     });
   }
   function ladeText(pfad) {
-    return fetch(ROOT + pfad).then(function (r) {
+    return fetch(ROOT + pfad, FRISCH).then(function (r) {
       if (!r.ok) throw new Error(pfad + " nicht gefunden (" + r.status + ")");
       return r.text();
     });
@@ -45,9 +48,15 @@
       img.src = url;
     }
     if (window.CAMPUS_TEXTUREN) { mitBild(window.CAMPUS_TEXTUREN, window.CAMPUS_TEXTUREN.atlasDaten); return; }
-    fetch(ROOT + "texturen/texturen.json")
+    fetch(ROOT + "texturen/texturen.json", FRISCH)
       .then(function (r) { return r.ok ? r.json() : null; })
-      .then(function (d) { if (d) mitBild(d, ROOT + "texturen/" + d.atlas); else fertig(); })
+      .then(function (d) {
+        if (!d) { fertig(); return; }
+        /* Atlas ebenfalls am Cache vorbei holen */
+        return fetch(ROOT + "texturen/" + d.atlas, FRISCH)
+          .then(function (r) { if (!r.ok) throw new Error("atlas"); return r.blob(); })
+          .then(function (b) { mitBild(d, URL.createObjectURL(b)); });
+      })
       .catch(function () { fertig(); });
   });
 

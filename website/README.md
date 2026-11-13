@@ -13,6 +13,8 @@ python3 -m http.server 8000
 
 Dann im Browser `http://localhost:8000` öffnen. Die Startseite leitet auf die Campus-Ansicht weiter.
 
+Daten (JSON, Texturen) holt die Seite immer frisch. Die Skripte in `website/js/` sind in den HTML-Dateien mit `?v=<Datum>` eingebunden: nach einer Änderung an einem Skript das Datum in allen `website/*.html` hochzählen, sonst zeigt der Browser noch die alte Version. Im Zweifel hilft Strg+Umschalt+R.
+
 ## Seiten
 
 - `index.html` – **Übersicht:** eine Karte pro Gebäude mit Kennzahlen und Sprungmarken.
