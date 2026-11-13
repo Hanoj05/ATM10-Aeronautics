@@ -1,0 +1,39 @@
+# Campus-Dienst: Login, Konten, Profile. Kopieren nach /etc/systemd/system/
+[Unit]
+Description=Campus-Dienst (Login und Speichern für die Campus-Website)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=campus
+Group=campus
+Environment=CAMPUS_REPO=/srv/campus/repo
+Environment=CAMPUS_DATEN=/var/lib/campus
+Environment=CAMPUS_PORT=8090
+Environment=PYTHONDONTWRITEBYTECODE=1
+ExecStart=/usr/bin/python3 /srv/campus/repo/server/dienst.py
+# Beendet sich der Dienst nach einem Code-Update mit 75, startet systemd ihn neu
+Restart=on-failure
+RestartSec=2
+UMask=0022
+
+# /var/lib/campus anlegen, nur für den Nutzer campus lesbar
+StateDirectory=campus
+StateDirectoryMode=0700
+
+# Absichern: darf nur ins Repo und nach /var/lib/campus schreiben
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+ReadWritePaths=/srv/campus/repo /var/lib/campus
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+LockPersonality=yes
+
+[Install]
+WantedBy=multi-user.target

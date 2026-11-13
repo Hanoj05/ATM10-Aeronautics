@@ -20,6 +20,8 @@ Daten (JSON, Texturen) holt die Seite immer frisch. Die Skripte in `website/js/`
 - `index.html` – **Übersicht:** eine Karte pro Gebäude mit Kennzahlen und Sprungmarken.
 - `map.html` – **Map:** der Campus in 3D. Hover zeigt den Gebäudenamen, Klick öffnet die Gebäudeseite.
 - `technik.html` – **Technik:** ME-System (Zahlen aus dem Blockmodell, Zellen und Anbindungen aus `konfig.json` unter `me`) und alle Logistics Networks, jedes einzeln aufklappbar mit Kanälen, Flüssen und Nodes.
+- `team.html` – **Team:** ein Profil pro Person aus `team/`. Das eigene Profil lässt sich bearbeiten, darunter das Passwort ändern (nur mit Login auf dem Server).
+- `admin.html` – **Admin:** Konten anlegen, Passwort zurücksetzen, sperren, Admin-Recht geben (nur für Admins).
 - `roadmap.html` – **Roadmap:** Phasen mit Stand, getrennt nach Minecraft und Website, Filter nach Ort und Status. Daten aus `campus/roadmap.json`.
 - `gebaeude.html?id=<id>` – **Gebäude** mit Unter-Tabs:
   - `#ansicht`: 3D-Modell mit Schnitt-Regler. Hover zeigt die Konfiguration eines Teils, Kanäle lassen sich markieren.
@@ -58,4 +60,4 @@ Die 3D-Ansicht zeichnet die Blöcke mit den echten Texturen aus dem Spiel (`text
 | Eigener Debian-Server | Volle Kontrolle, alles bleibt bei dir | Ein Webserver wie Caddy, dazu `git pull` per Cron. Zugriff von außen über Tailscale, dann müssen die Mitspieler auch Tailscale haben |
 | Netlify | Ähnlich wie Cloudflare Pages | Free-Plan hat Limits bei Build-Minuten, für eine statische Seite reicht es |
 
-Entscheidung: _offen_
+Entscheidung: **eigener Server** (CentOS) mit nginx und Login für jede Person. Einrichtung im Haupt-README unter „Server einrichten“.

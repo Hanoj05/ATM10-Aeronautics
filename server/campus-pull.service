@@ -1,0 +1,13 @@
+# Holt den neuesten Stand von GitHub. Wird von campus-pull.timer gestartet.
+# Kopieren nach /etc/systemd/system/
+[Unit]
+Description=Campus: neuesten Stand von GitHub holen
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=campus
+Group=campus
+# Dieselbe Sperre wie der Dienst: nie gleichzeitig mit einer Änderung über die Website
+ExecStart=/usr/bin/flock /var/lib/campus/git.lock /usr/bin/git -C /srv/campus/repo pull --ff-only --quiet origin main
