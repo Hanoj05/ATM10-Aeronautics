@@ -248,7 +248,7 @@ sudo firewall-cmd --reload
 
 In der Authentik-Admin-Oberfläche:
 
-1. **Gruppen** unter Directory → Groups: Zugang hat die bestehende Gruppe `tofg-users`. Neu anlegen: `campus-admins` (Admins der Website). Beide Benutzer müssen in `tofg-users` sein, Jonah zusätzlich in `campus-admins`.
+1. **Gruppen** unter Directory → Groups: Zugang hat die bestehende Gruppe `tofg-users`. Neu anlegen: `campus-admins` (Admins der Website). Beide Benutzer müssen in `tofg-users` sein und kommen auch in `campus-admins`.
 2. **Provider** unter Applications → Providers → Create: Typ **Proxy Provider**, Modus **Forward auth (single application)**, External host `https://DEINE-DOMAIN`.
 3. **Application** unter Applications → Applications → Create: Name `Campus`, Slug `campus`, Provider aus Schritt 2.
 4. In der Application unter **Policy / Group / User Bindings** die Gruppe `tofg-users` binden. Wer nicht in der Gruppe ist, kommt dann gar nicht erst durch.
