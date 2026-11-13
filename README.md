@@ -7,7 +7,6 @@ Doku zu unserem Tech-Campus in der ATM10-Aeronautics-Welt. Jedes Gebäude hat ei
 ```
 campus/
   campus.json          Liste aller Gebäude mit Lage in der Welt
-  roadmap.json         Roadmap, angezeigt auf website/roadmap.html
 gebaeude/
   vorlage/             Kopiervorlage für ein neues Gebäude
   wabenhaus/           Bienengebäude
@@ -22,6 +21,7 @@ gebaeude/
   aussenanlagen/       Wege, Bäume, Teiche, Laternen zwischen den Gebäuden
 schematics/
   campus.nbt           die ganze Campus-Fläche, daraus werden alle Modelle ausgeschnitten
+kanban/                Kanban-Board: Phasen und eine Datei pro Karte, angezeigt auf website/kanban.html
 team/                  Öffentliche Profile (Anzeigename, Minecraft-Name, Farbe, Info), keine Login-Daten
 texturen/              Blocktexturen für die 3D-Ansicht (Atlas plus Zuordnung), erzeugt mit tools/hole-texturen.py
 tools/                 Hilfsskripte: modell.json aus Bauplan oder Schematic, Texturen holen, Zip bauen

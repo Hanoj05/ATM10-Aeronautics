@@ -1,0 +1,14 @@
+{
+  "id": "wabenhaus-bauplan-blockmodell-und",
+  "titel": "Wabenhaus: Bauplan, Blockmodell und Konfiguration",
+  "beschreibung": "",
+  "status": "erledigt",
+  "phase": "fundament",
+  "wo": "Website",
+  "bereich": "Gebäude",
+  "gebaeude": "wabenhaus",
+  "tab": null,
+  "zustaendig": [],
+  "faellig": null,
+  "rang": 3000
+}

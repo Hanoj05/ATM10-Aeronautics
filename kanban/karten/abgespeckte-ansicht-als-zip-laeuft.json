@@ -1,0 +1,14 @@
+{
+  "id": "abgespeckte-ansicht-als-zip-laeuft",
+  "titel": "Abgespeckte Ansicht als Zip, läuft offline",
+  "beschreibung": "download/campus-ansicht.zip, gebaut mit tools/baue-ansicht-zip.py",
+  "status": "erledigt",
+  "phase": "fundament",
+  "wo": "Website",
+  "bereich": "Website",
+  "gebaeude": null,
+  "tab": null,
+  "zustaendig": [],
+  "faellig": null,
+  "rang": 8000
+}

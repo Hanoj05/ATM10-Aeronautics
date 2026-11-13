@@ -1,0 +1,14 @@
+{
+  "id": "wabenhaus-als-schematic-exportieren",
+  "titel": "Wabenhaus als Schematic exportieren",
+  "beschreibung": "Steckt in der Campus-Schematic vom 10.11.2026.",
+  "status": "erledigt",
+  "phase": "echt",
+  "wo": "Minecraft",
+  "bereich": "Gebäude",
+  "gebaeude": "wabenhaus",
+  "tab": null,
+  "zustaendig": [],
+  "faellig": null,
+  "rang": 14000
+}

@@ -1,0 +1,14 @@
+{
+  "id": "me-gebaeude-als-schematic-exportiert",
+  "titel": "ME-Gebäude als Schematic exportiert",
+  "beschreibung": "",
+  "status": "erledigt",
+  "phase": "fundament",
+  "wo": "Minecraft",
+  "bereich": "Gebäude",
+  "gebaeude": "me-zentrale",
+  "tab": null,
+  "zustaendig": [],
+  "faellig": null,
+  "rang": 6000
+}

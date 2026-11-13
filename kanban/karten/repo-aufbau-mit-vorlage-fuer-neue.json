@@ -1,0 +1,14 @@
+{
+  "id": "repo-aufbau-mit-vorlage-fuer-neue",
+  "titel": "Repo-Aufbau mit Vorlage für neue Gebäude",
+  "beschreibung": "",
+  "status": "erledigt",
+  "phase": "fundament",
+  "wo": "Website",
+  "bereich": "Doku",
+  "gebaeude": null,
+  "tab": null,
+  "zustaendig": [],
+  "faellig": null,
+  "rang": 1000
+}

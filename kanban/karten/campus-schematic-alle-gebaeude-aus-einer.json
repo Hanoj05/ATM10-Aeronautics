@@ -1,0 +1,14 @@
+{
+  "id": "campus-schematic-alle-gebaeude-aus-einer",
+  "titel": "Campus-Schematic: alle Gebäude aus einer Datei",
+  "beschreibung": "schematics/campus.nbt, jedes Gebäude als Ausschnitt. Wabenhaus jetzt auch aus der echten Welt.",
+  "status": "erledigt",
+  "phase": "fundament",
+  "wo": "Website",
+  "bereich": "3D",
+  "gebaeude": null,
+  "tab": null,
+  "zustaendig": [],
+  "faellig": null,
+  "rang": 11000
+}

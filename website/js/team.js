@@ -5,7 +5,18 @@
   var $ = function (s) { return document.getElementById(s); };
   C.navi("team");
 
-  var profile = [], wer = null;
+  var profile = [], wer = null, karten = [];
+
+  /* Offene Karten aus dem Kanban, die einer Person zugewiesen sind */
+  function aufgaben(id) {
+    var meine = karten.filter(function (k) { return k.status !== "erledigt" && (k.zustaendig || []).indexOf(id) >= 0; })
+      .sort(function (a, b) { return (a.status === "in Arbeit" ? 0 : 1) - (b.status === "in Arbeit" ? 0 : 1) || a.rang - b.rang; });
+    var link = "kanban.html?person=" + encodeURIComponent(id);
+    if (!meine.length) return "<p class='note'>Keine offenen Aufgaben. <a href='" + link + "'>Kanban</a></p>";
+    return "<ul class='team-aufgaben'>" + meine.slice(0, 6).map(function (k) {
+      return "<li><span class='s'>" + esc(k.status) + "</span><span>" + esc(k.titel) + "</span></li>";
+    }).join("") + "</ul><a class='note' href='" + link + "'>" + (meine.length > 6 ? "alle " + meine.length + " Aufgaben" : "im Kanban ansehen") + " →</a>";
+  }
 
   function karte(p) {
     var darf = wer && (wer.id === p.id || wer.admin);
@@ -13,6 +24,7 @@
       "<div class='team-kopf'>" + C.avatar(p, 56) + "<div><h2>" + esc(p.anzeigename || p.id) + "</h2>" +
       (p.minecraft ? "<span class='mc' title='Minecraft-Name'>" + esc(p.minecraft) + "</span>" : "<span class='note'>kein Minecraft-Name</span>") + "</div></div>" +
       (p.info ? "<p class='team-info'>" + esc(p.info) + "</p>" : "") +
+      "<div class='team-aufgaben-box'><h3 class='team-h3'>Aufgaben</h3>" + aufgaben(p.id) + "</div>" +
       (darf ? "<button type='button' class='knopf leise' data-bearbeiten='" + esc(p.id) + "'>Bearbeiten</button>" : "") +
       "<div class='bearbeiten'></div>" +
       "</article>";
@@ -71,11 +83,23 @@
     }).catch(function (e) { m.className = "meldung fehler"; m.textContent = e.message; });
   });
 
+  /* Karten: mit Login über den Dienst, sonst direkt aus kanban/ */
+  function ladeKarten() {
+    return C.ich().then(function (i) {
+      if (i) return C.api("kanban").then(function (j) { return j.karten; });
+      return C.ladeJSON("kanban/liste.json").then(function (ids) {
+        return Promise.all(ids.map(function (id) { return C.ladeJSON("kanban/karten/" + id + ".json").catch(function () { return null; }); }));
+      });
+    }).then(function (l) { return l.filter(Boolean); }).catch(function () { return []; });
+  }
+
   Promise.all([
     C.ladeJSON("team/liste.json").catch(function () { return []; }),
-    C.ich()
+    C.ich(),
+    ladeKarten()
   ]).then(function (r) {
     wer = r[1];
+    karten = r[2];
     $("passwortBox").hidden = !wer;
     return Promise.all(r[0].map(function (id) { return C.ladeJSON("team/" + encodeURIComponent(id) + ".json").catch(function () { return null; }); }));
   }).then(function (liste) {

@@ -28,6 +28,7 @@ import subprocess
 import sys
 import threading
 import time
+import unicodedata
 from contextlib import contextmanager
 from datetime import datetime, timezone
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -56,7 +57,7 @@ MIN_PASSWORT = 8
 SCRYPT = {"n": 2 ** 14, "r": 8, "p": 1}
 
 # Nur diese Ordner darf der Dienst im Repo beschreiben
-SCHREIBBAR = ("team/",)
+SCHREIBBAR = ("team/", "kanban/")
 
 ID_MUSTER = re.compile(r"^[a-z][a-z0-9-]{1,23}$")
 MC_MUSTER = re.compile(r"^[A-Za-z0-9_]{3,16}$")
@@ -339,10 +340,11 @@ class Git:
             raise Fehler(409, "Der Stand auf dem Server passt nicht mehr zu GitHub (jemand hat die Geschichte "
                               "umgeschrieben). Nichts gespeichert, bitte den Admin fragen.")
 
-    def schreibe(self, dateien, nachricht, autor, erwartet):
-        """dateien: {pfad im Repo: bytes oder None zum Löschen}
+    def schreibe(self, dateien, nachricht, autor, erwartet, bezeichnung=None):
+        """dateien: {pfad im Repo: bytes, None zum Löschen, oder eine Funktion, die aus dem
+                    aktuellen Inhalt (bytes oder None) unter der Sperre den neuen macht}
         erwartet: {pfad: Blob-Version, die der Browser gesehen hat (None = darf noch nicht existieren)}
-        autor: (Name, E-Mail). Gibt den neuen Commit-Hash zurück, oder None ohne Änderung."""
+        autor: (Name, E-Mail). bezeichnung: wie die Datei in Meldungen heißt. Gibt den neuen Commit-Hash zurück, oder None ohne Änderung."""
         for pfad in list(dateien) + list(erwartet):
             if ".." in pfad.split("/") or not pfad.startswith(SCHREIBBAR) or pfad.startswith("/"):
                 raise Fehler(400, "Pfad nicht erlaubt: %s" % pfad)
@@ -351,10 +353,12 @@ class Git:
             for pfad, version in erwartet.items():
                 if blob_version(self.repo / pfad) != version:
                     raise Fehler(409, "%s wurde inzwischen von jemand anderem geändert. Nichts gespeichert. "
-                                      "Bitte die Seite neu laden und es noch einmal versuchen." % pfad)
+                                      "Bitte die Seite neu laden und es noch einmal versuchen." % (bezeichnung or pfad))
             vorher = self.git("rev-parse", "HEAD").stdout.strip()
             for pfad, inhalt in dateien.items():
                 ziel = self.repo / pfad
+                if callable(inhalt):
+                    inhalt = inhalt(ziel.read_bytes() if ziel.exists() else None)
                 if inhalt is None:
                     if ziel.exists():
                         ziel.unlink()
@@ -425,31 +429,130 @@ def autor_von(kid):
     return (p.get("anzeigename") or kid, "%s@campus.invalid" % kid)
 
 
-def liste_mit(kid):
-    """team/liste.json mit der neuen ID, sortiert."""
+def liste_aendern(dazu=None, weg=None):
+    """Funktion für Git.schreibe: fügt eine ID in eine liste.json ein oder nimmt sie raus.
+    Läuft unter der Sperre auf dem frischen Stand, deshalb gibt es hier keinen Konflikt."""
+    def neu(alt):
+        try:
+            ids = json.loads(alt.decode("utf-8")) if alt else []
+        except ValueError:
+            ids = []
+        ids = [i for i in ids if i != weg]
+        if dazu and dazu not in ids:
+            ids.append(dazu)
+        return (json.dumps(sorted(ids), ensure_ascii=False) + "\n").encode("utf-8")
+    return neu
+
+
+def in_liste(pfad, kid):
     try:
-        ids = json.loads((REPO / "team/liste.json").read_text(encoding="utf-8"))
+        return kid in json.loads((REPO / pfad).read_text(encoding="utf-8"))
     except (FileNotFoundError, ValueError):
-        ids = []
-    if kid in ids:
-        return None
-    return (json.dumps(sorted(ids + [kid]), ensure_ascii=False) + "\n").encode("utf-8")
+        return False
 
 
 def profil_anlegen(git, kid, eingabe, autor):
     """Legt team/<id>.json an, falls es noch fehlt, und trägt die ID in team/liste.json ein."""
-    if lies_profil(kid) is not None and liste_mit(kid) is None:
+    if lies_profil(kid) is not None and in_liste("team/liste.json", kid):
         return None
-    dateien, erwartet = {}, {}
+    dateien, erwartet = {"team/liste.json": liste_aendern(dazu=kid)}, {}
     if lies_profil(kid) is None:
         dateien[profil_pfad(kid)] = profil_bytes(profil_pruefen(kid, eingabe))
         erwartet[profil_pfad(kid)] = None
-    liste = liste_mit(kid)
-    if liste is not None:
-        dateien["team/liste.json"] = liste
-        erwartet["team/liste.json"] = blob_version(REPO / "team/liste.json")
     name = profil_pruefen(kid, eingabe)["anzeigename"]
     return git.schreibe(dateien, "Team: %s dazu" % name, autor, erwartet)
+
+
+# --- Kanban (im Repo unter kanban/) ---
+
+STATUS = ["offen", "in Arbeit", "erledigt"]
+WO = ["Minecraft", "Website"]
+BEREICHE = ["Gebäude", "3D", "Doku", "Website", "Betrieb"]
+TABS = ["ansicht", "konfig", "bauplan"]
+KARTEN_ID = r"[a-z0-9][a-z0-9-]{0,47}"
+DATUM_MUSTER = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+
+
+def karten_pfad(kid):
+    return "kanban/karten/%s.json" % kid
+
+
+def lies_json(pfad, ersatz=None):
+    try:
+        return json.loads((REPO / pfad).read_text(encoding="utf-8"))
+    except (FileNotFoundError, ValueError):
+        return ersatz
+
+
+def karten_kurzname(titel):
+    """Lesbare ID aus dem Titel, wie in tools/migriere-roadmap.py."""
+    t = titel.lower().replace("ä", "ae").replace("ö", "oe").replace("ü", "ue").replace("ß", "ss")
+    t = unicodedata.normalize("NFKD", t).encode("ascii", "ignore").decode("ascii")
+    t = re.sub(r"[^a-z0-9]+", "-", t).strip("-")
+    if len(t) > 40:
+        t = t[:41].rsplit("-", 1)[0]
+    t = t or "karte"
+    kid, n = t, 2
+    while (REPO / karten_pfad(kid)).exists():
+        kid, n = "%s-%d" % (t, n), n + 1
+    return kid
+
+
+def karte_pruefen(eingabe, alt):
+    """Neue Karte aus alter Karte plus Eingabe. Nur bekannte Felder, alle geprüft."""
+    k = dict(alt)
+    for feld in ("titel", "beschreibung", "status", "phase", "wo", "bereich", "gebaeude", "tab", "zustaendig", "faellig", "rang"):
+        if feld in eingabe:
+            k[feld] = eingabe[feld]
+    k["titel"] = str(k.get("titel") or "").strip()
+    if not 1 <= len(k["titel"]) <= 120:
+        raise Fehler(400, "Titel: 1 bis 120 Zeichen.")
+    k["beschreibung"] = str(k.get("beschreibung") or "").strip()
+    if len(k["beschreibung"]) > 4000:
+        raise Fehler(400, "Beschreibung: höchstens 4000 Zeichen.")
+    if k.get("status") not in STATUS:
+        raise Fehler(400, "Unbekannter Status.")
+    if k.get("wo") not in WO:
+        raise Fehler(400, "Wo: Minecraft oder Website.")
+    if k.get("bereich") not in BEREICHE:
+        raise Fehler(400, "Unbekannter Bereich.")
+    phasen = [p["id"] for p in lies_json("kanban/phasen.json", [])]
+    if k.get("phase") not in phasen:
+        raise Fehler(400, "Unbekannte Phase.")
+    gebaeude = [g["id"] for g in lies_json("campus/campus.json", {}).get("gebaeude", [])]
+    if k.get("gebaeude") in ("", None):
+        k["gebaeude"] = None
+    elif k["gebaeude"] not in gebaeude:
+        raise Fehler(400, "Unbekanntes Gebäude.")
+    if k.get("tab") in ("", None) or not k["gebaeude"]:
+        k["tab"] = None
+    elif k["tab"] not in TABS:
+        raise Fehler(400, "Unbekannter Tab.")
+    leute = lies_json("team/liste.json", [])
+    z = k.get("zustaendig") or []
+    if not isinstance(z, list) or any(p not in leute for p in z):
+        raise Fehler(400, "Zuständig: nur Leute aus dem Team.")
+    k["zustaendig"] = sorted(set(z))
+    if k.get("faellig") in ("", None):
+        k["faellig"] = None
+    elif not DATUM_MUSTER.match(str(k["faellig"])):
+        raise Fehler(400, "Fällig bitte als Datum.")
+    try:
+        k["rang"] = float(k.get("rang") or 0)
+    except (TypeError, ValueError):
+        raise Fehler(400, "Ungültiger Rang.")
+    if k["rang"] == int(k["rang"]):
+        k["rang"] = int(k["rang"])
+    reihenfolge = ("id", "titel", "beschreibung", "status", "phase", "wo", "bereich", "gebaeude", "tab", "zustaendig", "faellig", "rang")
+    return {f: k.get(f) for f in reihenfolge}
+
+
+def karte_bytes(k):
+    return (json.dumps(k, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
+
+
+def kurz(titel):
+    return titel if len(titel) <= 60 else titel[:57] + "…"
 
 
 # --- Webserver ---
@@ -646,7 +749,7 @@ class Handler(BaseHTTPRequestHandler):
         neu = profil_pruefen(pid, e, alt)
         wer = "" if pid == kid else " (von %s)" % autor_von(kid)[0]
         commit = self.d["git"].schreibe({profil_pfad(pid): profil_bytes(neu)}, "Profil von %s geändert%s" % (neu["anzeigename"], wer),
-                                        autor_von(kid), {profil_pfad(pid): e.get("version")})
+                                        autor_von(kid), {profil_pfad(pid): e.get("version")}, "Das Profil")
         self.antwort(200, {"ok": True, "commit": commit, "profil": neu, "version": blob_version(REPO / profil_pfad(pid))})
 
     # -- Admin --
@@ -698,6 +801,61 @@ class Handler(BaseHTTPRequestHandler):
         log("Konto", ziel, aktion, "von", kid)
         self.antwort(200, {"ok": True})
 
+    # -- Kanban --
+
+    def kanban(self):
+        self.eingeloggt()
+        karten = []
+        for kid in lies_json("kanban/liste.json", []):
+            k = lies_json(karten_pfad(kid))
+            if k:
+                k["version"] = blob_version(REPO / karten_pfad(kid))
+                karten.append(k)
+        self.antwort(200, {"commit": self.d["git"].kopf(), "phasen": lies_json("kanban/phasen.json", []), "karten": karten})
+
+    def karte_neu(self):
+        kid, _ = self.eingeloggt()
+        e = self.eingabe()
+        vorlage = {"status": "offen", "wo": "Minecraft", "bereich": "Gebäude", "zustaendig": [], "rang": 0}
+        k = karte_pruefen(e, vorlage)
+        k["id"] = karten_kurzname(k["titel"])
+        commit = self.d["git"].schreibe(
+            {karten_pfad(k["id"]): karte_bytes(k), "kanban/liste.json": liste_aendern(dazu=k["id"])},
+            "Kanban: neue Karte „%s“" % kurz(k["titel"]), autor_von(kid), {karten_pfad(k["id"]): None})
+        k["version"] = blob_version(REPO / karten_pfad(k["id"]))
+        self.antwort(200, {"ok": True, "commit": commit, "karte": k})
+
+    def karte_aendern(self, karte_id):
+        kid, _ = self.eingeloggt()
+        e = self.eingabe()
+        alt = lies_json(karten_pfad(karte_id))
+        if alt is None:
+            raise Fehler(409, "Die Karte gibt es nicht mehr, vermutlich hat sie jemand gelöscht. Bitte neu laden.")
+        k = karte_pruefen(e, alt)
+        k["id"] = karte_id
+        if k["status"] != alt.get("status"):
+            nachricht = "Kanban: „%s“ nach %s" % (kurz(k["titel"]), k["status"])
+        elif set(e) <= {"rang", "version", "phase"}:
+            nachricht = "Kanban: „%s“ verschoben" % kurz(k["titel"])
+        else:
+            nachricht = "Kanban: „%s“ geändert" % kurz(k["titel"])
+        commit = self.d["git"].schreibe({karten_pfad(karte_id): karte_bytes(k)}, nachricht, autor_von(kid),
+                                        {karten_pfad(karte_id): e.get("version")}, "Die Karte „%s“" % kurz(alt.get("titel", "")))
+        k["version"] = blob_version(REPO / karten_pfad(karte_id))
+        self.antwort(200, {"ok": True, "commit": commit, "karte": k})
+
+    def karte_loeschen(self, karte_id):
+        kid, _ = self.eingeloggt()
+        e = self.eingabe()
+        alt = lies_json(karten_pfad(karte_id))
+        if alt is None:
+            raise Fehler(409, "Die Karte gibt es schon nicht mehr. Bitte neu laden.")
+        commit = self.d["git"].schreibe(
+            {karten_pfad(karte_id): None, "kanban/liste.json": liste_aendern(weg=karte_id)},
+            "Kanban: „%s“ gelöscht" % kurz(alt.get("titel", karte_id)), autor_von(kid),
+            {karten_pfad(karte_id): e.get("version")}, "Die Karte „%s“" % kurz(alt.get("titel", "")))
+        self.antwort(200, {"ok": True, "commit": commit})
+
     def stand(self):
         """Aktueller Commit, damit offene Seiten merken, dass es etwas Neues gibt."""
         self.eingeloggt()
@@ -718,6 +876,10 @@ ROUTEN = [
     _r("GET", r"/api/stand", Handler.stand),
     _r("GET", r"/api/profil/([a-z][a-z0-9-]{1,23})", Handler.profil_lesen),
     _r("POST", r"/api/profil/([a-z][a-z0-9-]{1,23})", Handler.profil_speichern),
+    _r("GET", r"/api/kanban", Handler.kanban),
+    _r("POST", r"/api/karten", Handler.karte_neu),
+    _r("POST", r"/api/karten/(" + KARTEN_ID + r")", Handler.karte_aendern),
+    _r("POST", r"/api/karten/(" + KARTEN_ID + r")/loeschen", Handler.karte_loeschen),
     _r("GET", r"/api/konten", Handler.konten_liste),
     _r("POST", r"/api/konten", Handler.konto_anlegen),
     _r("POST", r"/api/konten/([a-z][a-z0-9-]{1,23})", Handler.konto_aendern),

@@ -358,12 +358,12 @@
     return "<span class='avatar' style='--av:" + esc((p && p.farbe) || "#62645f") + (groesse ? ";--av-g:" + groesse + "px" : "") + "' aria-hidden='true'>" + esc(ini) + "</span>";
   }
 
-  /* Navigation oben auf jeder Seite. aktiv: "uebersicht", "map", "technik", "roadmap", "team", "admin" oder eine Gebäude-ID */
+  /* Navigation oben auf jeder Seite. aktiv: "uebersicht", "map", "technik", "kanban", "team", "admin" oder eine Gebäude-ID */
   function navi(aktiv) {
     var nav = document.getElementById("nav");
     if (!nav) return;
     function link(href, text, an) { return "<a href='" + href + "'" + (an ? " aria-current='page'" : "") + ">" + esc(text) + "</a>"; }
-    nav.innerHTML = link("index.html", "Übersicht", aktiv === "uebersicht") + link("map.html", "Map", aktiv === "map") + link("technik.html", "Technik", aktiv === "technik") + link("roadmap.html", "Roadmap", aktiv === "roadmap") + link("team.html", "Team", aktiv === "team");
+    nav.innerHTML = link("index.html", "Übersicht", aktiv === "uebersicht") + link("map.html", "Map", aktiv === "map") + link("technik.html", "Technik", aktiv === "technik") + link("kanban.html", "Kanban", aktiv === "kanban") + link("team.html", "Team", aktiv === "team");
     var gebaeude = ladeJSON("campus/campus.json").then(function (c) {
       var h = "";
       c.gebaeude.forEach(function (g) { if (g.ordner) h += link("gebaeude.html?id=" + encodeURIComponent(g.id), g.name, aktiv === g.id); });

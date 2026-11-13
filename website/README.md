@@ -22,7 +22,7 @@ Daten (JSON, Texturen) holt die Seite immer frisch. Die Skripte in `website/js/`
 - `technik.html` – **Technik:** ME-System (Zahlen aus dem Blockmodell, Zellen und Anbindungen aus `konfig.json` unter `me`) und alle Logistics Networks, jedes einzeln aufklappbar mit Kanälen, Flüssen und Nodes.
 - `team.html` – **Team:** ein Profil pro Person aus `team/`. Das eigene Profil lässt sich bearbeiten, darunter das Passwort ändern (nur mit Login auf dem Server).
 - `admin.html` – **Admin:** Konten anlegen, Passwort zurücksetzen, sperren, Admin-Recht geben (nur für Admins).
-- `roadmap.html` – **Roadmap:** Phasen mit Stand, getrennt nach Minecraft und Website, Filter nach Ort und Status. Daten aus `campus/roadmap.json`.
+- `kanban.html` – **Kanban:** Spalten offen, in Arbeit, erledigt. Karten per Drag & Drop verschieben, anklicken zum Bearbeiten. Filter nach Person („Meine Aufgaben“), Gebäude, Bereich, Ort und Phase, auf Wunsch nach Phase gruppiert. Die Filter stehen in der Adresse, ein Link zeigt also genau diese Ansicht. Offene Seiten holen sich Änderungen von anderen alle 20 Sekunden. Daten in `kanban/`, Ändern nur mit Login auf dem Server. `roadmap.html` leitet hierher weiter.
 - `gebaeude.html?id=<id>` – **Gebäude** mit Unter-Tabs:
   - `#ansicht`: 3D-Modell mit Schnitt-Regler. Hover zeigt die Konfiguration eines Teils, Kanäle lassen sich markieren.
   - `#konfig`: Matrix, welches Teil auf welchem Kanal sendet oder empfängt, die Flüsse pro Kanal und darunter `konfig.md`.

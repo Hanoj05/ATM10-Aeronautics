@@ -1,0 +1,14 @@
+{
+  "id": "bienschen-ersetzt-bienchen-komplett",
+  "titel": "Bienschen ersetzt Bienchen komplett",
+  "beschreibung": "Wenn alles auf Bienschen läuft, das alte Netz abbauen.",
+  "status": "in Arbeit",
+  "phase": "doku",
+  "wo": "Minecraft",
+  "bereich": "Gebäude",
+  "gebaeude": "wabenhaus",
+  "tab": "konfig",
+  "zustaendig": [],
+  "faellig": null,
+  "rang": 23000
+}
