@@ -15,9 +15,20 @@ import json
 import math
 from pathlib import Path
 
+# ---------------------------------------------------------------- Lage in der Welt
+MITTE = (263, -221)          # Ringmitte (Welt x, z), Boden auf Welt-Höhe 65
+FOYER = (348, -274)          # Eingang Wabenhaus (Westseite), dahin führt die Bienenallee
+ME_SUED = (272, -333)        # Mitte der Südseite vom ME-Gebäude, dahin führt die Wasserallee
+WELT_X = (177, 350)          # Rasterausdehnung in der Welt
+WELT_Z = (-334, -135)
+NX = WELT_X[1] - WELT_X[0] + 1
+NZ = WELT_Z[1] - WELT_Z[0] + 1
+P0 = (WELT_X[0], 65, WELT_Z[0])
+CX = MITTE[0] - WELT_X[0]    # Ringmitte im Raster
+CZ = MITTE[1] - WELT_Z[0]
+TOR_WINKEL = math.degrees(math.atan2(FOYER[1] - MITTE[1], FOYER[0] - MITTE[0]))  # ein Tor zeigt aufs Wabenhaus
+
 # ---------------------------------------------------------------- Maße
-N = 171                      # Kantenlänge des Rasters
-C = N // 2                   # Mittelpunkt (Index 85)
 R_AUSSEN = 74.5              # Glasfassade außen (Durchmesser 149)
 R_INNEN = 57.5               # Glasfassade innen (Durchmesser 115), Ring ist 17 breit
 VORDACH = 2                  # Überstand der weißen Bänder an jeder Decke
@@ -45,6 +56,8 @@ BLOECKE = [
     ("leaves2", "minecraft:oak_leaves", "Oak Leaves", "#3f7a33", False, False),
     ("flower", "minecraft:allium", "Allium", "#b565e0", False, True),
     ("flower2", "minecraft:dandelion", "Dandelion", "#f2d43a", False, True),
+    ("flower3", "minecraft:cornflower", "Cornflower", "#4a6fe0", False, True),
+    ("flower4", "minecraft:poppy", "Poppy", "#d8322a", False, True),
     ("kern", "draconicevolution:energy_core", "Energy Core", "#62e0ff", False, False),
     ("redstone", "minecraft:redstone_block", "Redstone Block", "#a8190f", False, False),
     ("draconium", "draconicevolution:draconium_block", "Draconium Block", "#4b2f7a", False, False),
@@ -57,7 +70,7 @@ H = {}                       # Geländehöhe im Park: oberster Grasblock
 
 
 def setze(x, y, z, m):
-    if 0 <= x < N and 0 <= z < N and y >= 0:
+    if 0 <= x < NX and 0 <= z < NZ and y >= 0:
         V[(x, y, z)] = m
 
 
@@ -65,15 +78,23 @@ def loesche(x, y, z):
     V.pop((x, y, z), None)
 
 
+_A = math.radians(TOR_WINKEL)
 FELD = []
-for _x in range(N):
-    for _z in range(N):
-        _dx, _dz = _x - C, _z - C
-        FELD.append((_x, _z, _dx, _dz, math.hypot(_dx, _dz), math.degrees(math.atan2(_dz, _dx)) % 360))
+for _x in range(NX):
+    for _z in range(NZ):
+        _dx, _dz = _x - CX, _z - CZ
+        # u, v: Koordinaten entlang der gedrehten Torachsen
+        _u = _dx * math.cos(_A) + _dz * math.sin(_A)
+        _v = -_dx * math.sin(_A) + _dz * math.cos(_A)
+        FELD.append((_x, _z, _u, _v, math.hypot(_dx, _dz), (math.degrees(math.atan2(_dz, _dx)) - TOR_WINKEL) % 360))
 
 
-def im_tor(dx, dz):
-    return (abs(dx) <= TOR_HALB) or (abs(dz) <= TOR_HALB)
+def im_tor(u, v):
+    return (abs(u) <= TOR_HALB) or (abs(v) <= TOR_HALB)
+
+
+def raster(wx, wz):
+    return wx - WELT_X[0], wz - WELT_Z[0]
 
 
 def zufallszahlen(start):
@@ -109,8 +130,14 @@ def weg_abstand(dx, dz, d, w):
     return best
 
 
+STABILIZER = []
+
+
 def baue():
     dach = ETAGEN * ETAGE
+    for ang in (0, 90, 180, 270):
+        a = math.radians(ang) + _A
+        STABILIZER.append((round(STAB_ABSTAND * math.cos(a)), round(STAB_ABSTAND * math.sin(a))))
 
     # --- Gelände: sanfte Hügel im Park
     for x, z, dx, dz, d, w in FELD:
@@ -186,11 +213,11 @@ def baue():
     for x, z, dx, dz, d, w in FELD:
         if not (R_INNEN - 0.5 <= d <= R_AUSSEN + 0.5):
             continue
-        q = min(abs(dx), abs(dz))
+        q = min(abs(dx), abs(dz))  # dx, dz sind hier die gedrehten u, v
         if q <= TOR_HALB:
             for y in range(1, ETAGE):
                 loesche(x, y, z)
-            if q == TOR_HALB:
+            if q > TOR_HALB - 1:
                 for y in range(1, ETAGE):
                     setze(x, y, z, "glass")
 
@@ -200,11 +227,10 @@ def baue():
     for _ in range(900):
         ang = next(rz) % 3600 / 10
         rad = TEICH_R + 6 + (next(rz) % 1000) / 1000 * (R_INNEN - TEICH_R - 15)
-        bx = round(C + rad * math.cos(math.radians(ang)))
-        bz = round(C + rad * math.sin(math.radians(ang)))
-        dx, dz = bx - C, bz - C
-        d = math.hypot(dx, dz)
-        if weg_abstand(dx, dz, d, math.degrees(math.atan2(dz, dx)) % 360) < 4.5:
+        bx = round(CX + rad * math.cos(math.radians(ang + TOR_WINKEL)))
+        bz = round(CZ + rad * math.sin(math.radians(ang + TOR_WINKEL)))
+        d = math.hypot(bx - CX, bz - CZ)
+        if weg_abstand(0, 0, d, ang % 360) < 4.5:
             continue
         if TEICH_R + 2 <= d < TEICH_R + 7 or R_INNEN - 11 <= d < R_INNEN - 5:
             continue
@@ -217,10 +243,10 @@ def baue():
     # Baumreihe außen um den Ring
     for i in range(48):
         ang = math.radians(i * 7.5 + 3.75)
-        bx = round(C + 80.5 * math.cos(ang))
-        bz = round(C + 80.5 * math.sin(ang))
-        if im_tor(bx - C, bz - C):
+        if min(abs(80.5 * math.sin(ang)), abs(80.5 * math.cos(ang))) <= TOR_HALB + 2:
             continue
+        bx = round(CX + 80.5 * math.cos(ang + _A))
+        bz = round(CZ + 80.5 * math.sin(ang + _A))
         baum(bx, bz, 4, 2.6, "leaves2")
     # Wiese mit Blumen
     for x, z, dx, dz, d, w in FELD:
@@ -232,10 +258,10 @@ def baue():
 
     # --- Energy Core: Kugel über dem Teich, weißer Ring auf vier Säulen
     r = int(KERN_R) + 1
-    for x in range(C - r, C + r + 1):
+    for x in range(CX - r, CX + r + 1):
         for y in range(KERN_Y - r, KERN_Y + r + 1):
-            for z in range(C - r, C + r + 1):
-                rr = math.sqrt((x - C) ** 2 + (y - KERN_Y) ** 2 + (z - C) ** 2)
+            for z in range(CZ - r, CZ + r + 1):
+                rr = math.sqrt((x - CX) ** 2 + (y - KERN_Y) ** 2 + (z - CZ) ** 2)
                 if rr > KERN_R:
                     continue
                 m = "kern" if rr <= 2 else "redstone" if rr <= 3.6 else "draconium" if rr <= 5.1 else "erwacht"
@@ -243,8 +269,8 @@ def baue():
     for x, z, dx, dz, d, w in FELD:
         if abs(d - STAB_ABSTAND) <= 0.55:
             setze(x, KERN_Y, z, "white")
-    for dx, dz in ((STAB_ABSTAND, 0), (-STAB_ABSTAND, 0), (0, STAB_ABSTAND), (0, -STAB_ABSTAND)):
-        px, pz = C + dx, C + dz
+    for dx, dz in STABILIZER:
+        px, pz = CX + dx, CZ + dz
         for ox in (-1, 0, 1):
             for oz in (-1, 0, 1):
                 setze(px + ox, 0, pz + oz, "quartz")     # kleine Insel im Teich
@@ -253,8 +279,115 @@ def baue():
         setze(px, KERN_Y, pz, "stabilizer")
 
 
+# ---------------------------------------------------------------- Außenanlagen
+def nachbarn():
+    """Grundflächen von Wabenhaus und ME-Gebäude in Rasterkoordinaten, um 2 Blöcke erweitert."""
+    wurzel = Path(__file__).resolve().parent.parent
+    belegt = set()
+    for name in ("wabenhaus", "me-zentrale"):
+        g = json.loads((wurzel / "gebaeude" / name / "gebaeude.json").read_text(encoding="utf-8"))
+        m = json.loads((wurzel / "gebaeude" / name / "modell.json").read_text(encoding="utf-8"))
+        p0, dreh = g["welt"]["p0"], g["welt"]["drehung"]
+        for b in m["bloecke"]:
+            if dreh == 90:
+                wx, wz = p0[0] + 1 - b[2], p0[2] + b[0]
+            else:
+                wx, wz = p0[0] + b[0], p0[2] + b[2]
+            gx, gz = raster(wx, wz)
+            for ox in range(-2, 3):
+                for oz in range(-2, 3):
+                    belegt.add((gx + ox, gz + oz))
+    return belegt
+
+
+def allee(ziel, breite_halb):
+    """Liefert Zellen entlang einer geraden Linie vom Vorplatz zum Ziel: (x, z, laengs, quer)."""
+    zx, zz = raster(*ziel)
+    rx, rz = zx - CX, zz - CZ
+    laenge = math.hypot(rx, rz)
+    ex, ez = rx / laenge, rz / laenge
+    start = R_AUSSEN + 6
+    zellen = []
+    for x in range(NX):
+        for z in range(NZ):
+            dx, dz = x - CX, z - CZ
+            l = dx * ex + dz * ez
+            q = -dx * ez + dz * ex
+            if start <= l <= laenge and abs(q) <= breite_halb:
+                zellen.append((x, z, l - start, q))
+    return zellen
+
+
+def hex_abstand(x, z, hx, hz):
+    """Abstand im Sechseck-Maß (Spitzen nach Osten und Westen)."""
+    dx, dz = abs(x - hx), abs(z - hz)
+    return max(dz / 0.866, (dx + dz / 1.732) / 1.0)
+
+
+def aussenanlagen():
+    belegt = nachbarn()
+    rz = zufallszahlen(77)
+    blumen = ("flower", "flower2", "flower3", "flower4")
+
+    # Bienenallee zum Wabenhaus: weißer Weg, links und rechts Sechseck-Beete voller Blumen
+    beete = []
+    for x, z, l, q in allee(FOYER, 12):
+        if (x, z) in belegt or math.hypot(x - CX, z - CZ) <= GRUND_R:
+            continue
+        if abs(q) <= 2.5:
+            setze(x, 0, z, "quartz")
+        elif abs(q) <= 3.5:
+            setze(x, 0, z, "platz")
+    for x, z, l, q in allee(FOYER, 12):
+        if abs(q) < 3.5 or (x, z) in belegt or math.hypot(x - CX, z - CZ) <= GRUND_R - 1:
+            continue
+        seite = 1 if q > 0 else -1
+        nr = round((l - 4) / 8)
+        hl, hq = 4 + nr * 8, seite * 8
+        # Beetmitte zurück ins Raster rechnen
+        zx, zz = raster(*FOYER)
+        ex, ez = (zx - CX), (zz - CZ)
+        n = math.hypot(ex, ez); ex, ez = ex / n, ez / n
+        ml = R_AUSSEN + 6 + hl
+        hx = CX + ex * ml - ez * hq
+        hz = CZ + ez * ml + ex * hq
+        h = hex_abstand(x, z, hx, hz)
+        if h <= 3.2:
+            setze(x, 0, z, "grass")
+            if next(rz) % 3:
+                setze(x, 1, z, blumen[next(rz) % 4])
+        elif h <= 4.1:
+            setze(x, 0, z, "quartz")
+        else:
+            setze(x, 0, z, "grass")
+
+    # Wasserallee zum ME-Gebäude: Weg zwischen zwei schmalen Wasserrinnen, außen Baumreihen
+    baeume = []
+    for x, z, l, q in allee(ME_SUED, 8):
+        if (x, z) in belegt or math.hypot(x - CX, z - CZ) <= GRUND_R:
+            continue
+        a = abs(q)
+        if a <= 2.5:
+            setze(x, 0, z, "quartz")
+        elif a <= 3.5:
+            setze(x, 0, z, "water")
+        elif a <= 4.5:
+            setze(x, 0, z, "quartz")
+        else:
+            setze(x, 0, z, "grass")
+            if 6.5 <= a <= 7.5 and round(l) % 6 == 3:
+                baeume.append((x, z))
+    gesehen = set()
+    for x, z in baeume:
+        if any(abs(x - a) + abs(z - b) < 4 for a, b in gesehen):
+            continue
+        gesehen.add((x, z))
+        baum(x, z, 4, 2.4, "leaves2")
+
+
 def schreibe(ziel):
     baue()
+    aussenanlagen()
     reihenfolge = [b[0] for b in BLOECKE]
     benutzt = [k for k in reihenfolge if k in set(V.values())]
     index = {k: i for i, k in enumerate(benutzt)}
@@ -268,7 +401,7 @@ def schreibe(ziel):
     ziel.parent.mkdir(parents=True, exist_ok=True)
     with ziel.open("w", encoding="utf-8") as f:
         f.write('{"quelle":"tools/modell-hauptgebaeude.py","groesse":')
-        json.dump([N, hoehe, N], f)
+        json.dump([NX, hoehe, NZ], f)
         f.write(',"palette":')
         json.dump(palette, f, ensure_ascii=False, separators=(",", ":"))
         f.write(',"bloecke":[\n')
@@ -277,7 +410,7 @@ def schreibe(ziel):
     zaehlung = {}
     for m in V.values():
         zaehlung[m] = zaehlung.get(m, 0) + 1
-    print(f"{ziel}: {len(bloecke)} Blöcke, Größe {N} x {hoehe} x {N}")
+    print(f"{ziel}: {len(bloecke)} Blöcke, Größe {NX} x {hoehe} x {NZ}, P0 {P0}, Mitte im Raster ({CX}, 0, {CZ}), Torwinkel {TOR_WINKEL:.1f}")
     for k in benutzt:
         print(f"  {info[k][2]:28} {zaehlung[k]}")
 

@@ -1,20 +1,20 @@
 {
   "id": "hauptgebaeude",
   "name": "Hauptgebäude",
-  "zweck": "Flacher Glasring nach dem Vorbild des Apple Park: weiße Bänder an jeder Etage, Solardach, Park mit Teich, Energy Core schwebt in der Mitte",
+  "zweck": "Flacher Glasring nach dem Vorbild des Apple Park, Park mit Teich und Energy Core, Bienenallee zum Wabenhaus und Wasserallee zum ME-Gebäude",
   "status": "geplant",
   "welt": {
     "p0": [
-      154,
+      177,
       65,
-      -329
+      -334
     ],
     "drehung": 0,
-    "hinweis": "P0 = Nordwest-Ecke unten. Mittelpunkt bei Plan (85, 0, 85), also Welt (239, 65, -244). Der Ring liegt in der Ecke zwischen ME-Gebäude (nördlich) und Wabenhaus (östlich) und hält zu beiden mindestens 86 Blöcke Abstand von der Mitte, also gut 2 Blöcke Luft hinter der äußeren Baumreihe. Steht dort, wo vorher Haus West und Haus Ost standen. Lage nur gerechnet, nicht eingemessen: vor dem Bauen mit F3 prüfen."
+    "hinweis": "P0 = Nordwest-Ecke unten. Ringmitte bei Plan (86, 0, 113) = Welt (263, 65, -221). Abstand vom Rand der Anlage (Baumreihe) zum Wabenhaus etwa 12 Blöcke, zum ME-Gebäude etwa 27. Ein Tor zeigt genau aufs Foyer des Wabenhauses (Bienenallee), eine Wasserallee führt zur Südseite des ME-Gebäudes. Lage gerechnet aus den Modellen, nicht eingemessen: vor dem Bauen mit F3 prüfen."
   },
   "masse": {
-    "breite": 171,
-    "tiefe": 171,
+    "breite": 174,
+    "tiefe": 200,
     "hoehe": 39
   },
   "ring": {

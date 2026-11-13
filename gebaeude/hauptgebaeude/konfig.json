@@ -8,14 +8,14 @@
       "art": "Energie",
       "zelle": "Park",
       "von": [
-        79,
+        80,
         26,
-        79
+        107
       ],
       "bis": [
-        91,
+        92,
         38,
-        91
+        119
       ],
       "einstellungen": [
         [
@@ -24,7 +24,7 @@
         ],
         [
           "Lage",
-          "über dem Teich, Kernmitte auf Höhe 32, über dem Dach (20)"
+          "über dem Teich, Kernmitte auf Höhe 32 (Welt 263, 97, -221)"
         ]
       ]
     },
@@ -34,14 +34,14 @@
       "art": "Energie",
       "zelle": "Park",
       "von": [
-        99,
+        98,
         32,
-        85
+        106
       ],
       "bis": [
-        99,
+        98,
         32,
-        85
+        106
       ],
       "einstellungen": [
         [
@@ -49,8 +49,12 @@
           "White Concrete auf einer kleinen Insel im Teich"
         ],
         [
-          "Abstand",
-          "14 Blöcke zur Kernmitte, an das Tier anpassen"
+          "Welt",
+          "275, 97, -228"
+        ],
+        [
+          "Hinweis",
+          "Säulen stehen in Richtung der Tore. Echte Stabilizer müssen auf einer Achse (N/O/S/W) zum Core stehen, im Spiel also achsparallel setzen."
         ]
       ]
     },
@@ -60,14 +64,14 @@
       "art": "Energie",
       "zelle": "Park",
       "von": [
-        71,
+        93,
         32,
-        85
+        125
       ],
       "bis": [
-        71,
+        93,
         32,
-        85
+        125
       ],
       "einstellungen": [
         [
@@ -75,8 +79,12 @@
           "White Concrete auf einer kleinen Insel im Teich"
         ],
         [
-          "Abstand",
-          "14 Blöcke zur Kernmitte, an das Tier anpassen"
+          "Welt",
+          "270, 97, -209"
+        ],
+        [
+          "Hinweis",
+          "Säulen stehen in Richtung der Tore. Echte Stabilizer müssen auf einer Achse (N/O/S/W) zum Core stehen, im Spiel also achsparallel setzen."
         ]
       ]
     },
@@ -86,14 +94,14 @@
       "art": "Energie",
       "zelle": "Park",
       "von": [
-        85,
+        74,
         32,
-        99
+        120
       ],
       "bis": [
-        85,
+        74,
         32,
-        99
+        120
       ],
       "einstellungen": [
         [
@@ -101,8 +109,12 @@
           "White Concrete auf einer kleinen Insel im Teich"
         ],
         [
-          "Abstand",
-          "14 Blöcke zur Kernmitte, an das Tier anpassen"
+          "Welt",
+          "251, 97, -214"
+        ],
+        [
+          "Hinweis",
+          "Säulen stehen in Richtung der Tore. Echte Stabilizer müssen auf einer Achse (N/O/S/W) zum Core stehen, im Spiel also achsparallel setzen."
         ]
       ]
     },
@@ -112,14 +124,14 @@
       "art": "Energie",
       "zelle": "Park",
       "von": [
-        85,
+        79,
         32,
-        71
+        101
       ],
       "bis": [
-        85,
+        79,
         32,
-        71
+        101
       ],
       "einstellungen": [
         [
@@ -127,8 +139,12 @@
           "White Concrete auf einer kleinen Insel im Teich"
         ],
         [
-          "Abstand",
-          "14 Blöcke zur Kernmitte, an das Tier anpassen"
+          "Welt",
+          "256, 97, -233"
+        ],
+        [
+          "Hinweis",
+          "Säulen stehen in Richtung der Tore. Echte Stabilizer müssen auf einer Achse (N/O/S/W) zum Core stehen, im Spiel also achsparallel setzen."
         ]
       ]
     }
