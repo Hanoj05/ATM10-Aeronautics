@@ -17,9 +17,10 @@ Daten (JSON, Texturen) holt die Seite immer frisch. Die Skripte in `website/js/`
 
 ## Seiten
 
-- `index.html` – **Übersicht:** eine Karte pro Gebäude mit Kennzahlen und Sprungmarken.
+- `index.html` – **Übersicht:** oben der ganze Campus in 3D als Bühne (dreht sich langsam, Klick auf ein Gebäude öffnet es), darunter eine Karte pro Gebäude mit Kennzahlen und Sprungmarken.
 - `map.html` – **Map:** der Campus in 3D. Hover zeigt den Gebäudenamen, Klick öffnet die Gebäudeseite.
 - `technik.html` – **Technik:** ME-System (Zahlen aus dem Blockmodell, Zellen und Anbindungen aus `konfig.json` unter `me`) und alle Logistics Networks, jedes einzeln aufklappbar mit Kanälen, Flüssen und Nodes.
+- **Glocke** (neben dem Profil): Benachrichtigungen, wenn dich jemand bei einer Kanban-Karte einträgt, eine deiner Karten den Status wechselt oder gelöscht wird, oder jemand die Karte (Import) aktualisiert. Eigene Aktionen lösen nichts aus. Klick auf einen Eintrag öffnet die Karte im Kanban.
 - **Profilmenü** (Klick auf den eigenen Namen oben rechts): Mein Profil, Meine Aufgaben, Karte aktualisieren, Versionen, Admin, Abmelden und **Darstellung** (System, Hell, Dunkel). Die Darstellung gilt pro Browser (localStorage), lokal ohne Login gibt es dafür einen runden Knopf oben rechts.
 - `team.html` – **Team:** ein Profil pro Person aus `team/`. Das eigene Profil lässt sich bearbeiten (nur angemeldet auf dem Server). Das Passwort ändert man in Authentik.
 - `import.html` – **Karte aktualisieren:** neue Campus-Schematic hochladen, Vorschau mit Blöcken dazu/weg pro Gebäude, neuen Blöcken ohne Textur, Gebautem außerhalb aller Gebäude und 3D-Vergleich (vorher, nachher, Unterschied). Pro Gebäude einstellbar, ob das Modell aus der Schematic oder aus dem Entwurfs-Skript kommt. Übernehmen wird ein Commit. Anleitung im Haupt-README unter „Karte aktualisieren“.

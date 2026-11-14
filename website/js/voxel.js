@@ -230,8 +230,9 @@
   }
 
   /** Szene mit Licht, Kamera und Steuerung in einem Container. */
-  function baueSzene(container) {
-    var renderer = new THREE.WebGLRenderer({ antialias: true });
+  function baueSzene(container, opt) {
+    opt = opt || {};
+    var renderer = new THREE.WebGLRenderer({ antialias: true, alpha: !!opt.durchsichtig });
     renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
     container.appendChild(renderer.domElement);
     var scene = new THREE.Scene();
@@ -249,7 +250,7 @@
     sonne2.position.set(-0.5, 0.4, -0.8);
     scene.add(sonne2);
 
-    function hintergrund() { scene.background = new THREE.Color(cssVar("--scene") || "#e9e7e0"); }
+    function hintergrund() { scene.background = opt.durchsichtig ? null : new THREE.Color(cssVar("--scene") || "#e9e7e0"); }
     hintergrund();
     /* Systemfarbe oder Schalter im Profilmenü geändert: Hintergrund nachziehen */
     if (window.matchMedia) {
@@ -281,6 +282,44 @@
     })();
 
     return { renderer: renderer, scene: scene, kamera: kamera, steuerung: steuerung, neu: neu, groesse: groesse };
+  }
+
+  /** Alle Gebäude an ihrer Weltposition in die Szene setzen (Map und Startseite).
+   *  eintraege: [{ g, geb, modell }]. Gibt pickbare Meshes und die Gesamtgröße zurück, e.box wird gesetzt. */
+  function baueCampus(sz, eintraege, opt) {
+    opt = opt || {};
+    var pick = [], gesamt = { min: [Infinity, 0, Infinity], max: [-Infinity, 10, -Infinity] };
+    var mitModell = eintraege.filter(function (e) { return e.modell; });
+    var basis = null;
+    mitModell.forEach(function (e) { if (e.g.position && !basis) basis = e.g.position; });
+    /* Gebäude ohne Weltposition kommen rechts neben die eingetragenen */
+    var reserve = 0;
+    mitModell.forEach(function (e) {
+      if (!e.g.position || !basis || !e.geb || !e.geb.masse) return;
+      reserve = Math.max(reserve, e.g.position[0] - basis[0] + Math.max(e.geb.masse.breite || 0, e.geb.masse.tiefe || 0) + 20);
+    });
+    mitModell.forEach(function (e) {
+      var vs;
+      if (e.g.position && basis) vs = [e.g.position[0] - basis[0], e.g.position[1] - basis[1], e.g.position[2] - basis[2]];
+      else { vs = [reserve, 0, 0]; reserve += (e.geb && e.geb.masse && e.geb.masse.breite || 40) + 20; }
+      var halter = drehGruppe(e.g.drehung);
+      halter.position.x += vs[0]; halter.position.y += vs[1]; halter.position.z += vs[2];
+      var m = baueModell(e.modell);
+      halter.add(m.gruppe);
+      m.pickbar.forEach(function (p) { p.userData.eintrag = e; pick.push(p); });
+      sz.scene.add(halter);
+      var b3 = weltBox(halter, e.modell);
+      e.box = [[b3.min.x, b3.min.y, b3.min.z], [b3.max.x, b3.max.y, b3.max.z]];
+      for (var a = 0; a < 3; a++) { gesamt.min[a] = Math.min(gesamt.min[a], e.box[0][a]); gesamt.max[a] = Math.max(gesamt.max[a], e.box[1][a]); }
+    });
+    if (opt.gitter !== false && mitModell.length) {
+      var spanne = Math.max(200, (gesamt.max[0] - gesamt.min[0]) * 3, (gesamt.max[2] - gesamt.min[2]) * 3);
+      var gitter = new THREE.GridHelper(spanne, Math.round(spanne / 8), 0x9a978d, 0xb9b6ad);
+      gitter.position.set((gesamt.min[0] + gesamt.max[0]) / 2, -0.01, (gesamt.min[2] + gesamt.max[2]) / 2);
+      gitter.material.transparent = true; gitter.material.opacity = opt.gitterDeckkraft || 0.45;
+      sz.scene.add(gitter);
+    }
+    return { pick: pick, gesamt: gesamt, anzahl: mitModell.length };
   }
 
   /** Kamera so setzen, dass ein Quader [min, max] gut im Bild ist. */
@@ -398,16 +437,66 @@
   }, true);   /* Capture: greift auch im Menü, das Klicks sonst abfängt */
 
   /* Aufklappmenü am Avatar (oder am Thema-Knopf ohne Login) */
-  function menueAn(knopf, menue) {
-    function zu() { menue.hidden = true; knopf.setAttribute("aria-expanded", "false"); }
+  var alleMenues = [];
+  function menueAn(knopf, menue, beimOeffnen) {
+    function zu() { if (menue.hidden) return; menue.classList.add("geht"); knopf.setAttribute("aria-expanded", "false");
+      setTimeout(function () { menue.hidden = true; menue.classList.remove("geht"); }, 160); }
+    alleMenues.push(zu);
     knopf.addEventListener("click", function (ev) {
       ev.stopPropagation();
-      var auf = menue.hidden;
-      menue.hidden = !auf; knopf.setAttribute("aria-expanded", String(auf));
+      if (!menue.hidden) return zu();
+      alleMenues.forEach(function (f) { if (f !== zu) f(); });
+      menue.hidden = false; menue.classList.remove("geht"); knopf.setAttribute("aria-expanded", "true");
+      if (beimOeffnen) beimOeffnen();
     });
-    menue.addEventListener("click", function (ev) { ev.stopPropagation(); });
+    menue.addEventListener("click", function (ev) { if (!ev.target.closest("a")) ev.stopPropagation(); });
     document.addEventListener("click", zu);
     document.addEventListener("keydown", function (ev) { if (ev.key === "Escape" && !menue.hidden) { zu(); knopf.focus(); } });
+  }
+
+  /* --- Glocke: Benachrichtigungen vom Dienst (Kanban-Zuweisungen, Statuswechsel, Karten-Import) --- */
+  var GLOCKE_SVG = "<svg viewBox='0 0 24 24' width='18' height='18' fill='none' stroke='currentColor' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true'><path d='M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9'/><path d='M10.3 21a1.94 1.94 0 0 0 3.4 0'/></svg>";
+  function vorWann(iso) {
+    var s = (Date.now() - Date.parse(iso)) / 1000;
+    if (s < 60) return "gerade eben";
+    if (s < 3600) return "vor " + Math.floor(s / 60) + " Min.";
+    if (s < 86400) return "vor " + Math.floor(s / 3600) + " Std.";
+    if (s < 7 * 86400) { var t = Math.floor(s / 86400); return t === 1 ? "gestern" : "vor " + t + " Tagen"; }
+    return new Date(iso).toLocaleDateString("de-DE", { day: "numeric", month: "short" });
+  }
+  function glocke(box) {
+    var knopf = box.querySelector(".glocke-knopf"), menue = box.querySelector(".glocke-menue"), zahl = knopf.querySelector(".zahl");
+    var letzte = null;
+    function zeigeZahl(n) {
+      var alt = zahl.textContent;
+      zahl.textContent = n > 9 ? "9+" : String(n);
+      zahl.hidden = !n;
+      knopf.setAttribute("aria-label", n ? n + " neue Benachrichtigungen" : "Benachrichtigungen");
+      if (n && alt !== zahl.textContent) { knopf.classList.remove("klingelt"); void knopf.offsetWidth; knopf.classList.add("klingelt"); }
+    }
+    function liste(d) {
+      var l = menue.querySelector(".glocke-liste");
+      if (!d.liste.length) { l.innerHTML = "<p class='glocke-leer'>Noch nichts Neues. Wenn dich jemand bei einer Kanban-Karte einträgt, erscheint es hier.</p>"; return; }
+      l.innerHTML = d.liste.slice(0, 30).map(function (e) {
+        return "<a class='glocke-eintrag" + (e.gelesen ? "" : " neu") + "' href='" + esc(e.link || "#") + "'>" +
+          avatar({ id: e.von, anzeigename: e.vonName, farbe: e.vonFarbe }, 30) +
+          "<span><span class='t'>" + esc(e.text) + "</span><small>" + esc(vorWann(e.zeit)) + "</small></span></a>";
+      }).join("");
+    }
+    function hole() {
+      if (document.hidden) return;
+      api("glocke").then(function (d) { letzte = d; zeigeZahl(d.ungelesen); if (!menue.hidden) liste(d); }).catch(function () {});
+    }
+    menueAn(knopf, menue, function () {
+      if (letzte) liste(letzte);
+      api("glocke").then(function (d) {
+        letzte = d; liste(d);
+        if (d.ungelesen) api("glocke/gelesen", {}).then(function () { zeigeZahl(0); d.liste.forEach(function (e) { e.gelesen = true; }); }).catch(function () {});
+      }).catch(function () { menue.querySelector(".glocke-liste").innerHTML = "<p class='glocke-leer'>Der Dienst antwortet gerade nicht.</p>"; });
+    });
+    hole();
+    setInterval(hole, 45000);
+    document.addEventListener("visibilitychange", hole);
   }
 
   /* Navigation oben auf jeder Seite. aktiv: "uebersicht", "map", "technik", "kanban", "team", "import", "versionen", "admin" oder eine Gebäude-ID */
@@ -420,7 +509,7 @@
       var h = "";
       c.gebaeude.forEach(function (g) { if (g.ordner) h += link("gebaeude.html?id=" + encodeURIComponent(g.id), g.name, aktiv === g.id); });
       if (h) nav.insertAdjacentHTML("beforeend", "<span class='sep' aria-hidden='true'></span>" + h);
-    }).catch(function () {}).then(function () { var m = nav.querySelector(".marker"); if (m) m.remove(); navMarker(nav); });
+    }).catch(function () {}).then(function () { linse(nav, "a[aria-current='page']"); });
     var site = nav.parentNode;
     Promise.all([ich(), gebaeude]).then(function (r) {
       var i = r[0];
@@ -437,6 +526,8 @@
         if (i.admin) extra.push(["admin", "admin.html", "Admin"]);
         var extraAktiv = extra.filter(function (e) { return e[0] === aktiv; })[0];
         box.innerHTML = (extraAktiv ? link(extraAktiv[1], extraAktiv[2], true) : "") +
+          "<button type='button' class='glocke-knopf' aria-haspopup='true' aria-expanded='false' aria-label='Benachrichtigungen' title='Benachrichtigungen'>" + GLOCKE_SVG + "<span class='zahl' hidden></span></button>" +
+          "<div class='menue glocke-menue' hidden><div class='glocke-kopf'><b>Benachrichtigungen</b></div><div class='glocke-liste'><p class='glocke-leer'>Lade …</p></div></div>" +
           "<button type='button' class='ich-knopf' aria-haspopup='true' aria-expanded='false' title='Mein Profil'>" + avatar(i) + "<span>" + esc(i.anzeigename) + "</span><span class='pfeil-runter' aria-hidden='true'></span></button>" +
           "<div class='menue' hidden>" +
             "<div class='menue-kopf'>" + avatar(i, 38) + "<div><b>" + esc(i.anzeigename) + "</b>" + (i.minecraft ? "<small>" + esc(i.minecraft) + "</small>" : "") + "</div></div>" +
@@ -449,7 +540,8 @@
           "</div>";
       }
       site.appendChild(box);
-      menueAn(box.querySelector(".ich-knopf, .thema-knopf"), box.querySelector(".menue"));
+      menueAn(box.querySelector(".ich-knopf, .thema-knopf"), box.querySelector(".menue:not(.glocke-menue)"));
+      if (i) glocke(box);
     });
   }
 
@@ -533,27 +625,30 @@
     }, { passive: true });
   })();
 
-  /* Marker, der in der Navigation zum Link unter der Maus gleitet und zur aktiven Seite zurückkehrt */
-  function navMarker(nav) {
-    if (nav.querySelector(".marker")) return;
+  /* Glas-Linse, die zum Link unter der Maus gleitet und zum aktiven Link zurückfedert.
+   * Für die Hauptnavigation und die Unter-Tabs der Gebäudeseiten. */
+  function linse(box, aktivSel) {
+    if (!box || box.querySelector(":scope > .marker")) return;
     var m = document.createElement("span");
     m.className = "marker"; m.setAttribute("aria-hidden", "true");
-    nav.appendChild(m); nav.classList.add("mit-marker");
-    function auf(a) {
+    box.appendChild(m); box.classList.add("mit-marker");
+    function auf(a, istAktiv) {
       if (!a) { m.style.opacity = "0"; return; }
       m.style.opacity = "1"; m.style.left = a.offsetLeft + "px"; m.style.width = a.offsetWidth + "px";
       m.style.top = a.offsetTop + "px"; m.style.height = a.offsetHeight + "px";
+      m.style.setProperty("--punkt", istAktiv ? "1" : "0");
     }
-    function aktiv() { auf(nav.querySelector("a[aria-current='page']")); }
-    nav.addEventListener("pointerover", function (ev) { var a = ev.target.closest("a"); if (a) auf(a); });
-    nav.addEventListener("pointerleave", aktiv);
+    function aktiv() { auf(box.querySelector(aktivSel), true); }
+    box.addEventListener("pointerover", function (ev) { var a = ev.target.closest("a"); if (a && box.contains(a)) auf(a, a.matches(aktivSel)); });
+    box.addEventListener("pointerleave", aktiv);
     window.addEventListener("resize", aktiv);
+    new MutationObserver(aktiv).observe(box, { attributes: true, subtree: true, attributeFilter: ["aria-current"] });
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(aktiv);
-    m.style.transition = "none"; aktiv(); m.offsetWidth; m.style.transition = "";
-    return aktiv;
+    m.style.transition = "none"; aktiv(); void m.offsetWidth; m.style.transition = "";
   }
+  document.addEventListener("DOMContentLoaded", function () { linse(document.querySelector(".subtabs"), "a[aria-current='true']"); });
 
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;" }[c]; }); }
 
-  window.Campus = { bereit: bereit, ladeJSON: ladeJSON, ladeText: ladeText, baueModell: baueModell, baueSzene: baueSzene, blickeAuf: blickeAuf, rahmen: rahmen, cssVar: cssVar, esc: esc, drehGruppe: drehGruppe, weltVon: weltVon, weltBox: weltBox, navi: navi, thema: thema, setzeThema: setzeThema, themaWahl: themaWahl, ladeGebaeude: ladeGebaeude, api: api, ich: ich, avatar: avatar };
+  window.Campus = { bereit: bereit, ladeJSON: ladeJSON, ladeText: ladeText, baueModell: baueModell, baueSzene: baueSzene, baueCampus: baueCampus, blickeAuf: blickeAuf, rahmen: rahmen, cssVar: cssVar, esc: esc, drehGruppe: drehGruppe, weltVon: weltVon, weltBox: weltBox, navi: navi, linse: linse, thema: thema, setzeThema: setzeThema, themaWahl: themaWahl, ladeGebaeude: ladeGebaeude, api: api, ich: ich, avatar: avatar };
 })();

@@ -6,19 +6,28 @@
 <title>Tech-Campus</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,500..900&family=Inter:wght@400..700&family=JetBrains+Mono:wght@400;600&display=swap">
 <script>try{var t=localStorage.getItem("campus-thema");if(t==="hell"||t==="dunkel")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
-<link rel="stylesheet" href="style.css?v=20261117">
+<link rel="stylesheet" href="style.css?v=20261118">
 </head>
 <body>
 <header class="site"><a class="brand" href="index.html">Tech<b>·</b>Campus</a><nav id="nav" aria-label="Hauptnavigation"></nav></header>
-<header class="topbar">
-  <h1>Übersicht</h1>
-  <span class="sub" id="welt">ATM10 Aeronautics</span>
-</header>
-<main class="page">
-  <p class="lead">Alle Gebäude des Campus mit ihrer Technik. Die <a href="map.html">Map</a> zeigt den Campus in 3D, <a href="technik.html">Technik</a> das ME-System und alle Logistics Networks, das <a href="kanban.html">Kanban-Board</a> was als Nächstes kommt.</p>
+<section class="hero" id="hero" aria-label="Der Campus in 3D">
+  <div class="loading" id="loading">Lade Campus …</div>
+  <div class="tooltip" id="tooltip" hidden></div>
+  <div class="hero-karte">
+    <h1>Tech-Campus</h1>
+    <p id="welt-text">Unser Campus in ATM10 Aeronautics. Fahr mit der Maus über ein Gebäude, ein Klick öffnet es.</p>
+    <div class="hero-zahlen" id="zahlen"></div>
+    <div class="hero-knoepfe"><a class="knopf" href="map.html">Map öffnen</a><a class="knopf leise" href="kanban.html">Kanban</a><a class="knopf leise" href="technik.html">Technik</a></div>
+  </div>
+  <div class="hero-tipp">Ziehen zum Drehen</div>
+</section>
+<main class="page nach-hero">
+  <h2>Gebäude</h2>
   <div class="gebkarten" id="karten"><p class="note">Lade Gebäude …</p></div>
 </main>
-<script src="js/voxel.js?v=20261117"></script>
-<script src="js/uebersicht.js?v=20261117"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/controls/OrbitControls.js"></script>
+<script src="js/voxel.js?v=20261118"></script>
+<script src="js/uebersicht.js?v=20261118"></script>
 </body>
 </html>

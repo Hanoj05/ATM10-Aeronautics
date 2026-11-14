@@ -119,6 +119,7 @@ Browser ──https──> Nginx Proxy Manager (Docker) ──http──> Campus
 | --- | --- |
 | Repo-Checkout | Campus-Server: `/srv/campus/repo`, gehört dem Nutzer `campus` |
 | Konten (welcher Authentik-Name welches Konto ist) | Campus-Server: `/var/lib/campus/konten.json` (nie im Repo) |
+| Benachrichtigungen (Glocke) | Campus-Server: `/var/lib/campus/benachrichtigungen.json` (nie im Repo, je Person die neuesten 60) |
 | Deploy-Key und `known_hosts` für GitHub | Campus-Server: `/etc/campus/` |
 | Proxy-Geheimnis | Campus-Server: `/etc/campus/dienst.env`, dazu dieselbe Zeichenkette im NPM |
 | nginx-Konfiguration | Campus-Server: `/etc/nginx/conf.d/DEINE-DOMAIN.conf`, Vorlage `server/nginx-campus.conf` |

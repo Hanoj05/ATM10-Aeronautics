@@ -197,6 +197,49 @@ class Konten:
 
 # --- Git ---
 
+class Benachrichtigungen:
+    """Glocke auf der Website. Liegt in DATEN/benachrichtigungen.json, nicht im Repo:
+    privat pro Person und ohne einen Commit pro Klick. Pro Person die neuesten MAX Einträge."""
+    MAX = 60
+
+    def __init__(self, ordner):
+        self.datei = Path(ordner) / "benachrichtigungen.json"
+        self.sperre = Path(ordner) / "benachrichtigungen.lock"
+
+    def _lies(self):
+        try:
+            return json.loads(self.datei.read_text(encoding="utf-8"))
+        except (FileNotFoundError, ValueError):
+            return {}
+
+    def _schreib(self, daten):
+        self.datei.parent.mkdir(parents=True, exist_ok=True)
+        schreibe_atomar(self.datei, (json.dumps(daten, ensure_ascii=False, indent=1) + "\n").encode("utf-8"))
+
+    def liste(self, kid):
+        return self._lies().get(kid, [])
+
+    def senden(self, an, von, text, link):
+        """an: Konto-IDs. Wer etwas selbst macht, bekommt keine Nachricht darüber."""
+        an = sorted({k for k in an if k and k != von})
+        if not an:
+            return
+        eintrag = {"zeit": zeitstempel(), "von": von, "text": text, "link": link, "gelesen": False}
+        with dateisperre(self.sperre):
+            daten = self._lies()
+            for k in an:
+                e = dict(eintrag, id=hashlib.sha1((k + eintrag["zeit"] + text).encode("utf-8")).hexdigest()[:12])
+                daten[k] = ([e] + daten.get(k, []))[:self.MAX]
+            self._schreib(daten)
+
+    def gelesen(self, kid):
+        with dateisperre(self.sperre):
+            daten = self._lies()
+            for e in daten.get(kid, []):
+                e["gelesen"] = True
+            self._schreib(daten)
+
+
 def blob_version(pfad):
     """Git-Blob-Hash einer Datei (wie git hash-object), None wenn es sie nicht gibt.
     Damit merkt der Dienst, ob eine Datei seit dem Laden im Browser geändert wurde."""
@@ -464,6 +507,14 @@ def karte_bytes(k):
     return (json.dumps(k, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
 
 
+def name_von(kid):
+    return (lies_profil(kid) or {}).get("anzeigename") or kid
+
+
+def karten_link(karte_id):
+    return "kanban.html#karte-" + karte_id
+
+
 def kurz(titel):
     return titel if len(titel) <= 60 else titel[:57] + "…"
 
@@ -478,6 +529,7 @@ def dienst_bauen():
         "zuletzt": {},          # wann letzter_login zuletzt geschrieben wurde, pro Konto
         "git": git,
         "karte": karte_modul.Karte(git, DATEN, log),
+        "glocke": Benachrichtigungen(DATEN),
     }
 
 
@@ -710,6 +762,7 @@ class Handler(BaseHTTPRequestHandler):
             {karten_pfad(k["id"]): karte_bytes(k), "kanban/liste.json": liste_aendern(dazu=k["id"])},
             "Kanban: neue Karte „%s“" % kurz(k["titel"]), autor_von(kid), {karten_pfad(k["id"]): None})
         k["version"] = blob_version(REPO / karten_pfad(k["id"]))
+        self.d["glocke"].senden(k["zustaendig"], kid, "%s hat dich bei „%s“ eingetragen" % (name_von(kid), kurz(k["titel"])), karten_link(k["id"]))
         self.antwort(200, {"ok": True, "commit": commit, "karte": k})
 
     def karte_aendern(self, karte_id):
@@ -729,6 +782,10 @@ class Handler(BaseHTTPRequestHandler):
         commit = self.d["git"].schreibe({karten_pfad(karte_id): karte_bytes(k)}, nachricht, autor_von(kid),
                                         {karten_pfad(karte_id): e.get("version")}, "Die Karte „%s“" % kurz(alt.get("titel", "")))
         k["version"] = blob_version(REPO / karten_pfad(karte_id))
+        dazu = set(k["zustaendig"]) - set(alt.get("zustaendig") or [])
+        self.d["glocke"].senden(dazu, kid, "%s hat dich bei „%s“ eingetragen" % (name_von(kid), kurz(k["titel"])), karten_link(karte_id))
+        if k["status"] != alt.get("status"):
+            self.d["glocke"].senden(set(k["zustaendig"]) - dazu, kid, "%s hat „%s“ nach %s geschoben" % (name_von(kid), kurz(k["titel"]), k["status"]), karten_link(karte_id))
         self.antwort(200, {"ok": True, "commit": commit, "karte": k})
 
     def karte_loeschen(self, karte_id):
@@ -741,6 +798,7 @@ class Handler(BaseHTTPRequestHandler):
             {karten_pfad(karte_id): None, "kanban/liste.json": liste_aendern(weg=karte_id)},
             "Kanban: „%s“ gelöscht" % kurz(alt.get("titel", karte_id)), autor_von(kid),
             {karten_pfad(karte_id): e.get("version")}, "Die Karte „%s“" % kurz(alt.get("titel", "")))
+        self.d["glocke"].senden(alt.get("zustaendig") or [], kid, "%s hat „%s“ gelöscht" % (name_von(kid), kurz(alt.get("titel", karte_id))), "kanban.html")
         self.antwort(200, {"ok": True, "commit": commit})
 
     # -- Karte: Import und Versionen --
@@ -790,7 +848,24 @@ class Handler(BaseHTTPRequestHandler):
     def import_uebernehmen(self):
         kid, _ = self.eingeloggt()
         commit = self.d["karte"].uebernehmen(kid, autor_von(kid))
+        self.d["glocke"].senden(lies_json("team/liste.json", []), kid, "%s hat die Karte aktualisiert" % name_von(kid), "versionen.html")
         self.antwort(200, {"ok": True, "commit": commit})
+
+    # -- Glocke --
+
+    def glocke(self):
+        kid, _ = self.eingeloggt()
+        liste = self.d["glocke"].liste(kid)
+        for e in liste:
+            p = lies_profil(e.get("von")) or {}
+            e["vonName"] = p.get("anzeigename") or e.get("von")
+            e["vonFarbe"] = p.get("farbe")
+        self.antwort(200, {"liste": liste, "ungelesen": sum(1 for e in liste if not e.get("gelesen"))})
+
+    def glocke_gelesen(self):
+        kid, _ = self.eingeloggt()
+        self.d["glocke"].gelesen(kid)
+        self.antwort(200, {"ok": True})
 
     def import_verwerfen(self):
         kid, konto = self.eingeloggt()
@@ -835,6 +910,8 @@ ROUTEN = [
     _r("GET", r"/api/stand", Handler.stand),
     _r("GET", r"/api/profil/([a-z][a-z0-9-]{1,23})", Handler.profil_lesen),
     _r("POST", r"/api/profil/([a-z][a-z0-9-]{1,23})", Handler.profil_speichern),
+    _r("GET", r"/api/glocke", Handler.glocke),
+    _r("POST", r"/api/glocke/gelesen", Handler.glocke_gelesen),
     _r("GET", r"/api/kanban", Handler.kanban),
     _r("POST", r"/api/karten", Handler.karte_neu),
     _r("POST", r"/api/karten/(" + KARTEN_ID + r")", Handler.karte_aendern),
