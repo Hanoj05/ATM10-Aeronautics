@@ -67,7 +67,7 @@
     }).catch(function () { /* ohne Dienst kein Auswahlfeld */ });
   }
 
-  function link(e) { return "gebaeude.html?id=" + encodeURIComponent(e.g.id) + "#ansicht"; }
+  function link(e) { return "gebaeude.html?id=" + encodeURIComponent(e.g.id) + (zweig ? "&zweig=" + encodeURIComponent(zweig) : "") + "#ansicht"; }
 
   function zeigeListe() {
     var h = "", ohnePos = 0;
@@ -82,7 +82,7 @@
     $("liste").innerHTML = h;
     var hinweise = [];
     if (ohnePos) hinweise.push("Bei " + ohnePos + " Gebäude fehlt noch die Weltposition in campus/campus.json. Es steht deshalb vorläufig am Nullpunkt.");
-    if (zweig) hinweise.push("Du siehst den Stand aus dem Branch „" + zweig + "“. Die Gebäudeseiten zeigen weiter den Stand aus main.");
+    if (zweig) hinweise.push("Du siehst den Stand aus dem Branch „" + zweig + "“. Ein Klick auf ein Gebäude zeigt es ebenfalls aus diesem Branch.");
     $("hinweis").textContent = hinweise.join(" ");
   }
 

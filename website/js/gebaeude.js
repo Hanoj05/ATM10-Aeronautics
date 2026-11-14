@@ -3,6 +3,9 @@
   "use strict";
   var C = window.Campus, esc = C.esc;
   var id = new URLSearchParams(location.search).get("id") || "wabenhaus";
+  /* ?zweig=NAME: Gebäude aus einem anderen Git-Branch (von der Map aus verlinkt) */
+  var zweig = new URLSearchParams(location.search).get("zweig") || "";
+  if (zweig === "main") zweig = "";
   var $ = function (s) { return document.getElementById(s); };
   C.navi(id);
 
@@ -11,7 +14,7 @@
   var VIEWS = ["ansicht", "konfig", "bauplan"];
 
   /* Texturen abwarten, damit das Modell gleich richtig gebaut wird */
-  Promise.all([C.ladeGebaeude(id), C.bereit]).then(function (r) {
+  Promise.all([C.ladeGebaeude(id, zweig), C.bereit]).then(function (r) {
     D = r[0];
     D.konfig.netzwerke.forEach(function (n) { (n.kanaele || []).forEach(function (k) { kanaele[k.nr] = k; }); });
     kopf();
@@ -24,8 +27,14 @@
 
   function kopf() {
     var g = D.geb;
-    document.title = g.name + " · Tech-Campus";
+    document.title = g.name + (zweig ? " (" + zweig + ")" : "") + " · Tech-Campus";
     $("titel").textContent = g.name;
+    if (zweig) {
+      var z = document.createElement("span");
+      z.className = "zweig";
+      z.textContent = "Branch: " + zweig;
+      $("titel").insertAdjacentElement("afterend", z);
+    }
     $("zweck").textContent = g.zweck || "";
     var st = $("status"); st.textContent = g.status || ""; if (g.status === "gebaut") st.classList.add("ok");
     if (!(g.dateien && g.dateien.bauplan)) $("bauplanTab").hidden = true;

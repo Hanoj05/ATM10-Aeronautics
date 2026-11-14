@@ -10,7 +10,8 @@ auch wenn die Schematic mehrere Millionen Blöcke hat.
 
 Wo ein Gebäude auf der Map steht (Eintrag in campus/campus.json mit Modell und Position,
 nicht "karte": false), zählt nur, was unter dem Gebäude liegt. Sonst lägen Gelände und
-Gebäudemodell doppelt übereinander.
+Gebäudemodell doppelt übereinander. Mit "aussparen": false bleibt das Gelände unter einem
+Eintrag stehen, etwa für Außenanlagen, die nur Dinge auf das Gelände stellen.
 
 Die Ecke (0, 0, 0) der Schematic kommt aus gebaeude.json unter ausschnitt.schematicP0
 (alle Gebäude mit dieser Schematic müssen dieselbe haben) oder von --p0.
@@ -240,7 +241,7 @@ def gebaeude_boxen(campus):
     """[(x0, x1, z0, z1, y_unten)] in Weltkoordinaten für alle Gebäude, die auf der Map stehen."""
     boxen = []
     for g in campus.get("gebaeude", []):
-        if not g.get("ordner") or not g.get("position") or g.get("karte") is False:
+        if not g.get("ordner") or not g.get("position") or g.get("karte") is False or g.get("aussparen") is False:
             continue
         pfad = REPO / g["ordner"] / "modell.json"
         if not pfad.exists():

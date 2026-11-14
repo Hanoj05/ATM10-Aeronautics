@@ -124,9 +124,17 @@
   /* Geometrie und Material je Sorte nur einmal bauen, der Schnitt-Regler baut sonst ständig neu. */
   var cache = {};
   function teileFuer(p, wuerfel, klein) {
-    var k = texturVon(p), schluessel = p.id + "|" + (p.klein ? 1 : 0) + "|" + (p.transparent ? 1 : 0) + "|" + p.farbe + "|" + (k ? 1 : 0);
+    var k = texturVon(p), schluessel = p.id + "|" + (p.klein ? 1 : 0) + "|" + (p.transparent ? 1 : 0) + "|" + p.farbe + "|" + (k ? 1 : 0) + "|" + (p.form || "");
     if (cache[schluessel]) return cache[schluessel];
     var r;
+    /* Stufen als halber Block: "form": "platte-oben" (an der Decke) oder "platte-unten" */
+    var platte = p.form === "platte-oben" || p.form === "platte-unten";
+    if (platte) {
+      r = { geo: k ? texturWuerfel(PLATTE, k) : PLATTE, mitte: p.form === "platte-oben" ? 0.75 : 0.25, textur: !!k, pickbar: true,
+            mat: k ? new THREE.MeshLambertMaterial({ map: TEX.atlas }) : new THREE.MeshLambertMaterial({ color: 0xffffff }) };
+      cache[schluessel] = r;
+      return r;
+    }
     if (!k || p.form === "kabel") {
       /* ohne Textur wie bisher: Farbe; Kabel bleiben auch einfarbig, ihre Texturen sind UV-Bögen */
       r = {
@@ -207,6 +215,7 @@
   var MIT_3D = typeof THREE !== "undefined";
   var WUERFEL = MIT_3D ? new THREE.BoxGeometry(1, 1, 1) : null;
   var KLEIN = MIT_3D ? new THREE.BoxGeometry(0.4, 0.5, 0.4) : null;
+  var PLATTE = MIT_3D ? new THREE.BoxGeometry(1, 0.5, 1) : null;
 
   /* AE2-Kabel als Strang: Mittelstück plus ein Arm pro Verbindung.
    * Block = [x, y, z, sorte, maske], Bits der maske: unten, oben, Nord, Süd, West, Ost. */
@@ -638,10 +647,10 @@
   }
 
   /* Alle Daten eines Gebäudes laden. Fehlende Dateien werden zu null. */
-  function ladeGebaeude(id) {
+  function ladeGebaeude(id, zweig) {
     var ordner = "gebaeude/" + id + "/";
-    function opt(p) { return p ? ladeJSON(ordner + p).catch(function () { return null; }) : Promise.resolve(null); }
-    return ladeJSON(ordner + "gebaeude.json").then(function (geb) {
+    function opt(p) { return p ? ladeJSON(ordner + p, zweig).catch(function () { return null; }) : Promise.resolve(null); }
+    return ladeJSON(ordner + "gebaeude.json", zweig).then(function (geb) {
       var d = geb.dateien || {};
       return Promise.all([
         opt(d.modell === undefined ? "modell.json" : d.modell),

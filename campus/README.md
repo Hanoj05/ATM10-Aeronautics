@@ -13,6 +13,7 @@ Pro Gebäude:
 | `status` | `geplant`, `im Bau` oder `gebaut` |
 | `position` | Weltkoordinate von P0 als `[x, y, z]`, im Spiel mit F3 ablesen |
 | `karte` | optional: `false` blendet das Gebäude auf der Map aus, es bleibt in der Liste |
+| `aussparen` | optional: `false` lässt das Gelände unter dem Eintrag stehen (für Außenanlagen, die nur etwas aufs Gelände stellen) |
 | `drehung` | 0, 90, 180 oder 270: um wie viel Grad im Uhrzeigersinn das Gebäude gegenüber dem Plan gedreht gebaut ist. 90 heißt: Plan-Norden zeigt nach Osten |
 
 `gelaende.json` (optional) ist das Gelände für die Map, erzeugt mit `tools/modell-gelaende.py`. Mehr dazu im Haupt-README unter „Anderen Stand auf der Map ansehen“.
