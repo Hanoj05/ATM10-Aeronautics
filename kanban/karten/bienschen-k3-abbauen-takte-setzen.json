@@ -2,7 +2,7 @@
   "id": "bienschen-k3-abbauen-takte-setzen",
   "titel": "Bienschen: K3 abbauen, Takte setzen",
   "beschreibung": "K0 und K5 auf 40 Ticks, K1 auf 20, K2 auf 200, am sendenden Node. K8 bleibt.",
-  "status": "offen",
+  "status": "erledigt",
   "phase": "doku",
   "wo": "Minecraft",
   "bereich": "Gebäude",
@@ -10,5 +10,5 @@
   "tab": "konfig",
   "zustaendig": [],
   "faellig": null,
-  "rang": 22000
+  "rang": 3500
 }
