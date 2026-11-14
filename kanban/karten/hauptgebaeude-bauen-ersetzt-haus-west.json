@@ -2,7 +2,7 @@
   "id": "hauptgebaeude-bauen-ersetzt-haus-west",
   "titel": "Hauptgebäude bauen (ersetzt Haus West und Haus Ost)",
   "beschreibung": "Haus West und Haus Ost abreißen, Mitte des Rings bei etwa 263, 65, -221 einmessen. Tier für den Energy Core festlegen.",
-  "status": "offen",
+  "status": "in Arbeit",
   "phase": "echt",
   "wo": "Minecraft",
   "bereich": "Gebäude",
@@ -12,5 +12,5 @@
     "jonah"
   ],
   "faellig": null,
-  "rang": 15000
+  "rang": 12000
 }
