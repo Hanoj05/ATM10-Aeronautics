@@ -8,7 +8,10 @@
   "bereich": "Gebäude",
   "gebaeude": "me-zentrale",
   "tab": "ansicht",
-  "zustaendig": [],
+  "zustaendig": [
+    "felix",
+    "jonah"
+  ],
   "faellig": null,
   "rang": 13000
 }
