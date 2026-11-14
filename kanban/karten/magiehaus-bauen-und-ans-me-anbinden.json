@@ -2,7 +2,7 @@
   "id": "magiehaus-bauen-und-ans-me-anbinden",
   "titel": "Magiehaus bauen und ans ME anbinden",
   "beschreibung": "Pentagramm westlich vom Ring, Mitte etwa 88, 65, -221, Keller bis Höhe 59. ME per P2P-Tunnel aus dem ME-Gebäude, im Keller auf die fünf Flügel verteilen.",
-  "status": "offen",
+  "status": "in Arbeit",
   "phase": "echt",
   "wo": "Minecraft",
   "bereich": "Gebäude",
@@ -10,5 +10,5 @@
   "tab": null,
   "zustaendig": [],
   "faellig": null,
-  "rang": 19000
+  "rang": 14000
 }
