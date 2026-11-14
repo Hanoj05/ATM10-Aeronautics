@@ -2,7 +2,7 @@
   "id": "zugriff-nur-fuer-mitspieler",
   "titel": "Zugriff nur für Mitspieler",
   "beschreibung": "Anmeldung per Authentik (Single Sign-on) über den Nginx Proxy Manager, ein Campus-Konto pro Authentik-Benutzer, Profile unter Team. Fertig, sobald es auf dem Server läuft.",
-  "status": "in Arbeit",
+  "status": "erledigt",
   "phase": "online",
   "wo": "Website",
   "bereich": "Betrieb",
@@ -10,5 +10,5 @@
   "tab": null,
   "zustaendig": [],
   "faellig": null,
-  "rang": 30000
+  "rang": 2750
 }
