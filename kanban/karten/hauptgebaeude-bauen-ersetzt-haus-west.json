@@ -8,7 +8,9 @@
   "bereich": "Gebäude",
   "gebaeude": "hauptgebaeude",
   "tab": null,
-  "zustaendig": [],
+  "zustaendig": [
+    "jonah"
+  ],
   "faellig": null,
   "rang": 15000
 }
