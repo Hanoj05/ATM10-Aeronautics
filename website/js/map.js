@@ -39,36 +39,9 @@
   }
 
   function starte3D() {
-    var sz = C.baueSzene(viewport), pick = [], gesamt = { min: [Infinity, 0, Infinity], max: [-Infinity, 10, -Infinity] };
+    var sz = C.baueSzene(viewport);
+    var campus = C.baueCampus(sz, eintraege), pick = campus.pick, gesamt = campus.gesamt;
     var mitModell = eintraege.filter(function (e) { return e.modell; });
-    var basis = null;
-    mitModell.forEach(function (e) { if (e.g.position && !basis) basis = e.g.position; });
-    /* Gebäude ohne Weltposition kommen rechts neben die eingetragenen */
-    var reserve = 0;
-    mitModell.forEach(function (e) {
-      if (!e.g.position || !basis || !e.geb || !e.geb.masse) return;
-      reserve = Math.max(reserve, e.g.position[0] - basis[0] + Math.max(e.geb.masse.breite || 0, e.geb.masse.tiefe || 0) + 20);
-    });
-    mitModell.forEach(function (e) {
-      var vs;
-      if (e.g.position && basis) vs = [e.g.position[0] - basis[0], e.g.position[1] - basis[1], e.g.position[2] - basis[2]];
-      else { vs = [reserve, 0, 0]; reserve += (e.geb && e.geb.masse && e.geb.masse.breite || 40) + 20; }
-      var halter = C.drehGruppe(e.g.drehung);
-      halter.position.x += vs[0]; halter.position.y += vs[1]; halter.position.z += vs[2];
-      var m = C.baueModell(e.modell);
-      halter.add(m.gruppe);
-      m.pickbar.forEach(function (p) { p.userData.eintrag = e; pick.push(p); });
-      sz.scene.add(halter);
-      var b3 = C.weltBox(halter, e.modell);
-      e.box = [[b3.min.x, b3.min.y, b3.min.z], [b3.max.x, b3.max.y, b3.max.z]];
-      for (var a = 0; a < 3; a++) { gesamt.min[a] = Math.min(gesamt.min[a], e.box[0][a]); gesamt.max[a] = Math.max(gesamt.max[a], e.box[1][a]); }
-    });
-    /* Boden */
-    var spanne = Math.max(200, (gesamt.max[0] - gesamt.min[0]) * 3, (gesamt.max[2] - gesamt.min[2]) * 3);
-    var gitter = new THREE.GridHelper(spanne, Math.round(spanne / 8), 0x9a978d, 0xb9b6ad);
-    gitter.position.set((gesamt.min[0] + gesamt.max[0]) / 2, -0.01, (gesamt.min[2] + gesamt.max[2]) / 2);
-    gitter.material.transparent = true; gitter.material.opacity = 0.45;
-    sz.scene.add(gitter);
 
     function ansicht() {
       C.blickeAuf(sz, gesamt.min, [gesamt.max[0], gesamt.max[1] * 0.4, gesamt.max[2]]);

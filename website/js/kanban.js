@@ -116,6 +116,13 @@
       neu.karten.forEach(function (k) { k.zustaendig = k.zustaendig || []; k.rang = Number(k.rang) || 0; });
       d = neu; wartet = false;
       zeige();
+      /* Aus der Glocke: kanban.html#karte-<id> öffnet die Karte direkt */
+      var m = /^#karte-(.+)$/.exec(location.hash);
+      if (m && !offen) {
+        var k = d.karten.filter(function (x) { return x.id === decodeURIComponent(m[1]); })[0];
+        history.replaceState(null, "", location.pathname + location.search);
+        if (k) oeffne(k);
+      }
     });
   }
 
