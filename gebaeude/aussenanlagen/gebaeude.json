@@ -1,7 +1,7 @@
 {
   "id": "aussenanlagen",
   "name": "Außenanlagen",
-  "zweck": "Plan für die Umgebung: Wege, ME-Platz, Ufer mit Steg, Landeplatz, Hain, Bienenweide, Licht und Mega Torches",
+  "zweck": "Plan: ebener Campus mit Rundweg, Wegen von den Ring-Toren, ME-Platz, Landeplatz, Wasserband, Bienenweide, Licht und Mega Torches",
   "status": "geplant",
   "welt": {
     "p0": [
