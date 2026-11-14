@@ -33,9 +33,27 @@
     "modell": "modell.json",
     "konfigDaten": "konfig.json",
     "konfig": "konfig.md",
-    "schematic": null,
+    "schematic": "schematics/campus.nbt",
     "generator": "tools/modell-hauptgebaeude.py",
     "bauabschnitte": "bauabschnitte.json",
     "bauhilfe": "tools/bauhilfe-hauptgebaeude.py"
+  },
+  "modellquelle": "schematic",
+  "ausschnitt": {
+    "schematicP0": [
+      -33,
+      45,
+      -528
+    ],
+    "von": [
+      177,
+      65,
+      -331
+    ],
+    "bis": [
+      346,
+      150,
+      -136
+    ]
   }
 }

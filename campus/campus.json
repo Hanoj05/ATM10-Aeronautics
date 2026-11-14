@@ -67,7 +67,8 @@
         65,
         -347
       ],
-      "drehung": 0
+      "drehung": 0,
+      "karte": false
     }
   ]
 }

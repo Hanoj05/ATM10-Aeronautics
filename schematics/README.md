@@ -6,7 +6,7 @@ Die ganze Campus-Fläche liegt als eine Datei vor. Jedes Gebäude schneidet sich
 
 | Datei | Inhalt |
 | --- | --- |
-| `campus.nbt` | ganze Fläche, Stand 10.11.2026. Ecke (0, 0, 0) = Welt 221, 65, −391 |
+| `campus.nbt` | ganze Fläche mit Gelände drumherum, Stand 14.11.2026. Ecke (0, 0, 0) = Welt −33, 45, −528 |
 
 ## Ausschnitt pro Gebäude
 

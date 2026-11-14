@@ -25,7 +25,7 @@
     "modell": "modell.json",
     "konfigDaten": "konfig.json",
     "konfig": "konfig.md",
-    "schematic": null,
+    "schematic": "schematics/campus.nbt",
     "generator": "tools/modell-magiehaus.py",
     "bauabschnitte": "bauabschnitte.json",
     "bauhilfe": "tools/bauhilfe-magiehaus.py"
@@ -34,5 +34,23 @@
     "keller": "Plan y 0 bis 5 (Welt 59 bis 64), 5 Blöcke hoch",
     "eg": "Plan y 7 bis 11 (Welt 66 bis 70), 5 Blöcke hoch",
     "og": "Plan y 13 bis 20 (Welt 72 bis 79), 8 Blöcke hoch"
+  },
+  "modellquelle": "schematic",
+  "ausschnitt": {
+    "schematicP0": [
+      -33,
+      45,
+      -528
+    ],
+    "von": [
+      25,
+      59,
+      -285
+    ],
+    "bis": [
+      151,
+      110,
+      -158
+    ]
   }
 }
