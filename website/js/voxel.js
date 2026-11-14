@@ -7,8 +7,14 @@
   /* "no-cache": der Browser fragt jedes Mal nach, ob sich die Datei geändert hat.
    * python3 -m http.server schickt keine Cache-Regeln, sonst bleiben alte Daten hängen. */
   var FRISCH = { cache: "no-cache" };
-  function ladeJSON(pfad) {
-    return fetch(ROOT + pfad, FRISCH).then(function (r) {
+  /* zweig: Datei aus einem anderen Git-Branch holen (nur über den Campus-Dienst auf dem Server).
+   * Ohne zweig oder mit "main" kommt die Datei wie gewohnt direkt aus dem Repo. */
+  function adresse(pfad, zweig) {
+    if (!zweig || zweig === "main") return ROOT + pfad;
+    return ROOT + "api/zweig/" + encodeURIComponent(zweig) + "/" + pfad;
+  }
+  function ladeJSON(pfad, zweig) {
+    return fetch(adresse(pfad, zweig), zweig && zweig !== "main" ? { cache: "no-store", credentials: "same-origin" } : FRISCH).then(function (r) {
       if (!r.ok) throw new Error(pfad + " nicht gefunden (" + r.status + ")");
       return r.json();
     });
@@ -289,7 +295,8 @@
   function baueCampus(sz, eintraege, opt) {
     opt = opt || {};
     var pick = [], gesamt = { min: [Infinity, 0, Infinity], max: [-Infinity, 10, -Infinity] };
-    var mitModell = eintraege.filter(function (e) { return e.modell; });
+    /* "karte": false in campus.json: steht in der Liste, aber nicht in der 3D-Ansicht */
+    var mitModell = eintraege.filter(function (e) { return e.modell && e.g.karte !== false; });
     var basis = null;
     mitModell.forEach(function (e) { if (e.g.position && !basis) basis = e.g.position; });
     /* Gebäude ohne Weltposition kommen rechts neben die eingetragenen */
@@ -319,7 +326,65 @@
       gitter.material.transparent = true; gitter.material.opacity = opt.gitterDeckkraft || 0.45;
       sz.scene.add(gitter);
     }
-    return { pick: pick, gesamt: gesamt, anzahl: mitModell.length };
+    return { pick: pick, gesamt: gesamt, anzahl: mitModell.length, basis: basis || [0, 0, 0] };
+  }
+
+  /** Gelände aus campus/gelaende.json (tools/modell-gelaende.py) als ein Mesh.
+   *  basis: Weltkoordinate, die in der Szene bei 0 liegt (von baueCampus).
+   *  Pro Spalte eine Deckfläche, dazu Hänge, wo der Nachbar tiefer liegt. */
+  function baueGelaende(gel, basis) {
+    function bytes(b64) { var s = atob(b64), a = new Uint8Array(s.length); for (var i = 0; i < s.length; i++) a[i] = s.charCodeAt(i); return a; }
+    var nx = gel.groesse[0], nz = gel.groesse[1];
+    var h = bytes(gel.hoehe), bb = bytes(gel.block);
+    var blk = new Uint16Array(bb.buffer, 0, nx * nz);
+    var ox = gel.ursprung[0] - basis[0], oz = gel.ursprung[1] - basis[2], oy = gel.ybasis - basis[1];
+    var farben = gel.palette.map(function (p) { return new THREE.Color(p.farbe); });
+    function H(x, z) { return x < 0 || z < 0 || x >= nx || z >= nz ? 0 : h[x * nz + z]; }
+
+    /* erst zählen, dann Puffer in passender Größe füllen */
+    var quads = 0, x, z, i;
+    for (x = 0; x < nx; x++) for (z = 0; z < nz; z++) {
+      var hh = h[x * nz + z]; if (!hh) continue;
+      quads++;
+      if (H(x + 1, z) < hh) quads++; if (H(x - 1, z) < hh) quads++;
+      if (H(x, z + 1) < hh) quads++; if (H(x, z - 1) < hh) quads++;
+    }
+    var pos = new Float32Array(quads * 12), nor = new Float32Array(quads * 12), col = new Float32Array(quads * 12);
+    var idx = new Uint32Array(quads * 6), q = 0, c = new THREE.Color();
+    function quad(a, b, cc, d, n, farbe) {
+      var o = q * 12, v = [a, b, cc, d];
+      for (var k = 0; k < 4; k++) {
+        pos[o + k * 3] = v[k][0]; pos[o + k * 3 + 1] = v[k][1]; pos[o + k * 3 + 2] = v[k][2];
+        nor[o + k * 3] = n[0]; nor[o + k * 3 + 1] = n[1]; nor[o + k * 3 + 2] = n[2];
+        col[o + k * 3] = farbe.r; col[o + k * 3 + 1] = farbe.g; col[o + k * 3 + 2] = farbe.b;
+      }
+      var j = q * 6, s = q * 4;
+      idx[j] = s; idx[j + 1] = s + 1; idx[j + 2] = s + 2; idx[j + 3] = s; idx[j + 4] = s + 2; idx[j + 5] = s + 3;
+      q++;
+    }
+    for (x = 0; x < nx; x++) for (z = 0; z < nz; z++) {
+      i = x * nz + z;
+      var oben = h[i]; if (!oben) continue;
+      var x0 = ox + x, x1 = x0 + 1, z0 = oz + z, z1 = z0 + 1, y1 = oy + oben;
+      var basisFarbe = farben[blk[i]] || farben[0];
+      c.copy(basisFarbe).offsetHSL(0, 0, rauschen(x, oben, z));
+      quad([x0, y1, z0], [x0, y1, z1], [x1, y1, z1], [x1, y1, z0], [0, 1, 0], c);
+      /* Hänge etwas dunkler, damit man die Stufen sieht */
+      var seite = c.clone().multiplyScalar(0.78), n;
+      if ((n = H(x + 1, z)) < oben) quad([x1, y1, z0], [x1, y1, z1], [x1, oy + n, z1], [x1, oy + n, z0], [1, 0, 0], seite);
+      if ((n = H(x - 1, z)) < oben) quad([x0, y1, z1], [x0, y1, z0], [x0, oy + n, z0], [x0, oy + n, z1], [-1, 0, 0], seite);
+      if ((n = H(x, z + 1)) < oben) quad([x1, y1, z1], [x0, y1, z1], [x0, oy + n, z1], [x1, oy + n, z1], [0, 0, 1], seite);
+      if ((n = H(x, z - 1)) < oben) quad([x0, y1, z0], [x1, y1, z0], [x1, oy + n, z0], [x0, oy + n, z0], [0, 0, -1], seite);
+    }
+    var geo = new THREE.BufferGeometry();
+    geo.setAttribute("position", new THREE.BufferAttribute(pos, 3));
+    geo.setAttribute("normal", new THREE.BufferAttribute(nor, 3));
+    geo.setAttribute("color", new THREE.BufferAttribute(col, 3));
+    geo.setIndex(new THREE.BufferAttribute(idx, 1));
+    geo.computeBoundingSphere();
+    var mesh = new THREE.Mesh(geo, new THREE.MeshLambertMaterial({ vertexColors: true }));
+    mesh.userData.gelaende = true;
+    return mesh;
   }
 
   /** Kamera so setzen, dass ein Quader [min, max] gut im Bild ist. */
@@ -697,5 +762,5 @@
 
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;" }[c]; }); }
 
-  window.Campus = { bereit: bereit, ladeJSON: ladeJSON, ladeText: ladeText, baueModell: baueModell, baueSzene: baueSzene, baueCampus: baueCampus, blickeAuf: blickeAuf, rahmen: rahmen, cssVar: cssVar, esc: esc, drehGruppe: drehGruppe, weltVon: weltVon, weltBox: weltBox, navi: navi, linse: linse, thema: thema, setzeThema: setzeThema, themaWahl: themaWahl, ladeGebaeude: ladeGebaeude, api: api, ich: ich, avatar: avatar };
+  window.Campus = { bereit: bereit, ladeJSON: ladeJSON, ladeText: ladeText, baueModell: baueModell, baueSzene: baueSzene, baueCampus: baueCampus, baueGelaende: baueGelaende, blickeAuf: blickeAuf, rahmen: rahmen, cssVar: cssVar, esc: esc, drehGruppe: drehGruppe, weltVon: weltVon, weltBox: weltBox, navi: navi, linse: linse, thema: thema, setzeThema: setzeThema, themaWahl: themaWahl, ladeGebaeude: ladeGebaeude, api: api, ich: ich, avatar: avatar };
 })();

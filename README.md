@@ -7,6 +7,7 @@ Doku zu unserem Tech-Campus in der ATM10-Aeronautics-Welt. Jedes Gebäude hat ei
 ```
 campus/
   campus.json          Liste aller Gebäude mit Lage in der Welt
+  gelaende.json        Gelände rund um die Gebäude für die Map (nur, wenn es angelegt ist)
 gebaeude/
   vorlage/             Kopiervorlage für ein neues Gebäude
   wabenhaus/           Bienengebäude
@@ -81,6 +82,27 @@ Es kann immer nur einer gleichzeitig importieren. Steht oben, dass gerade jemand
 ### Wenn etwas schiefgegangen ist
 
 Ein Admin geht auf **Versionen**, wählt oben **Karte** und klickt beim letzten guten Stand auf **Diesen Kartenstand wiederherstellen** (zweimal, zur Sicherheit). Das holt Schematic und Modelle zurück, als neuer Eintrag im Verlauf. Kanban und Profile bleiben dabei unverändert.
+
+## Anderen Stand auf der Map ansehen (Branch)
+
+Größere Änderungen an der Karte, zum Beispiel ein neuer Export mit viel Gelände drumherum, kommen erst in einen eigenen Git-Branch statt direkt nach main. So lässt sich alles ansehen, ohne dass sich die Website für alle ändert.
+
+- Auf der **Map** oben links steht das Feld **Stand**. Dort einen Branch auswählen, die Map lädt dann Gebäude, Modelle und Gelände aus diesem Branch. `main` ist der normale Stand.
+- Direkt verlinken geht auch: `map.html?zweig=NAME`.
+- Das geht nur online auf dem Server. Der Campus-Dienst holt die Branches höchstens einmal pro Minute von GitHub und liest daraus nur `campus/` und `gebaeude/`. Lokal mit `python3 -m http.server` gibt es das Feld nicht.
+- Die Gebäudeseiten und alle anderen Seiten zeigen weiter den Stand aus main.
+
+### Gelände
+
+Liegt im Branch eine `campus/gelaende.json`, zeichnet die Map das Gelände rund um die Gebäude mit. Ein Häkchen **Gelände** blendet es aus. Erzeugt wird die Datei aus der Schematic:
+
+```
+python3 tools/modell-gelaende.py
+```
+
+Gespeichert wird pro Spalte nur der oberste Block, so bleibt die Datei auch bei großen Exporten klein. Unter den Gebäuden zählt nur, was unter dem Modell liegt. Gibt es die Datei, rechnet der Import auf der Website sie bei jeder neuen Schematic mit.
+
+In `campus/campus.json` blendet `"karte": false` ein Gebäude auf der Map aus, es bleibt aber in der Liste. Das ist praktisch für Entwürfe, die über dem echten Gelände nur stören.
 
 ## Gebäude
 

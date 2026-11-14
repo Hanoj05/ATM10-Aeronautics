@@ -59,6 +59,9 @@ PROXY_GEHEIMNIS = os.environ.get("CAMPUS_PROXY_GEHEIMNIS") or ""
 ADMIN_GRUPPE = os.environ.get("CAMPUS_ADMIN_GRUPPE") or "tofg-users"
 
 MAX_ANFRAGE = 64 * 1024             # größte erlaubte Anfrage an die API in Byte
+ZWEIG_MUSTER = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,59}$")   # Branch-Namen, die die Map anzeigen kann
+ZWEIG_LESBAR = ("campus/", "gebaeude/")                              # nur diese Ordner gibt es aus Branches
+ZWEIGE_ABSTAND = 60                  # Sekunden zwischen zwei „git fetch“ für die Branch-Liste
 
 # Nur diese Ordner darf der Dienst im Repo beschreiben
 SCHREIBBAR = ("team/", "kanban/", "gebaeude/", "schematics/", "download/")
@@ -342,6 +345,55 @@ class Git:
 
     def kopf(self):
         return self.git("rev-parse", "HEAD").stdout.strip()
+
+    # -- Andere Branches nur lesen (Map: „Stand“ auswählen) --
+
+    def _zweig_ns(self):
+        return "refs/remotes/%s/" % self.remote if self.hat_remote() else "refs/heads/"
+
+    def zweige_holen(self):
+        """Branches von GitHub holen, höchstens einmal pro ZWEIGE_ABSTAND Sekunden."""
+        if not self.hat_remote() or time.time() - getattr(self, "_zweige_geholt", 0) < ZWEIGE_ABSTAND:
+            return
+        self._zweige_geholt = time.time()
+        with self.gesperrt():
+            r = self.git("fetch", "--quiet", "--prune", self.remote, pruefen=False)
+        if r.returncode != 0:
+            log("git fetch für die Branches ist fehlgeschlagen:", (r.stderr or r.stdout).strip()[:300])
+
+    def zweige(self):
+        """[{name, commit, datum, betreff}], main zuerst."""
+        self.zweige_holen()
+        ns = self._zweig_ns()
+        r = self.git("for-each-ref", "--format=%(refname)%1f%(objectname)%1f%(committerdate:iso-strict)%1f%(subject)", ns)
+        aus = []
+        for zeile in r.stdout.splitlines():
+            teile = zeile.split("\x1f")
+            if len(teile) != 4 or not teile[0].startswith(ns):
+                continue
+            name = teile[0][len(ns):]
+            if name == "HEAD" or not ZWEIG_MUSTER.match(name):
+                continue
+            aus.append({"name": name, "commit": teile[1], "datum": teile[2], "betreff": teile[3][:120]})
+        aus.sort(key=lambda b: (b["name"] != self.branch, b["name"]))
+        return aus
+
+    def zweig_datei(self, name, pfad):
+        """Inhalt einer Datei aus einem Branch (bytes) oder Fehler 404."""
+        if not ZWEIG_MUSTER.match(name):
+            raise Fehler(400, "Ungültiger Branch-Name.")
+        if (not pfad.startswith(ZWEIG_LESBAR) or ".." in pfad.split("/") or "//" in pfad
+                or not re.match(r"^[A-Za-z0-9._/-]{1,200}$", pfad)):
+            raise Fehler(400, "Diese Datei gibt es aus einem Branch nicht.")
+        ref = self._zweig_ns() + name
+        if self.git("rev-parse", "--verify", "--quiet", ref + "^{commit}", pruefen=False).returncode != 0:
+            self._zweige_geholt = 0         # vielleicht ganz neu: beim nächsten Mal sofort holen
+            raise Fehler(404, "Den Branch „%s“ gibt es nicht." % name)
+        r = subprocess.run(["git", "-C", str(self.repo), "cat-file", "blob", "%s:%s" % (ref, pfad)],
+                           capture_output=True, timeout=60, env=dict(os.environ, GIT_TERMINAL_PROMPT="0", LC_ALL="C"))
+        if r.returncode != 0:
+            raise Fehler(404, "%s gibt es im Branch „%s“ nicht." % (pfad, name))
+        return r.stdout
 
 
 # --- Profile (öffentlich, im Repo unter team/) ---
@@ -892,6 +944,24 @@ class Handler(BaseHTTPRequestHandler):
         self.eingeloggt()
         self.antwort(200, {"commit": self.d["git"].kopf()})
 
+    # -- Branches (Map: anderen Stand ansehen) --
+
+    def zweige(self):
+        self.eingeloggt()
+        self.antwort(200, {"zweige": self.d["git"].zweige()})
+
+    def zweig_datei(self, name, pfad):
+        self.eingeloggt()
+        inhalt = self.d["git"].zweig_datei(name, pfad)
+        art = {"json": "application/json; charset=utf-8", "png": "image/png", "md": "text/plain; charset=utf-8"}
+        self.send_response(200)
+        self.send_header("Content-Type", art.get(pfad.rsplit(".", 1)[-1], "application/octet-stream"))
+        self.send_header("Content-Length", str(len(inhalt)))
+        self.send_header("Cache-Control", "no-store")
+        self.end_headers()
+        if self.command != "HEAD":
+            self.wfile.write(inhalt)
+
 
 def github_adresse(git):
     """https://github.com/<besitzer>/<repo> aus der Remote-Adresse, sonst None."""
@@ -908,6 +978,8 @@ ROUTEN = [
     _r("GET", r"/api/auth", Handler.auth),
     _r("GET", r"/api/ich", Handler.ich),
     _r("GET", r"/api/stand", Handler.stand),
+    _r("GET", r"/api/zweige", Handler.zweige),
+    _r("GET", r"/api/zweig/([A-Za-z0-9][A-Za-z0-9._-]{0,59})/((?:campus|gebaeude)/[A-Za-z0-9._/-]{1,200})", Handler.zweig_datei),
     _r("GET", r"/api/profil/([a-z][a-z0-9-]{1,23})", Handler.profil_lesen),
     _r("POST", r"/api/profil/([a-z][a-z0-9-]{1,23})", Handler.profil_speichern),
     _r("GET", r"/api/glocke", Handler.glocke),

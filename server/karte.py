@@ -41,8 +41,10 @@ WARN_ANTEIL = 0.2                       # Warnung, wenn ein Gebäude mehr als 20
 
 SCHEMATIC = "schematics/campus.nbt"
 AUSSEN_SKRIPT = "tools/modell-aussenanlagen.py"
+GELAENDE = "campus/gelaende.json"          # Gelände für die Map, nur neu berechnet, wenn es die Datei schon gibt
+GELAENDE_SKRIPT = "tools/modell-gelaende.py"
 NICHT_AUF_DEM_SERVER = {"tools/modell-aus-bauplan.py"}   # braucht Playwright
-DARF_AENDERN = ("gebaeude/", "schematics/", "download/")
+DARF_AENDERN = ("gebaeude/", "schematics/", "download/", GELAENDE)
 # Ändert sich davon etwas zwischen Vorschau und Übernehmen, muss die Vorschau neu
 BETRIFFT_KARTE = ("gebaeude/", "schematics/", "campus/", "tools/", "texturen/", "download/", "website/js/voxel.js")
 # Woran man in einer Schematic Gebautes von Natur unterscheidet
@@ -407,6 +409,9 @@ class Karte:
                 self._skript(arbeit, "tools/modell-aus-schematic.py", g["ordner"])
             else:
                 self._skript(arbeit, g["generator"])
+        # Gelände zuletzt, es spart die fertigen Gebäude aus
+        if (arbeit / GELAENDE).exists() and (arbeit / GELAENDE_SKRIPT).exists():
+            self._skript(arbeit, GELAENDE_SKRIPT, "--p0", *[str(v) for v in ecke])
         return self._vergleich(arbeit, liste, ecke)
 
     def _vergleich(self, arbeit, liste, ecke):
@@ -584,7 +589,7 @@ class Karte:
             pfade = [p for p in zeilen[1:] if p.strip()]
             bereiche = []
             for p in pfade:
-                b = ("Karte" if p == SCHEMATIC or p.endswith("/modell.json") or p.startswith("download/") else "Kanban" if p.startswith("kanban/")
+                b = ("Karte" if p in (SCHEMATIC, GELAENDE) or p.endswith("/modell.json") or p.startswith("download/") else "Kanban" if p.startswith("kanban/")
                      else "Team" if p.startswith("team/") else "Gebäude" if p.startswith(("gebaeude/", "campus/"))
                      else "Website" if p.startswith(("website/", "server/", "tools/", "texturen/")) else "Doku")
                 if b not in bereiche:
@@ -612,6 +617,9 @@ class Karte:
                 schem = alt(SCHEMATIC)
                 if schem is not None:
                     (ziel / SCHEMATIC).write_bytes(schem)
+                gelaende = alt(GELAENDE)
+                if gelaende is not None and (ziel / GELAENDE).exists():
+                    (ziel / GELAENDE).write_bytes(gelaende)
                 for g in self.gebaeude(ziel):
                     for datei in ("modell.json", "bauanleitung.json"):
                         inhalt = alt("%s/%s" % (g["ordner"], datei))

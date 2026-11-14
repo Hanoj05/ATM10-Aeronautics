@@ -706,3 +706,10 @@ body.mit-dock { padding-bottom: 104px; }
 .page.nach-hero > h2 { font: 850 26px/1.2 var(--f-display); letter-spacing: -.02em; }
 
 @media (prefers-reduced-motion: reduce) { body::before { animation: none; } .vorher { opacity: 1; transform: none; filter: none; } }
+
+/* Map: Auswahl des Stands (Git-Branch) und Gelände-Schalter */
+.ctl select { font: 600 12px var(--f-mono); background: none; border: 0; color: var(--fg); cursor: pointer; padding: 0 2px; }
+.ctl select option { background: var(--surface); color: var(--fg); }
+.ctl input[type=checkbox] { accent-color: var(--honey); margin: 0; }
+.ctl[hidden] { display: none; }
+.topbar .zweig { font: 600 12px var(--f-mono); color: var(--honey); margin-left: 10px; }
