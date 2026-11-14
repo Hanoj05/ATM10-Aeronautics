@@ -9,8 +9,10 @@ mit Farbe. Die Map zeichnet daraus Oberflächen und Hänge. So bleibt die Datei 
 auch wenn die Schematic mehrere Millionen Blöcke hat.
 
 Wo ein Gebäude auf der Map steht (Eintrag in campus/campus.json mit Modell und Position,
-nicht "karte": false), zählt nur, was unter dem Gebäude liegt. Sonst lägen Gelände und
-Gebäudemodell doppelt übereinander.
+nicht "karte": false), zählt in jeder Spalte mit Modellblöcken nur, was unter dem tiefsten
+davon liegt. Sonst lägen Gelände und
+Gebäudemodell doppelt übereinander. Mit "aussparen": false bleibt das Gelände unter einem
+Eintrag stehen, etwa für Außenanlagen, die nur Dinge auf das Gelände stellen.
 
 Die Ecke (0, 0, 0) der Schematic kommt aus gebaeude.json unter ausschnitt.schematicP0
 (alle Gebäude mit dieser Schematic müssen dieselbe haben) oder von --p0.
@@ -236,11 +238,12 @@ def welt_von(p0, drehung, x, y, z):
     return p0[0] + dx, p0[1] + y, p0[2] + dz
 
 
-def gebaeude_boxen(campus):
-    """[(x0, x1, z0, z1, y_unten)] in Weltkoordinaten für alle Gebäude, die auf der Map stehen."""
-    boxen = []
+def gebaeude_spalten(campus):
+    """{(x, z): y} in Weltkoordinaten: in dieser Spalte steht ein Gebäudemodell, dessen
+    tiefster Block auf Höhe y liegt. Dort zählt nur das Gelände darunter. Dazu die Namen."""
+    spalten, namen = {}, []
     for g in campus.get("gebaeude", []):
-        if not g.get("ordner") or not g.get("position") or g.get("karte") is False:
+        if not g.get("ordner") or not g.get("position") or g.get("karte") is False or g.get("aussparen") is False:
             continue
         pfad = REPO / g["ordner"] / "modell.json"
         if not pfad.exists():
@@ -248,12 +251,12 @@ def gebaeude_boxen(campus):
         bl = lies_json(pfad).get("bloecke") or []
         if not bl:
             continue
-        mn = [min(b[a] for b in bl) for a in range(3)]
-        mx = [max(b[a] for b in bl) for a in range(3)]
-        ecken = [welt_von(g["position"], g.get("drehung"), x, mn[1], z) for x in (mn[0], mx[0]) for z in (mn[2], mx[2])]
-        boxen.append((min(e[0] for e in ecken), max(e[0] for e in ecken),
-                      min(e[2] for e in ecken), max(e[2] for e in ecken), ecken[0][1], g["id"]))
-    return boxen
+        namen.append(g["id"])
+        for b in bl:
+            x, y, z = welt_von(g["position"], g.get("drehung"), b[0], b[1], b[2])
+            if (x, z) not in spalten or y < spalten[(x, z)]:
+                spalten[(x, z)] = y
+    return spalten, namen
 
 
 # --- Hauptteil -------------------------------------------------------------------------
@@ -276,13 +279,12 @@ def main():
 
     # Pro Spalte die Höhe, bis zu der das Gelände zählt (unter einem Gebäude nur bis darunter)
     grenze = bytearray([255]) * (nx * nz)
-    boxen = gebaeude_boxen(campus)
-    for x0, x1, z0, z1, yu, gid in boxen:
-        lokal = yu - p0[1]
-        for x in range(max(0, x0 - p0[0]), min(nx, x1 - p0[0] + 1)):
-            for z in range(max(0, z0 - p0[2]), min(nz, z1 - p0[2] + 1)):
-                i = x * nz + z
-                grenze[i] = max(0, min(grenze[i], lokal))
+    spalten, ausgespart = gebaeude_spalten(campus)
+    for (wx, wz), yu in spalten.items():
+        x, z = wx - p0[0], wz - p0[2]
+        if 0 <= x < nx and 0 <= z < nz:
+            i = x * nz + z
+            grenze[i] = max(0, min(grenze[i], yu - p0[1]))
 
     hoehe = bytearray(nx * nz)              # 0 = leer, sonst y + 1 (relativ zur Schematic)
     block = array("H", bytes(2 * nx * nz))
@@ -317,7 +319,7 @@ def main():
         "ursprung": [p0[0], p0[2]],
         "groesse": [nx, nz],
         "ybasis": p0[1],
-        "ausgespart": [b[5] for b in boxen],
+        "ausgespart": ausgespart,
         "palette": neu,
         "hoehe": base64.b64encode(bytes(hoehe)).decode("ascii"),
         "block": base64.b64encode(benutzt.tobytes()).decode("ascii"),
