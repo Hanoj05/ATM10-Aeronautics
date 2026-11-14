@@ -78,6 +78,10 @@ NATUR = ("stone", "andesite", "diorite", "granite", "gravel", "dirt", "cobble", 
          "asurine", "limestone", "calcite", "peat", "grass", "water", "sand", "clay", "leaves", "log", "fern",
          "flower", "tulip", "poppy", "dandelion", "bush", "sapling", "ore", "moss", "silt", "mud", "seagrass", "kelp")
 
+RING_DEKO = 97                 # bis hier bleibt die Deko rund ums Hauptgebäude
+WILDNIS = ("spruce", "stone", "dirt", "ore", "andesite", "diorite", "granite", "gravel", "sprouts", "short_grass",
+           "fern", "mossy", "litter", "branch")
+
 FARBE = {
     "minecraft:grass_block": "#5d8f3a", "minecraft:smooth_quartz": "#ece6df",
     "minecraft:light_gray_concrete": "#a9a9a2", "minecraft:white_concrete": "#e4e8e8",
@@ -166,12 +170,18 @@ def plane_hauptgebaeude():
         elif y == 20 and sid == "minecraft:white_concrete" and (55 <= r < 56 or 75.5 <= r < 76.5):
             if int(winkel * r * math.pi / 180) % 3 == 0:
                 m.setze(x, y, z, "minecraft:sea_lantern"); n_kranz += 1
-    # Ecken außerhalb der Anlage (Radius 87): alles weg, Campus-Wiese
+    # Rund um die Anlage: die vorhandene Deko (äußerer Quarzweg, Ahorn, Eichen, Birken, Blumen)
+    # bleibt bis Radius RING_DEKO. Wildnis (Fichtenwald, Stein, Erde, Erz) fliegt raus, weiter
+    # draußen alles Natürliche. Gebautes von euch (Barrels, Kabel, Tische) bleibt immer stehen.
     weg_ecken = 0
-    for (x, y, z) in list(m.pos):
-        if math.hypot(x + 0.5 - cx, z + 0.5 - cz) >= 87:
+    for (x, y, z), b in list(m.pos.items()):
+        r = math.hypot(x + 0.5 - cx, z + 0.5 - cz)
+        kurz = m.id_von(b).split(":")[-1].split("|")[0]
+        natuerlich = any(t in kurz for t in NATUR)
+        wild = any(t in kurz for t in WILDNIS)
+        if natuerlich and (r >= RING_DEKO or (r >= 84 and wild)):
             m.weg(x, y, z); weg_ecken += 1
-    print("Hauptgebäude: %d Blöcke in den Ecken außerhalb der Anlage entfernt" % weg_ecken)
+    print("Hauptgebäude: %d Blöcke Wildnis rund um die Anlage entfernt, Deko bis Radius %d bleibt" % (weg_ecken, RING_DEKO))
     # Park: Laternen am Rand der Quarzwege, etwa alle 7 Blöcke
     top = oberste(m)
     for (x, z), (b, y) in top.items():

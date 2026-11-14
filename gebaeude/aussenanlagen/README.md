@@ -37,7 +37,9 @@ Alle vier Gebäude liegen auf einer gemeinsamen, ebenen Fläche. Innerhalb der C
 - Bienenweide südlich vom Wabenhaus mit Blumen in Streifen
 - Magiehaus und Hauptgebäude: alles außerhalb vom Kreis bzw. der Ring-Anlage wird Campus-Wiese
 
-Neu rechnen: `python3 tools/plan-umgebung.py` (etwa eine Minute).
+**Bauen:** Die Anleitung steht in [bauhilfe.md](bauhilfe.md). Das Datapack `download/campus-bau-datapack.zip` baut den Plan Abschnitt für Abschnitt und kann jeden Abschnitt auch wieder zurückbauen. Erzeugt wird es mit `python3 tools/bauhilfe-campus.py`.
+
+Neu rechnen: `python3 tools/plan-umgebung.py` (etwa eine Minute), danach `python3 tools/bauhilfe-campus.py`.
 
 ## Älterer Entwurf (main)
 
