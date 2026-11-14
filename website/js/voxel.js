@@ -504,13 +504,40 @@
     var nav = document.getElementById("nav");
     if (!nav) return;
     function link(href, text, an) { return "<a href='" + href + "'" + (an ? " aria-current='page'" : "") + ">" + esc(text) + "</a>"; }
-    nav.innerHTML = link("index.html", "Übersicht", aktiv === "uebersicht") + link("map.html", "Map", aktiv === "map") + link("technik.html", "Technik", aktiv === "technik") + link("kanban.html", "Kanban", aktiv === "kanban") + link("team.html", "Team", aktiv === "team");
+    /* Dock unten in der Mitte, wie auf dem Mac: Icons, Name als Schild beim Drüberfahren, Gebäude im Aufklappmenü */
+    var D = function (pfad) { return "<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true'>" + pfad + "</svg>"; };
+    var DOCK = [
+      ["uebersicht", "index.html", "Übersicht", D("<path d='M3 10.5 12 3l9 7.5'/><path d='M5 9.5V20h5v-6h4v6h5V9.5'/>")],
+      ["map", "map.html", "Map", D("<path d='M9 4 3 6.5v13.5l6-2.5 6 2.5 6-2.5V4l-6 2.5z'/><path d='M9 4v13.5M15 6.5V20'/>")],
+      ["technik", "technik.html", "Technik", D("<rect x='6' y='6' width='12' height='12' rx='2'/><rect x='9.5' y='9.5' width='5' height='5' rx='1'/><path d='M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4'/>")],
+      ["kanban", "kanban.html", "Kanban", D("<rect x='3' y='4' width='18' height='16' rx='2.5'/><path d='M9 4v16M15 4v16'/><path d='M5.5 8h1.5M11.2 8h1.6M17 8h1.5M5.5 11h1.5'/>")],
+      ["team", "team.html", "Team", D("<circle cx='9' cy='8' r='3.2'/><path d='M3 20c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5'/><circle cx='17' cy='9' r='2.5'/><path d='M16.5 14.6c2.6.2 4.5 2.1 4.5 4.9'/>")]
+    ];
+    var HEX = D("<path d='M12 2.8 20 7.4v9.2l-8 4.6-8-4.6V7.4z'/><path d='M12 8.5 15 10.25v3.5L12 15.5l-3-1.75v-3.5z'/>");
+    var dock = document.createElement("nav");
+    dock.className = "dock"; dock.setAttribute("aria-label", "Hauptnavigation");
+    dock.innerHTML = "<div class='dock-leiste'>" + DOCK.map(function (d) {
+      return "<a class='dock-teil' href='" + d[1] + "'" + (aktiv === d[0] ? " aria-current='page'" : "") + " aria-label='" + d[2] + "'>" + d[3] + "<span class='dock-schild'>" + d[2] + "</span></a>";
+    }).join("") + "<span class='dock-trenner' aria-hidden='true'></span>" +
+      "<button type='button' class='dock-teil dock-gebaeude' aria-haspopup='true' aria-expanded='false' aria-label='Gebäude'>" + HEX + "<span class='dock-schild'>Gebäude</span></button>" +
+      "</div><div class='menue dock-menue' hidden><div class='glocke-kopf'><b>Gebäude</b></div><div class='dock-liste'><p class='glocke-leer'>Lade …</p></div></div>";
+    document.body.appendChild(dock);
+    nav.remove();
+    document.body.classList.add("mit-dock");
+    dockLupe(dock.querySelector(".dock-leiste"));
+    menueAn(dock.querySelector(".dock-gebaeude"), dock.querySelector(".dock-menue"));
     var gebaeude = ladeJSON("campus/campus.json").then(function (c) {
-      var h = "";
-      c.gebaeude.forEach(function (g) { if (g.ordner) h += link("gebaeude.html?id=" + encodeURIComponent(g.id), g.name, aktiv === g.id); });
-      if (h) nav.insertAdjacentHTML("beforeend", "<span class='sep' aria-hidden='true'></span>" + h);
-    }).catch(function () {}).then(function () { linse(nav, "a[aria-current='page']"); });
-    var site = nav.parentNode;
+      var h = "", hier = false;
+      c.gebaeude.forEach(function (g) {
+        if (!g.ordner) return;
+        if (aktiv === g.id) hier = true;
+        h += "<a class='dock-geb' href='gebaeude.html?id=" + encodeURIComponent(g.id) + "'" + (aktiv === g.id ? " aria-current='page'" : "") + ">" +
+          "<span class='dock-geb-icon'>" + HEX + "</span><span><b>" + esc(g.name) + "</b><small>" + esc(g.status || "") + "</small></span></a>";
+      });
+      dock.querySelector(".dock-liste").innerHTML = h || "<p class='glocke-leer'>Noch keine Gebäude.</p>";
+      if (hier) dock.querySelector(".dock-gebaeude").setAttribute("aria-current", "page");
+    }).catch(function () {});
+    var site = document.querySelector("header.site");
     Promise.all([ich(), gebaeude]).then(function (r) {
       var i = r[0];
       if (!site) return;
@@ -624,6 +651,26 @@
       box.style.setProperty("--my", (ev.clientY - r.top) + "px");
     }, { passive: true });
   })();
+
+  /* Dock-Lupe: jedes Icon wächst je nach Abstand zur Maus, wie beim Mac */
+  function dockLupe(leiste) {
+    var ruhig = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (ruhig || !window.matchMedia("(hover: hover)").matches) return;
+    var teile = [].slice.call(leiste.querySelectorAll(".dock-teil")), x = null, plan = false;
+    function rechne() {
+      plan = false;
+      teile.forEach(function (t) {
+        var s = 1;
+        if (x !== null) {
+          var r = t.getBoundingClientRect(), d = Math.abs(x - (r.left + r.width / 2));
+          s = 1 + 0.38 * Math.max(0, Math.cos(Math.min(d / 110, 1) * Math.PI / 2));
+        }
+        t.style.setProperty("--s", s.toFixed(3));
+      });
+    }
+    leiste.addEventListener("pointermove", function (ev) { x = ev.clientX; if (!plan) { plan = true; requestAnimationFrame(rechne); } });
+    leiste.addEventListener("pointerleave", function () { x = null; rechne(); });
+  }
 
   /* Glas-Linse, die zum Link unter der Maus gleitet und zum aktiven Link zurückfedert.
    * Für die Hauptnavigation und die Unter-Tabs der Gebäudeseiten. */

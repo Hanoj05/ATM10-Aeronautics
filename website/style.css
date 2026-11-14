@@ -137,17 +137,6 @@ ul.hinweise { margin: 0; padding-left: 18px; display: grid; gap: 4px; font-size:
 .campus-list span { font-size: 13px; color: var(--muted); }
 .note { font-size: 13px; color: var(--muted); }
 
-/* ---------- Navigation ---------- */
-.site { position: sticky; top: 0; z-index: 20; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 22px; padding: 9px max(16px, env(safe-area-inset-right, 0px)) 9px max(16px, env(safe-area-inset-left, 0px)); background: var(--nav-bg); -webkit-backdrop-filter: saturate(1.6) blur(14px); backdrop-filter: saturate(1.6) blur(14px); border-bottom: 1px solid var(--line); }
-.site .brand { display: inline-flex; align-items: center; font: 800 16px var(--f-display); font-stretch: 110%; color: var(--fg); text-decoration: none; letter-spacing: .01em; }
-.site .brand::before { content: ""; width: 18px; height: 20px; background: var(--honey); clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%); margin-right: 9px; }
-.site .brand b { color: var(--honey); }
-#nav { display: flex; flex-wrap: wrap; align-items: center; gap: 2px; }
-#nav a { font: 600 13px var(--f-body); color: var(--muted); text-decoration: none; padding: 6px 11px; border-radius: 999px; }
-#nav a:hover { color: var(--fg); background: var(--raised); }
-#nav a[aria-current="page"] { color: var(--honey-ink); background: var(--honey-soft); }
-#nav .sep { width: 1px; height: 18px; background: var(--line-strong); margin: 0 8px; }
-
 /* ---------- Unter-Tabs auf der Gebäudeseite ---------- */
 .subtabs { display: flex; flex-wrap: wrap; gap: 4px; padding: 0 max(16px, env(safe-area-inset-right, 0px)) 0 max(16px, env(safe-area-inset-left, 0px)); background: var(--surface); border-bottom: 1px solid var(--line); }
 .subtabs a { font: 600 13px var(--f-body); color: var(--muted); text-decoration: none; padding: 11px 14px; border-bottom: 2px solid transparent; margin-bottom: -1px; }
@@ -468,7 +457,7 @@ body::before { content: ""; position: fixed; inset: -12vmax; z-index: -1; pointe
 @keyframes flecken { 0% { transform: translate3d(0, 0, 0) rotate(0); } 50% { transform: translate3d(3vmax, -2vmax, 0) rotate(4deg); } 100% { transform: translate3d(-2vmax, 2vmax, 0) rotate(-3deg); } }
 
 /* Das Glas selbst */
-.site, .box, .kb-spalte, .panel, .md, .ctl, .hint, .subtabs, .knopf.leise, .tabs button, .tabs a, .ich-knopf, .glocke-knopf, .thema-knopf,
+.box, .kb-spalte, .panel, .site .brand, .dock-leiste, .md, .ctl, .hint, .subtabs, .knopf.leise, .tabs button, .tabs a, .ich-knopf, .glocke-knopf, .thema-knopf,
 .gebkarte .links a, .kb-editor, .kb-toast, .tooltip, .formbox, .hero-karte, .hero-zahl {
   background: var(--surface);
   -webkit-backdrop-filter: var(--blur); backdrop-filter: var(--blur);
@@ -489,19 +478,59 @@ body::before { content: ""; position: fixed; inset: -12vmax; z-index: -1; pointe
 .box:hover { --rand-an: 0 0 / 100% 100%; }
 .box:hover::before { opacity: 1; }
 
-/* ---------- Navigation: schwebende Glasleiste mit Linse ---------- */
-.site { position: sticky; top: 10px; margin: 10px max(10px, env(safe-area-inset-right, 0px)) 0 max(10px, env(safe-area-inset-left, 0px)); border-radius: 20px; padding: 7px 8px 7px 16px; background: var(--nav-bg); isolation: isolate; view-transition-name: kopfleiste; }
-#nav { position: relative; }
-#nav a { position: relative; z-index: 1; font-weight: 550; padding: 7px 13px; }
-#nav a:hover, #nav a[aria-current="page"] { background: none; }
-#nav a[aria-current="page"] { color: var(--fg); }
-#nav .marker, .subtabs .marker { position: absolute; z-index: 0; border-radius: 999px; pointer-events: none; background: var(--linse);
+/* ---------- Kopf: nur Logo links und Glocke/Profil rechts, beides als schwebendes Glas ---------- */
+.site { position: sticky; top: 0; z-index: 20; display: flex; align-items: center; gap: 12px; margin: 0; padding: 12px max(14px, env(safe-area-inset-right, 0px)) 0 max(14px, env(safe-area-inset-left, 0px));
+  background: none; border: 0; -webkit-backdrop-filter: none; backdrop-filter: none; pointer-events: none; view-transition-name: kopfleiste; }
+.site > * { pointer-events: auto; }
+.site .brand { display: inline-flex; align-items: center; font: 850 15px var(--f-display); font-stretch: 110%; color: var(--fg); text-decoration: none; letter-spacing: .01em; }
+.site .brand::before { content: ""; width: 18px; height: 20px; clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%); margin-right: 9px; }
+.site .brand b { color: var(--honey); }
+.site .brand { padding: 7px 14px 7px 10px; border-radius: 999px; font-weight: 850; font-size: 15px; }
+.site .brand:hover { transform: scale(1.03); }
+.site .brand::before { background: linear-gradient(160deg, color-mix(in srgb, var(--honey) 70%, #fff), var(--honey)); box-shadow: 0 0 12px color-mix(in srgb, var(--honey) 50%, transparent); }
+.subtabs .marker { position: absolute; z-index: 0; border-radius: 999px; pointer-events: none; background: var(--linse);
   box-shadow: inset 0 1px 0 var(--glas-hell), inset 0 0 0 1px var(--glas-rand), 0 4px 14px -4px rgba(16, 24, 40, .22);
   transition: left .55s var(--feder), width .55s var(--feder), top .3s var(--ease), height .3s var(--ease), opacity .25s; }
-#nav .marker::after { content: ""; position: absolute; left: 50%; bottom: 3px; width: 4px; height: 4px; margin-left: -2px; border-radius: 50%; background: var(--honey); opacity: var(--punkt, 0); transition: opacity .25s; }
-#nav .sep { background: var(--line-strong); }
-.site .brand { font-weight: 850; }
-.site .brand::before { background: linear-gradient(160deg, color-mix(in srgb, var(--honey) 70%, #fff), var(--honey)); box-shadow: 0 0 12px color-mix(in srgb, var(--honey) 50%, transparent); }
+
+/* ---------- Dock unten ---------- */
+body.mit-dock { padding-bottom: 104px; }
+.dock { position: fixed; left: 50%; bottom: max(14px, env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); z-index: 25; view-transition-name: dock; animation: dock-rein .8s .15s var(--feder) both; }
+@keyframes dock-rein { from { opacity: 0; transform: translate(-50%, 40px) scale(.9); } }
+.dock-leiste { display: flex; align-items: flex-end; gap: 6px; height: 64px; padding: 8px 10px; border-radius: 24px; background: var(--nav-bg);
+  box-shadow: inset 0 1px 0 var(--glas-hell), inset 0 -1px 0 var(--glas-tief), var(--shadow-l); }
+.dock-teil { --s: 1; position: relative; flex: none; width: calc(46px * var(--s)); height: calc(46px * var(--s)); display: grid; place-items: center; border-radius: calc(14px * var(--s));
+  color: var(--fg); text-decoration: none; background: var(--raised); border: 1px solid var(--glas-rand); cursor: pointer; padding: 0;
+  box-shadow: inset 0 1px 0 var(--glas-hell), 0 2px 6px -2px rgba(16, 24, 40, .18);
+  transition: width .18s var(--ease), height .18s var(--ease), border-radius .18s var(--ease), background-color .25s, color .25s, transform .3s var(--feder) !important; }
+.dock-teil svg { width: calc(22px * var(--s)); height: calc(22px * var(--s)); transition: width .18s var(--ease), height .18s var(--ease); }
+.dock-teil:active { transform: scale(.9); }
+.dock-teil[aria-current="page"] { color: var(--honey-ink); background: var(--honey-soft); border-color: color-mix(in srgb, var(--honey) 40%, transparent); }
+.dock-teil::after { content: ""; position: absolute; left: 50%; bottom: -7px; width: 4px; height: 4px; margin-left: -2px; border-radius: 50%; background: var(--honey); opacity: 0; box-shadow: 0 0 6px var(--honey); transition: opacity .3s; }
+.dock-teil[aria-current="page"]::after { opacity: 1; }
+.dock-schild { position: absolute; bottom: calc(100% + 12px); left: 50%; transform: translate(-50%, 6px) scale(.9); white-space: nowrap; pointer-events: none; opacity: 0;
+  font: 600 12px var(--f-body); padding: 5px 10px; border-radius: 999px; color: var(--fg); background: var(--menue-bg); -webkit-backdrop-filter: var(--blur); backdrop-filter: var(--blur);
+  border: 1px solid var(--glas-rand); box-shadow: inset 0 1px 0 var(--glas-hell), var(--shadow); transition: opacity .2s var(--ease), transform .35s var(--feder); }
+.dock-teil:hover .dock-schild, .dock-teil:focus-visible .dock-schild { opacity: 1; transform: translate(-50%, 0) scale(1); }
+.dock-gebaeude[aria-expanded="true"] .dock-schild { opacity: 0; }
+.dock-trenner { align-self: center; width: 1px; height: 34px; margin: 0 4px; background: var(--line-strong); }
+.dock .dock-menue { left: 50%; right: auto; top: auto; bottom: calc(100% + 14px); width: 300px; padding: 0; overflow: hidden; transform-origin: bottom center; translate: -50% 0; }
+.dock-liste { padding: 6px; display: grid; gap: 2px; max-height: min(420px, 60vh); overflow-y: auto; }
+.dock-geb { display: flex; align-items: center; gap: 12px; padding: 8px 10px; border-radius: 12px; color: var(--fg); text-decoration: none; }
+.dock-geb:hover { background: var(--linse); }
+.dock-geb[aria-current="page"] { background: var(--honey-soft); }
+.dock-geb-icon { width: 34px; height: 34px; flex: none; display: grid; place-items: center; border-radius: 10px; background: var(--honey-soft); color: var(--honey-ink); }
+.dock-geb-icon svg { width: 20px; height: 20px; }
+.dock-geb b { display: block; font: 700 14px var(--f-body); }
+.dock-geb small { color: var(--muted); font: 11px var(--f-mono); text-transform: uppercase; letter-spacing: .05em; }
+.kb-toast { bottom: 100px; }
+@media (max-width: 560px) {
+  .dock { left: 10px; right: 10px; transform: none; }
+  @keyframes dock-rein { from { opacity: 0; transform: translateY(40px); } }
+  .dock-leiste { justify-content: space-between; gap: 2px; padding: 8px; }
+  .dock-teil { width: 44px; height: 44px; }
+  .dock-trenner { display: none; }
+  .dock .dock-menue { left: auto; right: 0; translate: none; }
+}
 
 /* Knöpfe rechts: Glocke, Profil */
 .wer { gap: 6px; }
@@ -629,7 +658,7 @@ body::before { content: ""; position: fixed; inset: -12vmax; z-index: -1; pointe
 /* ---------- 3D-Seiten: Viewport und Panel als schwebende Flächen ---------- */
 .layout { gap: 14px; padding: 14px max(14px, env(safe-area-inset-right, 0px)) 20px max(14px, env(safe-area-inset-left, 0px)); min-height: calc(100vh - 150px); }
 .viewport { border-radius: var(--r); border: 1px solid var(--glas-rand); box-shadow: inset 0 1px 0 var(--glas-hell), var(--shadow); min-height: 560px; }
-.panel { border-radius: var(--r); top: 78px; max-height: calc(100vh - 92px); border-left: 1px solid var(--glas-rand); }
+.panel { border-radius: var(--r); top: 70px; max-height: calc(100vh - 180px); border-left: 1px solid var(--glas-rand); }
 @media (max-width: 900px) { .panel { position: static; max-height: none; border-top: 1px solid var(--glas-rand); } }
 .ctl, .hint { box-shadow: inset 0 1px 0 var(--glas-hell), var(--shadow); }
 .tooltip { color: var(--fg); background: var(--menue-bg); border-radius: 12px; }
