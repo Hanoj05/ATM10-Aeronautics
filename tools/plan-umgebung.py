@@ -211,7 +211,7 @@ def plane_magiehaus():
             m.setze(x, 5, z, "minecraft:smooth_quartz_slab", name="Smooth Quartz Slab (obere Hälfte, neue Kellerdecke)",
                     farbe="#ece6df", form="platte-oben")
             stufen += 1
-    # 3. Ecken außerhalb vom Kreis: Wiese auf Bodenhöhe statt kahler Stellen
+    # 3. Ecken außerhalb vom Kreis leeren: dort liegt dann das Campus-Gelände
     ecken = 0
     spalten = {(x, z) for (x, y, z) in m.pos}
     for x, z in spalten:
@@ -219,15 +219,9 @@ def plane_magiehaus():
             continue
         for y in [y for y in range(-6, 45) if (x, y, z) in m.pos]:
             m.weg(x, y, z)
-        m.setze(x, BODEN_Y - p0[1], z, "minecraft:grass_block")
         ecken += 1
-    xs = [x for x, z in spalten]; zs = [z for x, z in spalten]
-    for x in range(min(xs), max(xs) + 1):
-        for z in range(min(zs), max(zs) + 1):
-            if (x, z) not in spalten and math.hypot(x + 0.5 - cx, z + 0.5 - cz) >= 63:
-                m.setze(x, BODEN_Y - p0[1], z, "minecraft:grass_block"); ecken += 1
     schreib_modell("gebaeude/magiehaus/modell.json", m.fertig())
-    print("Magiehaus: %d Leuchtkanten-Blöcke, %d Stufen als Kellerdecke, %d Spalten Wiese in den Ecken" % (kanten, stufen, ecken))
+    print("Magiehaus: %d Leuchtkanten-Blöcke, %d Stufen als Kellerdecke, %d Spalten in den Ecken geleert (dort liegt das Campus-Gelände)" % (kanten, stufen, ecken))
 
 
 # --- Gelände ----------------------------------------------------------------------------
@@ -275,6 +269,10 @@ class Gelaende:
         self.d["hoehe"] = base64.b64encode(bytes(self.h)).decode("ascii")
         self.d["block"] = base64.b64encode(b.tobytes()).decode("ascii")
         self.d["hinweis"] += " Plan: bearbeitet mit tools/plan-umgebung.py."
+        # Wiese etwas dunkler, damit sie zum texturierten Rasen der Gebäudemodelle passt
+        for p in self.pal:
+            if p["id"] == "minecraft:grass_block":
+                p["farbe"] = "#4f7d35"
         (REPO / "campus/gelaende.json").write_text(json.dumps(self.d, ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")
 
 
