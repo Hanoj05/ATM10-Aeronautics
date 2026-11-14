@@ -1,7 +1,7 @@
 {
   "id": "aussenanlagen",
   "name": "Außenanlagen",
-  "zweck": "Wege, Haine, Blumenwiesen, Teiche und Laternen zwischen den Gebäuden, geschwungener Magierweg zum Magiehaus",
+  "zweck": "Plan für die Umgebung: Wege, ME-Platz, Ufer mit Steg, Landeplatz, Hain, Bienenweide, Licht und Mega Torches",
   "status": "geplant",
   "welt": {
     "p0": [
@@ -10,7 +10,7 @@
       -347
     ],
     "drehung": 0,
-    "hinweis": "P0 = Nordwest-Ecke, Boden auf Welt-Höhe 65. Alles liegt auf Bodenhöhe. Die Gebäude-Grundflächen sind mit 2 Blöcken Abstand ausgespart. Erzeugt von tools/modell-aussenanlagen.py."
+    "hinweis": "P0 = Nordwest-Ecke, y = 0 entspricht Welt-Höhe 65. Im Branch umgebung-plan erzeugt von tools/plan-umgebung.py: Bäume, Laternen, Blumen und Mega Torches stehen hier, Wege und Flächen stecken im Gelände (campus/gelaende.json)."
   },
   "masse": {
     "breite": 378,
@@ -27,6 +27,6 @@
     "konfig": null,
     "schematic": null,
     "bauanleitung": "bauanleitung.json",
-    "generator": "tools/modell-aussenanlagen.py"
+    "generator": "tools/plan-umgebung.py"
   }
 }

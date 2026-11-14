@@ -60,7 +60,7 @@
       "id": "aussenanlagen",
       "name": "Außenanlagen",
       "ordner": "gebaeude/aussenanlagen",
-      "zweck": "Wege, Bäume, Teiche, Laternen",
+      "zweck": "Plan: Wege, ME-Platz, Ufer, Landeplatz, Bäume, Licht, Mega Torches",
       "status": "geplant",
       "position": [
         14,
@@ -68,7 +68,7 @@
         -347
       ],
       "drehung": 0,
-      "karte": false
+      "aussparen": false
     }
   ]
 }
