@@ -24,15 +24,18 @@ Auf der Map stehen sie als goldene Säulen, damit man sie findet. Gebaut werden 
 
 **3. Kellerdecke im Magiehaus:** unter jedem Grasblock, der direkt über dem Keller liegt, eine Smooth Quartz Slab in der oberen Hälfte. Von oben bleibt der Rasen, unten wird eine Kassettendecke in der Form der Gärten daraus. Der Raum verliert dort einen halben Block.
 
-**4. Umgebung**
+**4. Ein gemeinsamer Campus**
 
-- ME-Platz: die schwarze Bodenplatte wird Smooth Quartz mit Raster aus Light Gray Concrete (alle 12 Blöcke), dazu Baum-Inseln mit Sea Lanterns
-- Landeplatz für Luftschiffe nördlich vom ME-Gebäude (Mitte 316 / −417, Radius 14) mit Weg zum Platz
-- Wege auf Höhe 64: Magierweg (als Brücke über das Wasser), Nordweg Magiehaus–ME, Südtor zur Uferpromenade, Weg zur Bienenweide. Smooth Quartz mit Rand aus Light Gray Concrete, alle 9 Blöcke eine Sea Lantern im Rand
-- Steg vom Ring-Ufer in die Bucht (330 / −152 bis 372 / −128) mit Plattform und Laternen
-- Kahle Flächen (Stein, Kies, Erde) werden Wiese, am Wasser Sand
-- Hain zwischen Magiehaus und Ring, Bienenweide östlich vom Wabenhaus, Bäume an der Promenade
-- Magiehaus: Ecken außerhalb vom Kreis werden Wiese auf Bodenhöhe
+Alle vier Gebäude liegen auf einer gemeinsamen, ebenen Fläche. Innerhalb der Campus-Grenze wird alles auf Höhe 65 planiert, also auf die Bodenhöhe der Gebäude. Flüsse und Buchten werden zugeschüttet, Hügel abgetragen und die wilden Bäume entfernt. Außerhalb bleibt die Natur.
+
+- Grenze: Rechteck x 8 bis 422, z −446 bis −116, Ecken mit Radius 36. Der alte Bau im Osten (ab x 424) bleibt draußen.
+- Außen ein Bordstein, dahinter ein Rundweg (5 breit) mit Lichtern im Rand und eine Eichen-Allee.
+- Wege gehen von den echten Toren des Rings aus: Tor 148° zum Magiehaus (Magierweg), Tor 328° zum Wabenhaus (Bienenallee), Tor 238° zum ME-Platz, Tor 58° zur Südterrasse. Dazu der Nord-, West- und Südweg vom Magiehaus und zwei Wege vom Wabenhaus. Alle sind gleich gebaut: Smooth Quartz, Rand aus Light Gray Concrete, alle 8 Blöcke eine Sea Lantern. An den Wegen stehen Birken-Alleen, die Wiesen dazwischen bleiben offen.
+- ME-Platz (x 205–326, z −404 bis −306): Smooth Quartz mit Raster aus Light Gray Concrete alle 12 Blöcke, Baum-Inseln mit vier Lichtern
+- Landeplatz für Luftschiffe auf der Nordachse (Mitte 263 / −420, Radius 12)
+- Wasserband auf der Südterrasse (x 213–313, z −131 bis −126) mit Quarzrand und Lichtern
+- Bienenweide südlich vom Wabenhaus mit Blumen in Streifen
+- Magiehaus und Hauptgebäude: alles außerhalb vom Kreis bzw. der Ring-Anlage wird Campus-Wiese
 
 Neu rechnen: `python3 tools/plan-umgebung.py` (etwa eine Minute).
 

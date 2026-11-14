@@ -7,8 +7,8 @@ Ausgangspunkt ist der Ist-Stand aus schematics/campus.nbt. Das Skript rechnet da
   gebaeude/hauptgebaeude/modell.json   + Lichtkranz auf dem Dach, Wegeleuchten im Park
   gebaeude/magiehaus/modell.json       + violette Leuchtkanten am Stern, Kellerdecke aus
                                          Stufen, begrünte Ecken außerhalb vom Kreis
-  gebaeude/aussenanlagen/modell.json   Bäume, Laternen, Steg, Blumen, Mega Torches
-  campus/gelaende.json                 Wege, ME-Platz, Strand, Landeplatz, begrünte Flächen
+  gebaeude/aussenanlagen/modell.json   Bäume, Blumen, Mega Torches
+  campus/gelaende.json                 Campus planiert auf eine Ebene, Wege, Plätze, Becken
 
 Alle Koordinaten unten sind Weltkoordinaten (x, z), Höhen ebenfalls Welt-y.
 Die Feral Flare Lanterns gehören nicht zum Plan, sie sieht man ohnehin nicht.
@@ -36,39 +36,47 @@ def modul(name, datei):
 
 GEL = modul("modell_gelaende", "tools/modell-gelaende.py")
 
-BODEN_Y = 64                 # Oberkante Wiese und Wege rund um die Gebäude
+BODEN_Y = 65                 # Campus-Ebene: Oberkante Wiese, Wege und Plätze (wie die Gebäude)
 RING = (263, -221)           # Mitte Hauptgebäude
 MAGIE = (88, -221)           # Mitte Magiehaus
 AUSSEN_P0 = (14, 65, -347)   # P0 der Außenanlagen (wie bisher)
 
 # Mega Torches (Torchmaster, Reichweite 64 als Würfel): decken alle Gebäude ab
 MEGA_TORCHES = [("T1", 88, -221, "Mitte Magiehaus, im Keller unter der Kuppel"),
-                ("T2", 158, -196, "zwischen Magiehaus und Ring, unter dem Weg"),
+                ("T2", 158, -196, "zwischen Magiehaus und Ring, unter der Wiese"),
                 ("T3", 236, -324, "unter dem ME-Platz"),
                 ("T4", 286, -196, "im Park, unter einem Beet"),
                 ("T5", 362, -300, "Nordwest-Ecke im Wabenhaus")]
 
-# Wege: Liste von Punkten, Breite (ungerade)
-WEGE = [
-    ("Magierweg", [(140, -199), (184, -201)], 5),
-    ("Nordweg Magiehaus–ME", [(96, -283), (150, -300), (180, -322), (206, -334)], 5),
-    ("Südtor zur Promenade", [(268, -137), (268, -118)], 5),
-    ("Uferpromenade", [(168, -122), (210, -118), (268, -116), (305, -122), (322, -134)], 5),
-    ("Zum Landeplatz", [(310, -388), (314, -401)], 5),
-    ("Zur Bienenweide", [(392, -240), (406, -224), (418, -214)], 3),
-]
-LANDEPLATZ = (316, -417, 14)          # Mitte x, z und Radius
-STEG = [(330, -152), (372, -128)]      # vom Ring-Ufer in die Bucht
-BIENENWEIDE = (401, 440, -240, -195)   # x0, x1, z0, z1
-HAIN = (130, 176, -334, -268)          # zwischen Magiehaus und Ring
-CAMPUS = (-10, 440, -440, -110)        # hier wird Kahles begrünt
+# Campus-Grenze: Rechteck mit runden Ecken. Innen wird alles auf BODEN_Y planiert,
+# außen bleibt die Natur. Der alte Bau im Osten (ab x 424) bleibt draußen.
+GRENZE = (8, 422, -446, -116, 36)      # x0, x1, z0, z1, Eckradius
+RUNDWEG = (1, 5)                       # Rundweg: so weit innerhalb der Grenze (von, bis)
 
-KAHL = ("minecraft:stone", "minecraft:andesite", "minecraft:diorite", "minecraft:granite",
-        "minecraft:gravel", "minecraft:dirt", "minecraft:coarse_dirt", "minecraft:cobblestone",
-        "minecraft:tuff", "minecraft:deepslate", "regions_unexplored:mossy_stone",
-        "minecraft:mossy_cobblestone", "xycraft_world:kivi", "create:asurine", "create:limestone",
-        "minecraft:calcite", "railcraft:quarried_stone", "minecraft:light_gray_concrete_powder",
-        "regions_unexplored:peat_mud")
+# Wege: Punkte (x, z) und Breite. Alle gleich gebaut: Quarz, grauer Rand, Lichter im Rand.
+# Die Tore vom Ring liegen bei 58°, 148°, 238° und 328° (0° = Osten, 90° = Süden), dazu Norden zum ME.
+WEGE = [
+    ("Magierweg (Tor 148° zum Magiehaus)", [(189, -175), (147, -198)], 7),
+    ("Bienenallee (Tor 328° zum Wabenhaus)", [(336, -266), (349, -271)], 5),
+    ("Tor 238° zum ME-Platz", [(217, -294), (211, -307)], 5),
+    ("Tor 58° zur Südterrasse", [(309, -147), (322, -126)], 5),
+    ("Westzugang Magiehaus", [(12, -221), (30, -221)], 5),
+    ("Nordweg Magiehaus–ME-Platz", [(88, -282), (88, -305), (206, -305)], 5),
+    ("Südweg Magiehaus", [(88, -160), (88, -120)], 5),
+    ("Nordachse ME–Landeplatz", [(263, -400), (263, -408)], 7),
+    ("Wabenhaus Süd", [(381, -241), (381, -120)], 5),
+    ("Wabenhaus Nord", [(381, -304), (381, -330), (330, -330)], 5),
+]
+ME_PLATZ = (205, 326, -404, -306)      # x0, x1, z0, z1 (Gebäude bleiben ausgespart)
+LANDEPLATZ = (263, -420, 12)           # Mitte x, z und Radius
+BECKEN = [("Wasserband Südterrasse", 213, 313, -131, -126)]
+BIENENWEIDE = (348, 416, -234, -126)   # x0, x1, z0, z1
+ALLEE = 10                             # Abstand der Bäume in den Alleen
+
+# Natur, die auf dem Campus-Gelände verschwindet (Magiehaus-Ecken)
+NATUR = ("stone", "andesite", "diorite", "granite", "gravel", "dirt", "cobble", "tuff", "deepslate", "kivi",
+         "asurine", "limestone", "calcite", "peat", "grass", "water", "sand", "clay", "leaves", "log", "fern",
+         "flower", "tulip", "poppy", "dandelion", "bush", "sapling", "ore", "moss", "silt", "mud", "seagrass", "kelp")
 
 FARBE = {
     "minecraft:grass_block": "#5d8f3a", "minecraft:smooth_quartz": "#ece6df",
@@ -158,6 +166,12 @@ def plane_hauptgebaeude():
         elif y == 20 and sid == "minecraft:white_concrete" and (55 <= r < 56 or 75.5 <= r < 76.5):
             if int(winkel * r * math.pi / 180) % 3 == 0:
                 m.setze(x, y, z, "minecraft:sea_lantern"); n_kranz += 1
+    # Ecken außerhalb der Anlage (Radius 87): alles weg, Campus-Wiese
+    weg_ecken = 0
+    for (x, y, z) in list(m.pos):
+        if math.hypot(x + 0.5 - cx, z + 0.5 - cz) >= 87:
+            m.weg(x, y, z); weg_ecken += 1
+    print("Hauptgebäude: %d Blöcke in den Ecken außerhalb der Anlage entfernt" % weg_ecken)
     # Park: Laternen am Rand der Quarzwege, etwa alle 7 Blöcke
     top = oberste(m)
     for (x, z), (b, y) in top.items():
@@ -199,18 +213,14 @@ def plane_magiehaus():
             stufen += 1
     # 3. Ecken außerhalb vom Kreis: Wiese auf Bodenhöhe statt kahler Stellen
     ecken = 0
-    natur = set(KAHL) | {"minecraft:grass_block", "minecraft:water", "minecraft:short_grass", "minecraft:sand",
-                         "minecraft:gravel", "minecraft:clay"}
     spalten = {(x, z) for (x, y, z) in m.pos}
     for x, z in spalten:
         if math.hypot(x + 0.5 - cx, z + 0.5 - cz) < 63:
             continue
-        ys = [y for (xx, y, zz) in [(x, yy, z) for yy in range(-2, 12)] if (x, y, z) in m.pos]
-        if all(m.id_von(m.pos[(x, y, z)]) in natur for y in ys):
-            for y in ys:
-                m.weg(x, y, z)
-            m.setze(x, BODEN_Y - p0[1], z, "minecraft:grass_block")
-            ecken += 1
+        for y in [y for y in range(-6, 45) if (x, y, z) in m.pos]:
+            m.weg(x, y, z)
+        m.setze(x, BODEN_Y - p0[1], z, "minecraft:grass_block")
+        ecken += 1
     xs = [x for x, z in spalten]; zs = [z for x, z in spalten]
     for x in range(min(xs), max(xs) + 1):
         for z in range(min(zs), max(zs) + 1):
@@ -311,151 +321,149 @@ class Aussen(Modell):
         self.setze(p[0], p[1], p[2], sid, **kw)
 
 
+def in_grenze(x, z, einzug=0):
+    x0, x1, z0, z1, r = GRENZE
+    x0, x1, z0, z1, r = x0 + einzug, x1 - einzug, z0 + einzug, z1 - einzug, max(1, r - einzug)
+    if not (x0 <= x <= x1 and z0 <= z <= z1):
+        return False
+    cx = min(max(x, x0 + r), x1 - r)
+    cz = min(max(z, z0 + r), z1 - r)
+    return math.hypot(x - cx, z - cz) <= r
+
+
 def plane_aussen_und_gelaende():
     gel = Gelaende()
     aussen = Aussen({"quelle": "tools/plan-umgebung.py", "groesse": [1, 1, 1], "zusatz": {}, "palette": [], "bloecke": []})
     zaehler = {}
+    belegt = set()          # Spalten mit Weg, Platz, Becken: dort keine Bäume
 
     def plus(k, n=1):
         zaehler[k] = zaehler.get(k, 0) + n
 
-    def land(x, z):
-        y, sid = gel.oben(x, z)
-        return y is not None and sid != "minecraft:water" and y >= 62
+    x0, x1, z0, z1, _ = GRENZE
+    innen = [(x, z) for x in range(x0, x1 + 1) for z in range(z0, z1 + 1) if in_grenze(x, z)]
 
-    x0, x1, z0, z1 = CAMPUS
-    # 1. ME-Platz: schwarze Bodenplatte wird helles Pflaster mit Raster und Baum-Inseln
-    platz = [(x, z) for x in range(x0, x1 + 1) for z in range(z0, z1 + 1)
-             if gel.oben(x, z)[1] == "minecraft:black_concrete"]
-    platz += [(x, z) for x in range(251, 295) for z in range(-402, -386) if gel.oben(x, z)[1] in KAHL]   # B5
-    inseln = set()
-    for x, z in platz:
-        if (x - 219) % 24 == 0 and (z + 393) % 24 == 0 and all((x + dx, z + dz) not in gel.geschuetzt
-                                                              for dx in range(-5, 6) for dz in range(-5, 6)) and abs(x - 263) > 6:
-            inseln.add((x, z))
+    # 1. Planieren: alles innerhalb der Grenze wird Wiese auf Campus-Höhe
+    for x, z in innen:
+        gel.setze(x, z, "minecraft:grass_block")
+    plus("planiert (Spalten)", len(innen))
+
+    # 2. Grenze: Bordstein, Rundweg mit Lichtern, Baumreihe dahinter
+    for x, z in innen:
+        if (x, z) in gel.geschuetzt:
+            continue
+        if not in_grenze(x, z, 1):
+            gel.setze(x, z, "minecraft:light_gray_concrete"); belegt.add((x, z))
+        elif not in_grenze(x, z, RUNDWEG[1] + 1):
+            rand = in_grenze(x, z, RUNDWEG[1]) is False or not in_grenze(x, z, RUNDWEG[0] + 1)
+            sid = "minecraft:light_gray_concrete" if rand else "minecraft:smooth_quartz"
+            if rand and (x + z) % 9 == 0:
+                sid = "minecraft:sea_lantern"
+            gel.setze(x, z, sid); belegt.add((x, z))
+    plus("Rundweg und Bordstein", len(belegt))
+
+    # 3. ME-Platz: Pflaster mit Raster, Baum-Inseln mit Lichtern
+    px0, px1, pz0, pz1 = ME_PLATZ
+    platz = [(x, z) for x in range(px0, px1 + 1) for z in range(pz0, pz1 + 1)
+             if (x, z) not in gel.geschuetzt and in_grenze(x, z, RUNDWEG[1] + 1)]
+    inseln = [(x, z) for x, z in platz if (x - px0 - 10) % 24 == 0 and (z - pz0 - 10) % 24 == 0 and abs(x - 263) > 8
+              and all((x + dx, z + dz) not in gel.geschuetzt for dx in range(-6, 7) for dz in range(-6, 7))]
     for x, z in platz:
         if any(math.hypot(x - ix, z - iz) <= 3.2 for ix, iz in inseln):
             gel.setze(x, z, "minecraft:grass_block")
-        elif x % 12 == 0 or z % 12 == 0:
+        elif (x - px0) % 12 == 0 or (z - pz0) % 12 == 0:
             gel.setze(x, z, "minecraft:light_gray_concrete")
         else:
             gel.setze(x, z, "minecraft:smooth_quartz")
+        belegt.add((x, z))
     for ix, iz in inseln:
-        baum(aussen, ix, iz, BODEN_Y, "cherry" if (ix + iz) % 48 == 0 else "oak", 5)
+        baum(aussen, ix, iz, BODEN_Y, "oak", 5)
         for dx, dz in ((4, 0), (-4, 0), (0, 4), (0, -4)):
-            if gel.oben(ix + dx, iz + dz)[1] == "minecraft:smooth_quartz":
-                gel.setze(ix + dx, iz + dz, "minecraft:sea_lantern")
-    plus("Pflaster ME-Platz", len(platz)); plus("Baum-Inseln", len(inseln))
+            gel.setze(ix + dx, iz + dz, "minecraft:sea_lantern")
+    plus("ME-Platz", len(platz)); plus("Baum-Inseln", len(inseln))
 
-    # 2. Landeplatz für Luftschiffe nördlich vom ME-Gebäude
+    # 4. Landeplatz für Luftschiffe auf der Nordachse
     lx, lz, lr = LANDEPLATZ
-    for x in range(lx - lr - 3, lx + lr + 4):
-        for z in range(lz - lr - 3, lz + lr + 4):
+    for x in range(lx - lr - 1, lx + lr + 2):
+        for z in range(lz - lr - 1, lz + lr + 2):
             r = math.hypot(x - lx, z - lz)
-            if r <= lr + 0.5:
-                if lr - 1.5 < r and int(math.degrees(math.atan2(z - lz, x - lx)) % 360) % 30 < 8:
-                    sid = "minecraft:sea_lantern"
-                elif lr - 1.5 < r or (abs(x - lx) <= 1 and r < lr - 4) or (abs(z - lz) <= 1 and r < lr - 4):
-                    sid = "minecraft:white_concrete"
-                else:
-                    sid = "minecraft:gray_concrete"
-                gel.setze(x, z, sid)
-            elif r <= lr + 3.5 and land(x, z):
-                gel.setze(x, z, "minecraft:grass_block")
-    plus("Landeplatz Radius", lr)
-
-    # 3. Wege
-    for name, punkte, breite in WEGE:
-        sp = weg_spalten(punkte, breite)
-        n = 0
-        for (x, z), (d, s) in sp.items():
-            rand = d > breite / 2.0 - 1
-            y, sid = gel.oben(x, z)
-            ueber_wasser = sid == "minecraft:water" or y is None or y < 62
-            if ueber_wasser:
-                ok = gel.setze(x, z, "minecraft:spruce_planks" if not rand else "minecraft:spruce_planks")
-            elif rand and int(s) % 9 == 0:
-                ok = gel.setze(x, z, "minecraft:sea_lantern")
-            else:
-                ok = gel.setze(x, z, "minecraft:light_gray_concrete" if rand else "minecraft:smooth_quartz")
-            n += ok
-        plus("Wegfläche " + name, n)
-
-    # 4. Steg in die Bucht mit Plattform und Laternen
-    (sx, sz), (ex, ez) = STEG
-    for (x, z), (d, s) in weg_spalten([(sx, sz), (ex, ez)], 3).items():
-        if not land(x, z):
-            gel.setze(x, z, "minecraft:spruce_planks", frei=True)
-    for x in range(ex - 4, ex + 5):
-        for z in range(ez - 4, ez + 5):
-            if not land(x, z):
-                gel.setze(x, z, "minecraft:spruce_planks", frei=True)
-    lang = math.hypot(ex - sx, ez - sz)
-    for k in range(6, int(lang), 8):
-        t = k / lang
-        for seite in (-1.6, 1.6):
-            px = sx + t * (ex - sx) + seite * -(ez - sz) / lang
-            pz = sz + t * (ez - sz) + seite * (ex - sx) / lang
-            aussen.welt(round(px), BODEN_Y + 1, round(pz), "minecraft:spruce_fence", klein=True, farbe="#5a4027", name="Spruce Fence (Laternenpfosten)")
-            aussen.welt(round(px), BODEN_Y + 2, round(pz), "minecraft:lantern", klein=True, farbe="#f2c46a", name="Lantern")
-    for dx, dz in ((-4, -4), (4, -4), (-4, 4), (4, 4)):
-        aussen.welt(ex + dx, BODEN_Y + 1, ez + dz, "minecraft:spruce_fence", klein=True, farbe="#5a4027", name="Spruce Fence (Laternenpfosten)")
-        aussen.welt(ex + dx, BODEN_Y + 2, ez + dz, "minecraft:lantern", klein=True, farbe="#f2c46a", name="Lantern")
-
-    # 5. Kahle Flächen begrünen, Strand an der Bucht, Hain, Bienenweide
-    gruen = strand = 0
-    for x in range(x0, x1 + 1):
-        for z in range(z0, z1 + 1):
-            y, sid = gel.oben(x, z)
-            if sid not in KAHL or y is None or y < 61 or (x, z) in gel.geschuetzt:
+            if r > lr + 0.5:
                 continue
-            am_wasser = any(gel.oben(x + dx, z + dz)[1] == "minecraft:water" for dx in (-2, 0, 2) for dz in (-2, 0, 2))
-            if am_wasser and y <= 64:
-                gel.setze(x, z, "minecraft:sand", y=y); strand += 1
+            if lr - 1.5 < r and int(math.degrees(math.atan2(z - lz, x - lx)) % 360) % 30 < 8:
+                sid = "minecraft:sea_lantern"
+            elif lr - 1.5 < r or (abs(x - lx) <= 1 and r < lr - 3) or (abs(z - lz) <= 1 and r < lr - 3):
+                sid = "minecraft:white_concrete"
             else:
-                gel.setze(x, z, "minecraft:grass_block", y=y); gruen += 1
-    plus("begrünt", gruen); plus("Strand", strand)
-    hx0, hx1, hz0, hz1 = HAIN
-    n = 0
-    for _ in range(400):
-        x, z = random.randint(hx0, hx1), random.randint(hz0, hz1)
-        y, sid = gel.oben(x, z)
-        if sid == "minecraft:grass_block" and all(gel.oben(x + dx, z + dz)[1] == "minecraft:grass_block" for dx in (-3, 3) for dz in (-3, 3)) \
-                and all(math.hypot(x - a, z - b) > 7 for a, b in getattr(plane_aussen_und_gelaende, "baeume", [])):
-            plane_aussen_und_gelaende.baeume = getattr(plane_aussen_und_gelaende, "baeume", []) + [(x, z)]
-            baum(aussen, x, z, y, "birch" if n % 3 else "oak", 6); n += 1
-        if n >= 14:
-            break
-    plus("Bäume im Hain", n)
-    bx0, bx1, bz0, bz1 = BIENENWEIDE
+                sid = "minecraft:gray_concrete"
+            gel.setze(x, z, sid); belegt.add((x, z))
+
+    # 5. Wege
+    for name, punkte, breite in WEGE:
+        n = 0
+        for (x, z), (d, s) in weg_spalten(punkte, breite).items():
+            if not in_grenze(x, z):
+                continue
+            rand = d > breite / 2.0 - 1
+            sid = ("minecraft:sea_lantern" if int(s) % 8 == 0 else "minecraft:light_gray_concrete") if rand else "minecraft:smooth_quartz"
+            if gel.setze(x, z, sid):
+                belegt.add((x, z)); n += 1
+        plus("Weg " + name, n)
+
+    # 6. Wasserbecken mit Rand aus Quarz und Lichtern
+    for name, bx0, bx1, bz0, bz1 in BECKEN:
+        for x in range(bx0 - 1, bx1 + 2):
+            for z in range(bz0 - 1, bz1 + 2):
+                innen_b = bx0 <= x <= bx1 and bz0 <= z <= bz1
+                if innen_b:
+                    gel.setze(x, z, "minecraft:water", y=BODEN_Y - 1)
+                else:
+                    gel.setze(x, z, "minecraft:sea_lantern" if (x + z) % 6 == 0 else "minecraft:smooth_quartz")
+                belegt.add((x, z))
+        plus("Becken " + name, (bx1 - bx0 + 1) * (bz1 - bz0 + 1))
+
+    # 7. Bienenweide südlich vom Wabenhaus: Blumen in Streifen
     blumen = ["minecraft:allium", "minecraft:dandelion", "minecraft:cornflower", "minecraft:poppy",
               "minecraft:oxeye_daisy", "minecraft:azure_bluet", "minecraft:orange_tulip"]
+    bx0, bx1, bz0, bz1 = BIENENWEIDE
     nb = 0
     for x in range(bx0, bx1 + 1):
         for z in range(bz0, bz1 + 1):
-            y, sid = gel.oben(x, z)
-            if sid in ("minecraft:grass_block", "minecraft:sand", "minecraft:gravel") and y >= 62 and random.random() < 0.45:
-                if sid != "minecraft:grass_block":
-                    gel.setze(x, z, "minecraft:grass_block", y=y)
-                aussen.welt(x, y + 1, z, random.choice(blumen), klein=True)
-                nb += 1
+            if (x, z) in belegt or (x, z) in gel.geschuetzt or not in_grenze(x, z, RUNDWEG[1] + 2):
+                continue
+            if random.random() < 0.55:
+                aussen.welt(x, BODEN_Y + 1, z, blumen[((x - bx0) // 4) % len(blumen)], klein=True); nb += 1
+            belegt.add((x, z))
     plus("Blumen Bienenweide", nb)
-    # Bäume entlang der Uferpromenade
-    pts = WEGE[3][1]
-    for k in range(len(pts) - 1):
-        (ax, az), (bx, bz) = pts[k], pts[k + 1]
-        lang = math.hypot(bx - ax, bz - az)
-        for s in range(6, int(lang), 14):
-            x = round(ax + (bx - ax) * s / lang); z = round(az + (bz - az) * s / lang) - 5
-            y, sid = gel.oben(x, z)
-            if sid == "minecraft:grass_block":
-                baum(aussen, x, z, y, "oak", 5)
 
-    # 6. Mega Torches zeigen (werden versteckt eingebaut)
+    # 8. Alleen: Bäume in festem Abstand beidseits der Wege und innen am Rundweg, Wiesen bleiben offen
+    def frei(x, z, a):
+        return all((x + dx, z + dz) not in belegt and (x + dx, z + dz) not in gel.geschuetzt
+                   for dx in range(-a, a + 1) for dz in range(-a, a + 1))
+    gesetzt = []
+
+    def pflanze(x, z, art):
+        if in_grenze(x, z, RUNDWEG[1] + 3) and frei(x, z, 3) and all(math.hypot(x - a, z - b) >= ALLEE - 1 for a, b in gesetzt):
+            baum(aussen, x, z, BODEN_Y, art, 5); gesetzt.append((x, z))
+
+    for name, punkte, breite in WEGE:
+        for (ax, az), (bx, bz) in zip(punkte, punkte[1:]):
+            lang = math.hypot(bx - ax, bz - az)
+            nx_, nz_ = -(bz - az) / lang, (bx - ax) / lang
+            for s_ in range(ALLEE // 2, int(lang), ALLEE):
+                for seite in (-1, 1):
+                    abst = breite / 2.0 + 4
+                    pflanze(round(ax + (bx - ax) * s_ / lang + seite * nx_ * abst),
+                            round(az + (bz - az) * s_ / lang + seite * nz_ * abst), "birch")
+    # am Rundweg entlang: Spalten mit genau dem richtigen Abstand zur Grenze, im Takt
+    for x, z in innen:
+        if in_grenze(x, z, RUNDWEG[1] + 5) and not in_grenze(x, z, RUNDWEG[1] + 6) and (x + 2 * z) % ALLEE == 0:
+            pflanze(x, z, "oak")
+    plus("Bäume in Alleen", len(gesetzt))
+
+    # 9. Mega Torches zeigen (werden versteckt eingebaut)
     for name, x, z, wo in MEGA_TORCHES:
-        y = gel.oben(x, z)[0] or BODEN_Y
         for k in (1, 2):
-            aussen.welt(x, max(y, BODEN_Y) + k, z, "torchmaster:megatorch|" + name,
+            aussen.welt(x, BODEN_Y + k, z, "torchmaster:megatorch|" + name,
                         name="Mega Torch %s: %s (später versteckt einbauen)" % (name, wo), farbe="#e8b923", klein=k == 2)
 
     gel.speichern()
