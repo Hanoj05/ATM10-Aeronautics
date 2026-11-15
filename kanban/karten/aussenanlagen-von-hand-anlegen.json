@@ -2,7 +2,7 @@
   "id": "aussenanlagen-von-hand-anlegen",
   "titel": "Außenanlagen von Hand anlegen",
   "beschreibung": "Promenade, Magierweg, Zuwege, Laternen, Teiche, Bäume und Blumen nach der Bauanleitung im Tab Bauplan.",
-  "status": "offen",
+  "status": "in Arbeit",
   "phase": "echt",
   "wo": "Minecraft",
   "bereich": "Gebäude",
@@ -12,5 +12,5 @@
     "jonah"
   ],
   "faellig": null,
-  "rang": 20000
+  "rang": 13500
 }
